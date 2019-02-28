@@ -1,0 +1,4 @@
+include shrike/schema.sql
+graft shrike/static
+graft shrike/templates
+global-exclude *.pyc
