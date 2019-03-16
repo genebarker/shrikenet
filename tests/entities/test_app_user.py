@@ -1,5 +1,5 @@
 import pytest
-from shrike.entities.appuser import AppUser
+from shrike.entities.app_user import AppUser
 
 GOOD_USERNAME = 'mrgood'
 GOOD_NAME = 'Mr. Good'
