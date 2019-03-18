@@ -1,9 +1,11 @@
 import pytest
 from shrike.entities.app_user import AppUser
 
-GOOD_USERNAME = 'mrgood'
-GOOD_NAME = 'Mr. Good'
+GOOD_USERNAME = 'fmulder'
+GOOD_NAME = 'Fox Mulder'
 GOOD_PASSWORD_HASH = 'xxxYYY'
+
+TEST_USER = AppUser(GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH)
 
 class TestGeneralProperties:
 
