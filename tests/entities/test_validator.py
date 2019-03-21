@@ -1,6 +1,6 @@
 import pytest
 from pytest import raises
-from shrike.entities.validator import Validator
+from shrike.entities.field_validator import FieldValidator
 
 
 class TestIDValidation:
@@ -10,7 +10,7 @@ class TestIDValidation:
 
     def test_good_returns_its_value(self):
         id = 100
-        assert Validator.validate_id(id) == id
+        assert FieldValidator.validate_id(id) == id
 
     def test_none_raises(self):
         id = None
@@ -20,7 +20,7 @@ class TestIDValidation:
     @staticmethod
     def confirm_raises(expected_message, given_id, field_name='id'):
         with raises(ValueError) as excinfo:
-            Validator.validate_id(given_id, field_name)
+            FieldValidator.validate_id(given_id, field_name)
         assert str(excinfo.value) == expected_message
 
     def test_none_with_alternate_name_raises(self):
@@ -47,14 +47,14 @@ class TestUsernameValidation:
     missing_message = 'username must be provided'
     out_of_range_message = (
         'username must be between {0} and {1} characters long'
-        .format(Validator.username_min_length, Validator.username_max_length))
+        .format(FieldValidator.username_min_length, FieldValidator.username_max_length))
     bad_characters_message = (
         'username must be alphanumeric characters with optional underscore '
         'and period seperators')
 
     def test_good_returns_its_value(self):
         username = 'fmulder'
-        assert Validator.validate_username(username) == username
+        assert FieldValidator.validate_username(username) == username
 
     def test_none_raises(self):
         username = None
@@ -64,7 +64,7 @@ class TestUsernameValidation:
     @staticmethod
     def confirm_raises(expected_message, given_username, field_name='username'):
         with raises(ValueError) as excinfo:
-            Validator.validate_username(given_username, field_name)
+            FieldValidator.validate_username(given_username, field_name)
         assert str(excinfo.value) == expected_message
 
     def test_none_with_alternate_name_raises(self):
@@ -90,7 +90,7 @@ class TestUsernameValidation:
         self.confirm_raises(expected_message, username, alternate_field_name)
 
     def test_too_large_raises(self):
-        username = 'a' * (Validator.username_max_length + 1)
+        username = 'a' * (FieldValidator.username_max_length + 1)
         expected_message = self.out_of_range_message
         self.confirm_raises(expected_message, username)
 
@@ -107,7 +107,7 @@ class TestUsernameValidation:
 
     def test_good_seperators_validate(self):
         username = 'mr.awesome_dude'
-        assert Validator.validate_username(username) == username
+        assert FieldValidator.validate_username(username) == username
 
     def test_leading_seperator_raises(self):
         username = '_bad_lead_seperator'
@@ -125,13 +125,13 @@ class TestNameValidation:
     missing_message = 'name must be provided'
     out_of_range_message = (
         'name must be between {0} and {1} characters long'
-        .format(Validator.name_min_length, Validator.name_max_length))
+        .format(FieldValidator.name_min_length, FieldValidator.name_max_length))
     bad_characters_message = (
         'name must be alphanumeric characters with regular punctuation')
 
     def test_good_returns_its_value(self):
         name = 'Fox Mulder'
-        assert Validator.validate_name(name) == name
+        assert FieldValidator.validate_name(name) == name
 
     def test_none_throws(self):
         name = None
@@ -141,11 +141,11 @@ class TestNameValidation:
     @staticmethod
     def confirm_raises(expected_message, given_name, field_name='name'):
         with raises(ValueError) as excinfo:
-            Validator.validate_name(given_name, field_name)
+            FieldValidator.validate_name(given_name, field_name)
         assert str(excinfo.value) == expected_message
 
     def test_too_short_raises(self):
-        name = 'a' * (Validator.name_min_length - 1)
+        name = 'a' * (FieldValidator.name_min_length - 1)
         expected_message = self.out_of_range_message
         self.confirm_raises(expected_message, name)
 
@@ -160,7 +160,7 @@ class TestNameValidation:
 
     def test_permmited_punctuation_validates(self):
         name = "Mr. BIG-Time, Jr's "
-        assert Validator.validate_name(name) == name
+        assert FieldValidator.validate_name(name) == name
 
 
 class TestDescriptionValidation:
@@ -168,18 +168,18 @@ class TestDescriptionValidation:
     missing_message = 'description must be provided'
     out_of_range_message = (
         'description must be between {0} and {1} characters long'
-        .format(Validator.description_min_length, Validator.description_max_length))
+        .format(FieldValidator.description_min_length, FieldValidator.description_max_length))
 
     def test_good_description_returns_its_value(self):
         description = 'This is a good test.'
-        assert Validator.validate_description(description) == description
+        assert FieldValidator.validate_description(description) == description
 
     def test_description_none_throws(self):
         with raises(ValueError) as excinfo:
-            Validator.validate_description(None)
+            FieldValidator.validate_description(None)
         assert str(excinfo.value) == self.missing_message
 
     def test_description_too_long_throws(self):
         with raises(ValueError) as excinfo:
-            Validator.validate_description('a' * (Validator.description_max_length + 1))
+            FieldValidator.validate_description('a' * (FieldValidator.description_max_length + 1))
         assert str(excinfo.value) == self.out_of_range_message

@@ -1,7 +1,7 @@
 import re
 
 
-class Validator:
+class FieldValidator:
     username_min_length = 4
     username_max_length = 20
     username_regex_pattern = '^[a-zA-Z0-9][a-zA-Z0-9_.]*[a-zA-Z0-9]$'
@@ -21,12 +21,12 @@ class Validator:
 
     @staticmethod
     def validate_username(username, field_name='username'):
-        return Validator.validate_string(
+        return FieldValidator.validate_string(
             field_value=username,
             field_name=field_name,
-            min_length=Validator.username_min_length,
-            max_length=Validator.username_max_length,
-            regex_pattern=Validator.username_regex_pattern,
+            min_length=FieldValidator.username_min_length,
+            max_length=FieldValidator.username_max_length,
+            regex_pattern=FieldValidator.username_regex_pattern,
             pattern_hint=(field_name + ' must be alphanumeric characters with '
                           'optional underscore and period seperators')
         )
@@ -48,21 +48,21 @@ class Validator:
 
     @staticmethod
     def validate_name(name, field_name='name'):
-        return Validator.validate_string(
+        return FieldValidator.validate_string(
             field_value=name,
             field_name=field_name,
-            min_length=Validator.name_min_length,
-            max_length=Validator.name_max_length,
-            regex_pattern=Validator.name_regex_pattern,
+            min_length=FieldValidator.name_min_length,
+            max_length=FieldValidator.name_max_length,
+            regex_pattern=FieldValidator.name_regex_pattern,
             pattern_hint=(field_name + ' must be alphanumeric characters '
                           'with regular punctuation')
         )
 
     @staticmethod
     def validate_description(description, field_name='description'):
-        return Validator.validate_string(
+        return FieldValidator.validate_string(
             field_value=description,
             field_name=field_name,
-            min_length=Validator.description_min_length,
-            max_length=Validator.description_max_length
+            min_length=FieldValidator.description_min_length,
+            max_length=FieldValidator.description_max_length
         )

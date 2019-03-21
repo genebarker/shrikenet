@@ -1,11 +1,11 @@
 from .app_user import AppUser
-from .validator import Validator
+from .field_validator import FieldValidator
 
 
 class AppUserValidator:
 
     @staticmethod
     def validate_fields(app_user: AppUser):
-        Validator.validate_id(app_user.id)
-        Validator.validate_username(app_user.username)
-        Validator.validate_name(app_user.name)
+        FieldValidator.validate_id(app_user.id)
+        FieldValidator.validate_username(app_user.username)
+        FieldValidator.validate_name(app_user.name)

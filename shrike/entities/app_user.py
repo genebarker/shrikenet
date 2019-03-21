@@ -1,7 +1,5 @@
-from .validator import Validator
-
-
 class AppUser:
+
     def __init__(self, username, name, password_hash):
         self.id = None
         self.username = username
