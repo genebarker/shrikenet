@@ -12,6 +12,14 @@ class Validator:
     description_max_length = 140
 
     @staticmethod
+    def validate_id(id, field_name='id'):
+        if id is None:
+            raise ValueError('{0} must be provided'.format(field_name))
+        if not isinstance(id, int) or id < 0:
+            raise ValueError('{0} must be a positive integer'.format(field_name))
+        return id
+
+    @staticmethod
     def validate_username(username, field_name='username'):
         return Validator.validate_string(
             field_value=username,

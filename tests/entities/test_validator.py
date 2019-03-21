@@ -3,6 +3,45 @@ from pytest import raises
 from shrike.entities.validator import Validator
 
 
+class TestIDValidation:
+
+    missing_message = 'id must be provided'
+    bad_value_message = 'id must be a positive integer'
+
+    def test_good_returns_its_value(self):
+        id = 100
+        assert Validator.validate_id(id) == id
+
+    def test_none_raises(self):
+        id = None
+        expected_message = self.missing_message
+        self.confirm_raises(expected_message, id)
+
+    @staticmethod
+    def confirm_raises(expected_message, given_id, field_name='id'):
+        with raises(ValueError) as excinfo:
+            Validator.validate_id(given_id, field_name)
+        assert str(excinfo.value) == expected_message
+
+    def test_none_with_alternate_name_raises(self):
+        id = None
+        alternate_field_name = 'seqnum'
+        expected_message = self.missing_message.replace('id', alternate_field_name, 1)
+        self.confirm_raises(expected_message, id, alternate_field_name)
+
+    @pytest.mark.parametrize(('id'), (
+        ('not a number'),
+        (100.1),
+    ))
+    def test_non_integer_raises(self, id):
+        expected_message = self.bad_value_message
+        self.confirm_raises(expected_message, id)
+
+    def test_negative_integer_raises(self):
+        expected_message = self.bad_value_message
+        self.confirm_raises(expected_message, -100)
+
+
 class TestUsernameValidation:
 
     missing_message = 'username must be provided'
@@ -13,72 +52,72 @@ class TestUsernameValidation:
         'username must be alphanumeric characters with optional underscore '
         'and period seperators')
 
-    def test_good_username_returns_its_value(self):
+    def test_good_returns_its_value(self):
         username = 'fmulder'
         assert Validator.validate_username(username) == username
 
-    def test_username_none_throws(self):
+    def test_none_raises(self):
         username = None
         expected_message = self.missing_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
     @staticmethod
-    def confirm_username_raises(expected_message, given_username, field_name='username'):
+    def confirm_raises(expected_message, given_username, field_name='username'):
         with raises(ValueError) as excinfo:
             Validator.validate_username(given_username, field_name)
         assert str(excinfo.value) == expected_message
 
-    def test_username_none_throws_alternate_name(self):
+    def test_none_with_alternate_name_raises(self):
         username = None
         alternate_field_name = 'nickname'
         expected_message = self.missing_message.replace('username', alternate_field_name)
-        self.confirm_username_raises(expected_message, username, alternate_field_name)
+        self.confirm_raises(expected_message, username, alternate_field_name)
 
-    def test_username_empty_throws(self):
+    def test_empty_raises(self):
         username = ''
         expected_message = self.missing_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
-    def test_username_too_short_throws(self):
+    def test_too_short_raises(self):
         username = 'a'
         expected_message = self.out_of_range_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
-    def test_username_too_short_throws_alternate_name(self):
+    def test_too_short_with_alternate_name_raises(self):
         username = 'a'
         alternate_field_name = 'nickname'
         expected_message = self.out_of_range_message.replace('username', alternate_field_name)
-        self.confirm_username_raises(expected_message, username, alternate_field_name)
+        self.confirm_raises(expected_message, username, alternate_field_name)
 
-    def test_username_too_large_throws(self):
+    def test_too_large_raises(self):
         username = 'a' * (Validator.username_max_length + 1)
         expected_message = self.out_of_range_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
-    def test_username_with_bad_characters_throws(self):
+    def test_bad_characters_raises(self):
         username = 'no spaces'
         expected_message = self.bad_characters_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
-    def test_username_with_bad_characters_throws_alternate_name(self):
+    def test_bad_characters_with_alternate_name_raises(self):
         username = 'no spaces'
         alternate_field_name = 'supername'
         expected_message = self.bad_characters_message.replace('username', 'supername')
-        self.confirm_username_raises(expected_message, username, alternate_field_name)
+        self.confirm_raises(expected_message, username, alternate_field_name)
 
-    def test_username_with_good_seperators_accepts(self):
+    def test_good_seperators_validate(self):
         username = 'mr.awesome_dude'
-        assert Validator.validate_username(username)
+        assert Validator.validate_username(username) == username
 
-    def test_username_with_leading_seperator_throws(self):
+    def test_leading_seperator_raises(self):
         username = '_bad_lead_seperator'
         expected_message = self.bad_characters_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
-    def test_username_with_trailing_seperator_throws(self):
+    def test_trailing_seperator_raises(self):
         username = 'bad.trail.seperator.'
         expected_message = self.bad_characters_message
-        self.confirm_username_raises(expected_message, username)
+        self.confirm_raises(expected_message, username)
 
 
 class TestNameValidation:
@@ -90,36 +129,36 @@ class TestNameValidation:
     bad_characters_message = (
         'name must be alphanumeric characters with regular punctuation')
 
-    def test_good_name_returns_its_value(self):
+    def test_good_returns_its_value(self):
         name = 'Fox Mulder'
         assert Validator.validate_name(name) == name
 
-    def test_name_none_throws(self):
+    def test_none_throws(self):
         name = None
         expected_message = self.missing_message
-        self.confirm_name_raises(expected_message, name)
+        self.confirm_raises(expected_message, name)
 
     @staticmethod
-    def confirm_name_raises(expected_message, given_name, field_name='name'):
+    def confirm_raises(expected_message, given_name, field_name='name'):
         with raises(ValueError) as excinfo:
             Validator.validate_name(given_name, field_name)
         assert str(excinfo.value) == expected_message
 
-    def test_name_too_short_throws(self):
+    def test_too_short_raises(self):
         name = 'a' * (Validator.name_min_length - 1)
         expected_message = self.out_of_range_message
-        self.confirm_name_raises(expected_message, name)
+        self.confirm_raises(expected_message, name)
 
     @pytest.mark.parametrize(('name'), (
         ('This $has$ BAD chars'),
         ('This "has" BAD chars'),
         ('This _has_ BAD chars'),
     ))
-    def test_name_with_bad_characters_throws(self, name):
+    def test_bad_characters_raises(self, name):
         expected_message = self.bad_characters_message
-        self.confirm_name_raises(expected_message, name)
+        self.confirm_raises(expected_message, name)
 
-    def test_name_with_permmited_punctuation_accepts(self):
+    def test_permmited_punctuation_validates(self):
         name = "Mr. BIG-Time, Jr's "
         assert Validator.validate_name(name) == name
 

@@ -6,5 +6,6 @@ class AppUserValidator:
 
     @staticmethod
     def validate_fields(app_user: AppUser):
+        Validator.validate_id(app_user.id)
         Validator.validate_username(app_user.username)
         Validator.validate_name(app_user.name)

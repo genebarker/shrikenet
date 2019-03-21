@@ -1,10 +1,17 @@
 import pytest
 from shrike.entities.app_user import AppUser
 
+
 GOOD_ID = 100
 GOOD_USERNAME = 'fmulder'
 GOOD_NAME = 'Fox Mulder'
 GOOD_PASSWORD_HASH = 'xxxYYY'
+
+def create_good_app_user():
+    app_user = AppUser(GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH)
+    app_user.id = GOOD_ID
+    return app_user
+
 
 class TestGeneralProperties:
 
@@ -26,6 +33,7 @@ class TestEquals:
     def test_unequal_when_class_different(self):
         class FakeUser:
             def __init__(self, username, name, password_hash):
+                self.id = None
                 self.username = username
                 self.name = name
                 self.password_hash = password_hash
