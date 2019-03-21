@@ -7,8 +7,8 @@ from shrike.entities.storage_provider import StorageProvider
 
 @pytest.fixture
 def storage_provider(scope="class"):
-    provider = MemoryAdapter()
-    return provider
+    _storage_provider = MemoryAdapter()
+    return _storage_provider
 
 
 class TestGeneralProperties:

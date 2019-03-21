@@ -1,6 +1,7 @@
 import pytest
 from shrike.entities.app_user import AppUser
 
+
 GOOD_USERNAME = 'fmulder'
 GOOD_NAME = 'Fox Mulder'
 GOOD_PASSWORD_HASH = 'xxxYYY'
@@ -13,27 +14,6 @@ class TestGeneralProperties:
         assert user.name == GOOD_NAME
         assert user.password_hash == GOOD_PASSWORD_HASH
 
-    def test_field_validation_performed_on_init(self):
-        with pytest.raises(ValueError):
-            AppUser(None, None, None)
-
-class TestFieldValidation:
-
-    def test_username_required(self):
-        with pytest.raises(ValueError):
-            AppUser(None, GOOD_NAME, GOOD_PASSWORD_HASH)
-
-    def test_username_validated(self):
-        with pytest.raises(ValueError):
-            AppUser('bad username', GOOD_NAME, GOOD_PASSWORD_HASH)
-
-    def test_name_required(self):
-        with pytest.raises(ValueError):
-            AppUser(GOOD_USERNAME, None, GOOD_PASSWORD_HASH)
-
-    def test_name_validated(self):
-        with pytest.raises(ValueError):
-            AppUser(GOOD_USERNAME, 'A *bad* Name', GOOD_PASSWORD_HASH)
 
 class TestEquals:
 

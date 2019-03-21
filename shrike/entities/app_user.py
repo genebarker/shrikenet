@@ -6,11 +6,6 @@ class AppUser:
         self.username = username
         self.name = name
         self.password_hash = password_hash
-        self.validate_fields()
-
-    def validate_fields(self):
-        Validator.validate_username(self.username)
-        Validator.validate_name(self.name)
 
     def __eq__(self, other):
         return (isinstance(other, AppUser) and
