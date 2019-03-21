@@ -1,10 +1,22 @@
 import pytest
+
 from shrike.entities.app_user import AppUser
 from shrike.entities.app_user_validator import AppUserValidator
+from shrike.entities.record_validator import RecordValidator
+
 from .test_app_user import create_good_app_user
+
+class TestGeneralProperties:
+
+    def test_is_a_record_validator(self):
+        assert issubclass(AppUserValidator, RecordValidator)
 
 
 class TestFieldValidation:
+
+    def test_successful_validation_returns_none(self):
+        app_user = create_good_app_user()
+        assert AppUserValidator.validate_fields(app_user) is None
 
     def test_id_required(self):
         app_user = create_good_app_user()
