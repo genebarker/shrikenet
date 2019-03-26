@@ -1,4 +1,5 @@
 import pytest
+
 from shrike.entities.app_user import AppUser
 
 
