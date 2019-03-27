@@ -12,10 +12,16 @@ class TestMemoryAdapter:
 
     @classmethod
     def setup_class(cls):
-        cls.storage_provider = MemoryAdapter()
+        cls.storage_provider = cls.get_storage_provider()
+        cls.storage_provider.open()
+    
+    @staticmethod
+    def get_storage_provider():
+        return MemoryAdapter()
 
     @classmethod
     def teardown_class(cls):
+        cls.storage_provider.close()
         cls.storage_provider = None
 
 
@@ -23,6 +29,40 @@ class TestMemoryAdapter:
 
     def test_is_a_storage_provider(self):
         assert isinstance(self.storage_provider, StorageProvider)
+
+    def test_get_version_returns_provider_info(self):
+        assert self.storage_provider.get_version().startswith(self.storage_provider.VERSION_PREFIX)
+
+    def test_raises_when_not_opened_first(self):
+        storage_provider = self.get_storage_provider()
+        with pytest.raises(Exception) as excinfo:
+            storage_provider.get_version()
+        assert str(excinfo.value) == "connection closed"
+
+    def test_raises_when_already_opened(self):
+        storage_provider = self.get_storage_provider()
+        storage_provider.open()
+        with pytest.raises(Exception) as excinfo:
+            storage_provider.open()
+        assert str(excinfo.value) == "connection already open"
+
+    def test_raises_when_already_closed(self):
+        storage_provider = self.get_storage_provider()
+        storage_provider.open()
+        storage_provider.close()
+        with pytest.raises(Exception):
+            storage_provider.get_version()
+
+
+    # test transaction handling
+
+    def test_commit_can_be_called_after_no_action(self):
+        self.storage_provider.commit()
+        self.storage_provider.commit()
+
+    def test_rollback_can_be_called_after_no_action(self):
+        self.storage_provider.rollback()
+        self.storage_provider.rollback()
 
 
     # test app_user methods
