@@ -13,9 +13,20 @@ class MemoryAdapter(StorageProvider):
         self.app_user_next_id = 1
         self.is_open = False
 
+    def save_tables(self):
+        self.saved_app_user = {}
+        for key, value in self.app_user.items():
+            self.saved_app_user[key] = copy.copy(value)
+
+    def restore_tables(self):
+        self.app_user = {}
+        for key, value in self.saved_app_user.items():
+            self.app_user[key] = copy.copy(value)
+
+
     # restrict access to attributes when closed
     def __getattribute__(self, name):
-        if name != 'open' and name != 'is_open' and not self.is_open:
+        if (name not in ('open', 'is_open') and not self.is_open):
             error = '{0} is not available since the connection is closed'.format(name)
             raise Exception(error)
         return object.__getattribute__(self, name)
@@ -24,15 +35,17 @@ class MemoryAdapter(StorageProvider):
         if self.is_open:
             raise Exception('connection already open')
         self.is_open = True
+        self.save_tables()
 
     def close(self):
+        self.restore_tables()
         self.is_open = False
 
     def commit(self):
-        pass
+        self.save_tables()
 
     def rollback(self):
-        pass
+        self.restore_tables()
 
     def get_version(self):
         return ("{0} {1} - a lightweight in-memory database for unit testing"

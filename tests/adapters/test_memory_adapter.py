@@ -145,4 +145,16 @@ class TestMemoryAdapter:
     def test_exists_false_for_unknown(self):
         assert self.storage_provider.exists_app_user('existsUNKNOWN') is False
 
+    def test_add_exists_after_commit(self):
+        original_user = self.create_test_app_user('commitWORKS')
+        self.storage_provider.add_app_user(original_user)
+        self.storage_provider.commit()
+        assert self.storage_provider.exists_app_user('commitWORKS')
+
+    def test_add_gone_after_rollback(self):
+        original_user = self.create_test_app_user('rollbackWORKS')
+        self.storage_provider.add_app_user(original_user)
+        self.storage_provider.rollback()
+        assert not self.storage_provider.exists_app_user('rollbackWORKS')
+
     #endregion
