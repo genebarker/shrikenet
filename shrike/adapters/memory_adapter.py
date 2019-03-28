@@ -69,5 +69,8 @@ class MemoryAdapter(StorageProvider):
             raise ValueError(message)
         self.app_user[app_user.username] = copy.copy(app_user)
 
+    def update_app_user(self, app_user):
+        self.app_user[app_user.username] = app_user
+    
     def exists_app_user(self, username):
         return (username in self.app_user)

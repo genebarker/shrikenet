@@ -137,6 +137,14 @@ class TestMemoryAdapter:
         with pytest.raises(ValueError, match='app_user .username=addDUPE. already exists'):
             self.storage_provider.add_app_user(some_user)
 
+    def test_update_updates_record(self):
+        some_user = self.create_test_app_user('updateUpdates')
+        self.storage_provider.add_app_user(some_user)
+        some_user.name = "DIFFERENT"
+        self.storage_provider.update_app_user(some_user)
+        stored_user = self.storage_provider.get_app_user('updateUpdates')
+        assert stored_user == some_user
+
     def test_exists_true_for_known(self):
         some_user = self.create_test_app_user('existsTRUE')
         self.storage_provider.add_app_user(some_user)
