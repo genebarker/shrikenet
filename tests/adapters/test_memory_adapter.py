@@ -37,7 +37,7 @@ class TestMemoryAdapter:
         storage_provider = self.get_storage_provider()
         with pytest.raises(Exception) as excinfo:
             storage_provider.get_version()
-        assert str(excinfo.value) == "connection closed"
+        assert str(excinfo.value) == "get_version is not available since the connection is closed"
 
     def test_raises_when_already_opened(self):
         storage_provider = self.get_storage_provider()
