@@ -25,7 +25,7 @@ class TestMemoryAdapter:
         cls.storage_provider = None
 
 
-    # test general properties
+    #region - test general properties
 
     def test_is_a_storage_provider(self):
         assert isinstance(self.storage_provider, StorageProvider)
@@ -53,7 +53,10 @@ class TestMemoryAdapter:
         with pytest.raises(Exception):
             storage_provider.get_version()
 
-    # test transaction handling
+    #endregion
+
+
+    #region - test transaction handling
 
     def test_commit_can_be_called_after_no_action(self):
         self.storage_provider.commit()
@@ -63,7 +66,10 @@ class TestMemoryAdapter:
         self.storage_provider.rollback()
         self.storage_provider.rollback()
 
-    # test get next ID methods
+    #endregion
+
+
+    #region - test get next ID methods
 
     def test_get_next_app_user_id_positive(self):
         next_id = self.storage_provider.get_next_app_user_id()
@@ -75,12 +81,16 @@ class TestMemoryAdapter:
         assert id2 == id1 + 1
 
     def test_get_next_app_user_id_doesnt_rollback(self):
-        id1 = self.storage_provider.get_next_app_user_id()
         self.storage_provider.commit()
+        id1 = self.storage_provider.get_next_app_user_id()
+        self.storage_provider.rollback()
         id2 = self.storage_provider.get_next_app_user_id()
-        assert id2 != id1
+        assert id2 > id1
 
-    # test app_user methods
+    #endregion
+
+
+    #region - test app_user methods
 
     def test_get_unknown_raises(self):
         with pytest.raises(KeyError, match='app_user .username=xyz. does not exist'):
@@ -134,3 +144,5 @@ class TestMemoryAdapter:
 
     def test_exists_false_for_unknown(self):
         assert self.storage_provider.exists_app_user('existsUNKNOWN') is False
+
+    #endregion
