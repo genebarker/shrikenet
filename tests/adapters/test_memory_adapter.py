@@ -53,7 +53,6 @@ class TestMemoryAdapter:
         with pytest.raises(Exception):
             storage_provider.get_version()
 
-
     # test transaction handling
 
     def test_commit_can_be_called_after_no_action(self):
@@ -64,6 +63,22 @@ class TestMemoryAdapter:
         self.storage_provider.rollback()
         self.storage_provider.rollback()
 
+    # test get next ID methods
+
+    def test_get_next_app_user_id_positive(self):
+        next_id = self.storage_provider.get_next_app_user_id()
+        assert next_id > 0
+ 
+    def test_get_next_app_user_id_increments(self):
+        id1 = self.storage_provider.get_next_app_user_id()
+        id2 = self.storage_provider.get_next_app_user_id()
+        assert id2 == id1 + 1
+
+    def test_get_next_app_user_id_doesnt_rollback(self):
+        id1 = self.storage_provider.get_next_app_user_id()
+        self.storage_provider.commit()
+        id2 = self.storage_provider.get_next_app_user_id()
+        assert id2 != id1
 
     # test app_user methods
 
