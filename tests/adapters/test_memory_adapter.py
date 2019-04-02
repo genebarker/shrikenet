@@ -146,10 +146,18 @@ class TestMemoryAdapter:
 
     def test_update_app_user_updates_record(self):
         some_user = self.add_test_app_user('updateAppUserUpdates')
-        some_user.name = "DIFFERENT"
+        some_user.name = 'Differnt'
         self.storage_provider.update_app_user(some_user)
         stored_user = self.storage_provider.get_app_user_by_username('updateAppUserUpdates')
         assert stored_user == some_user
+
+    def test_update_app_user_updates_a_copy(self):
+        some_user = self.add_test_app_user('updateAppUserUpdatesCopy')
+        some_user.name = 'Different'
+        self.storage_provider.update_app_user(some_user)
+        some_user.name = 'Very Different'
+        stored_user = self.storage_provider.get_app_user_by_username('updateAppUserUpdatesCopy')
+        assert stored_user != some_user
 
     def test_exists_app_user_true_for_known(self):
         self.add_test_app_user('existsAppUserTRUE')

@@ -83,7 +83,7 @@ class MemoryAdapter(StorageProvider):
         self.app_user[app_user.oid] = copy.copy(app_user)
 
     def update_app_user(self, app_user):
-        self.app_user[app_user.oid] = app_user
+        self.app_user[app_user.oid] = copy.copy(app_user)
     
     def exists_app_username(self, username):
         return self._get_app_user_oid_for_username(username) is not None
