@@ -61,6 +61,9 @@ class MemoryAdapter(StorageProvider):
         if oid is None:
             message = 'app_user (username={}) does not exist'.format(username)
             raise KeyError(message)
+        return self.get_app_user_by_oid(oid)
+
+    def get_app_user_by_oid(self, oid):
         app_user = self.app_user[oid]
         return copy.copy(app_user)
 

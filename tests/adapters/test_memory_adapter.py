@@ -110,6 +110,11 @@ class TestMemoryAdapter:
         self.storage_provider.add_app_user(app_user)
         return app_user
 
+    def test_get_app_user_by_oid_gets_record(self):
+        original_user = self.add_test_app_user('getAppUserByOIDGETS')
+        stored_user = self.storage_provider.get_app_user_by_oid(original_user.oid)
+        assert stored_user == original_user
+
     def test_get_app_user_returns_a_copy(self):
         self.add_test_app_user('getAppUserRETURNS')
         copied_user = self.storage_provider.get_app_user_by_username('getAppUserRETURNS')
