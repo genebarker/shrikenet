@@ -10,7 +10,7 @@ class MemoryAdapter(StorageProvider):
 
     def __init__(self):
         self.app_user = {}
-        self.app_user_next_id = 1
+        self.app_user_next_oid = 1
         self.is_open = False
 
     def save_tables(self):
@@ -51,13 +51,13 @@ class MemoryAdapter(StorageProvider):
         return ("{0} {1} - a lightweight in-memory database for unit testing"
                 .format(self.VERSION_PREFIX, self.VERSION_NUMBER))
         
-    def get_next_app_user_id(self):
-        next_id = self.app_user_next_id
-        self.app_user_next_id += 1
-        return next_id
+    def get_next_app_user_oid(self):
+        next_oid = self.app_user_next_oid
+        self.app_user_next_oid += 1
+        return next_oid
 
     def get_app_user_by_username(self, username):
-        oid = self._get_app_user_id_for_username(username)
+        oid = self._get_app_user_oid_for_username(username)
         if oid is None:
             message = 'app_user (username={}) does not exist'.format(username)
             raise KeyError(message)
@@ -67,7 +67,7 @@ class MemoryAdapter(StorageProvider):
         app_user = self.app_user[oid]
         return copy.copy(app_user)
 
-    def _get_app_user_id_for_username(self, username):
+    def _get_app_user_oid_for_username(self, username):
         for oid, app_user in self.app_user.items():
             if app_user.username == username:
                 return oid
@@ -86,4 +86,4 @@ class MemoryAdapter(StorageProvider):
         self.app_user[app_user.oid] = app_user
     
     def exists_app_username(self, username):
-        return self._get_app_user_id_for_username(username) is not None
+        return self._get_app_user_oid_for_username(username) is not None

@@ -71,21 +71,21 @@ class TestMemoryAdapter:
 
     #region - test get next ID methods
 
-    def test_get_next_app_user_id_positive(self):
-        next_id = self.storage_provider.get_next_app_user_id()
-        assert next_id > 0
+    def test_get_next_app_user_oid_positive(self):
+        next_oid = self.storage_provider.get_next_app_user_oid()
+        assert next_oid > 0
  
-    def test_get_next_app_user_id_increments(self):
-        id1 = self.storage_provider.get_next_app_user_id()
-        id2 = self.storage_provider.get_next_app_user_id()
-        assert id2 == id1 + 1
+    def test_get_next_app_user_oid_increments(self):
+        oid1 = self.storage_provider.get_next_app_user_oid()
+        oid2 = self.storage_provider.get_next_app_user_oid()
+        assert oid2 == oid1 + 1
 
-    def test_get_next_app_user_id_doesnt_rollback(self):
+    def test_get_next_app_user_oid_doesnt_rollback(self):
         self.storage_provider.commit()
-        id1 = self.storage_provider.get_next_app_user_id()
+        oid1 = self.storage_provider.get_next_app_user_oid()
         self.storage_provider.rollback()
-        id2 = self.storage_provider.get_next_app_user_id()
-        assert id2 > id1
+        oid2 = self.storage_provider.get_next_app_user_oid()
+        assert oid2 > oid1
 
     #endregion
 
@@ -105,7 +105,7 @@ class TestMemoryAdapter:
         name = 'The ' + username
         password_hash = 'xxx' + username + 'YYY'
         app_user = AppUser(username, name, password_hash)
-        oid = self.storage_provider.get_next_app_user_id()
+        oid = self.storage_provider.get_next_app_user_oid()
         app_user.oid = oid
         self.storage_provider.add_app_user(app_user)
         return app_user
