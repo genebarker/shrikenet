@@ -1703,7 +1703,7 @@
 											"top": 72,
 											"width": 199.0751953125,
 											"height": 13,
-											"text": "+validate_id(id)",
+											"text": "+validate_oid(id)",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2540,7 +2540,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFpn3FX5rmfiGk="
 							},
-							"name": "validate_id",
+							"name": "validate_oid",
 							"parameters": [
 								{
 									"_type": "UMLParameter",
