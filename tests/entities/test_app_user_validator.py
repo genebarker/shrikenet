@@ -18,9 +18,9 @@ class TestFieldValidation:
         app_user = create_good_app_user()
         assert AppUserValidator.validate_fields(app_user) is None
 
-    def test_id_required(self):
+    def test_oid_required(self):
         app_user = create_good_app_user()
-        app_user.id = None
+        app_user.oid = None
         self.verify_validation_raises(app_user)
 
     @staticmethod

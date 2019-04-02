@@ -3,39 +3,39 @@ from pytest import raises
 from shrike.entities.field_validator import FieldValidator
 
 
-class TestIDValidation:
+class TestOIDValidation:
 
-    missing_message = 'id must be provided'
-    bad_value_message = 'id must be a positive integer'
+    missing_message = 'oid must be provided'
+    bad_value_message = 'oid must be a positive integer'
 
     def test_good_returns_its_value(self):
-        id = 100
-        assert FieldValidator.validate_id(id) == id
+        oid = 100
+        assert FieldValidator.validate_oid(oid) == oid
 
     def test_none_raises(self):
-        id = None
+        oid = None
         expected_message = self.missing_message
-        self.confirm_raises(expected_message, id)
+        self.confirm_raises(expected_message, oid)
 
     @staticmethod
-    def confirm_raises(expected_message, given_id, field_name='id'):
+    def confirm_raises(expected_message, given_oid, field_name='oid'):
         with raises(ValueError) as excinfo:
-            FieldValidator.validate_id(given_id, field_name)
+            FieldValidator.validate_oid(given_oid, field_name)
         assert str(excinfo.value) == expected_message
 
     def test_none_with_alternate_name_raises(self):
-        id = None
+        oid = None
         alternate_field_name = 'seqnum'
-        expected_message = self.missing_message.replace('id', alternate_field_name, 1)
-        self.confirm_raises(expected_message, id, alternate_field_name)
+        expected_message = self.missing_message.replace('oid', alternate_field_name, 1)
+        self.confirm_raises(expected_message, oid, alternate_field_name)
 
-    @pytest.mark.parametrize(('id'), (
+    @pytest.mark.parametrize(('oid'), (
         ('not a number'),
         (100.1),
     ))
-    def test_non_integer_raises(self, id):
+    def test_non_integer_raises(self, oid):
         expected_message = self.bad_value_message
-        self.confirm_raises(expected_message, id)
+        self.confirm_raises(expected_message, oid)
 
     def test_negative_integer_raises(self):
         expected_message = self.bad_value_message
