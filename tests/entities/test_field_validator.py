@@ -1,5 +1,5 @@
 import pytest
-from pytest import raises
+
 from shrike.entities.field_validator import FieldValidator
 
 
@@ -19,7 +19,7 @@ class TestOIDValidation:
 
     @staticmethod
     def confirm_raises(expected_message, given_oid, field_name='oid'):
-        with raises(ValueError) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             FieldValidator.validate_oid(given_oid, field_name)
         assert str(excinfo.value) == expected_message
 
@@ -63,7 +63,7 @@ class TestUsernameValidation:
 
     @staticmethod
     def confirm_raises(expected_message, given_username, field_name='username'):
-        with raises(ValueError) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             FieldValidator.validate_username(given_username, field_name)
         assert str(excinfo.value) == expected_message
 
@@ -140,7 +140,7 @@ class TestNameValidation:
 
     @staticmethod
     def confirm_raises(expected_message, given_name, field_name='name'):
-        with raises(ValueError) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             FieldValidator.validate_name(given_name, field_name)
         assert str(excinfo.value) == expected_message
 
@@ -175,11 +175,11 @@ class TestDescriptionValidation:
         assert FieldValidator.validate_description(description) == description
 
     def test_description_none_throws(self):
-        with raises(ValueError) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             FieldValidator.validate_description(None)
         assert str(excinfo.value) == self.missing_message
 
     def test_description_too_long_throws(self):
-        with raises(ValueError) as excinfo:
+        with pytest.raises(ValueError) as excinfo:
             FieldValidator.validate_description('a' * (FieldValidator.description_max_length + 1))
         assert str(excinfo.value) == self.out_of_range_message

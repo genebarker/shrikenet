@@ -1,5 +1,5 @@
-from .field_validator import FieldValidator
-from .record_validator import RecordValidator
+from shrike.entities.field_validator import FieldValidator
+from shrike.entities.record_validator import RecordValidator
 
 
 class AppUserValidator(RecordValidator):
