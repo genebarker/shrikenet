@@ -69,8 +69,7 @@ class MemoryAdapter(StorageProvider):
 
     def _get_app_user_oid_for_username(self, username):
         for oid, app_user in self.app_user.items():
-            if app_user.username == username:
-                return oid
+            if app_user.username == username: return oid
         return None
 
     def add_app_user(self, app_user):
