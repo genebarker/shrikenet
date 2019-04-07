@@ -128,12 +128,13 @@ class TestNameValidation:
         .format(FieldValidator.name_min_length, FieldValidator.name_max_length))
     bad_characters_message = (
         'name must be alphanumeric characters with regular punctuation')
+    trailing_spaces_message = 'name must not have trailing spaces'
 
     def test_good_returns_its_value(self):
         name = 'Fox Mulder'
         assert FieldValidator.validate_name(name) == name
 
-    def test_none_throws(self):
+    def test_none_raises(self):
         name = None
         expected_message = self.missing_message
         self.confirm_raises(expected_message, name)
@@ -149,18 +150,29 @@ class TestNameValidation:
         expected_message = self.out_of_range_message
         self.confirm_raises(expected_message, name)
 
+    def test_too_long_raises(self):
+        name = 'a' * (FieldValidator.name_max_length + 1)
+        expected_message = self.out_of_range_message
+        self.confirm_raises(expected_message, name)
+
     @pytest.mark.parametrize(('name'), (
         ('This $has$ BAD chars'),
         ('This "has" BAD chars'),
         ('This _has_ BAD chars'),
+        ('-Has BAD leading char'),
     ))
     def test_bad_characters_raises(self, name):
         expected_message = self.bad_characters_message
         self.confirm_raises(expected_message, name)
 
     def test_permmited_punctuation_validates(self):
-        name = "Mr. BIG-Time, Jr's "
+        name = "Mr. BIG-Time, Jr's"
         assert FieldValidator.validate_name(name) == name
+
+    def test_trailing_spaces_raises(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_name('trailing spaces  ')
+        assert str(excinfo.value) == self.trailing_spaces_message
 
 
 class TestDescriptionValidation:
@@ -169,6 +181,8 @@ class TestDescriptionValidation:
     out_of_range_message = (
         'description must be between {0} and {1} characters long'
         .format(FieldValidator.description_min_length, FieldValidator.description_max_length))
+    leading_spaces_message = 'description must not have leading spaces'
+    trailing_spaces_message = 'description must not have trailing spaces'
 
     def test_good_description_returns_its_value(self):
         description = 'This is a good test.'
@@ -183,3 +197,47 @@ class TestDescriptionValidation:
         with pytest.raises(ValueError) as excinfo:
             FieldValidator.validate_description('a' * (FieldValidator.description_max_length + 1))
         assert str(excinfo.value) == self.out_of_range_message
+
+    def test_leading_spaces_raises(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_description('  leading spaces')
+        assert str(excinfo.value) == self.leading_spaces_message
+
+    def test_trailing_spaces_raises(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_description('trailing spaces  ')
+        assert str(excinfo.value) == self.trailing_spaces_message
+
+
+class TestTitleValidation:
+
+    missing_message = 'title must be provided'
+    out_of_range_message = (
+        'title must be between {0} and {1} characters long'
+        .format(FieldValidator.title_min_length, FieldValidator.title_max_length))
+    bad_lead_message = 'title must begin with an alphanumeric character'
+    trailing_spaces_message = 'title must not have trailing spaces'
+
+    def test_good_title_returns_its_value(self):
+        title = 'This is a Good Title'
+        assert FieldValidator.validate_title(title) == title
+
+    def test_title_none_raises(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_title(None)
+        assert str(excinfo.value) == self.missing_message
+
+    def test_title_too_long_throws(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_title('a' * (FieldValidator.title_max_length + 1))
+        assert str(excinfo.value) == self.out_of_range_message
+
+    def test_leading_non_alphanumeric_raises(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_title('!bad lead')
+        assert str(excinfo.value) == self.bad_lead_message
+
+    def test_trailing_spaces_raises(self):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_title('trailing spaces  ')
+        assert str(excinfo.value) == self.trailing_spaces_message

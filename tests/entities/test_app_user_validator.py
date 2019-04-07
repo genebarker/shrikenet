@@ -29,6 +29,11 @@ class TestFieldValidation:
         with pytest.raises(ValueError):
             AppUserValidator.validate_fields(app_user)
 
+    def test_oid_validated(self):
+        app_user = create_good_app_user()
+        app_user.oid = 'bad oid'
+        self.verify_validation_raises(app_user)
+
     def test_username_required(self):
         app_user = create_good_app_user()
         app_user.username = None

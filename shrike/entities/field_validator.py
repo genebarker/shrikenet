@@ -7,9 +7,12 @@ class FieldValidator:
     username_regex_pattern = '^[a-zA-Z0-9][a-zA-Z0-9_.]*[a-zA-Z0-9]$'
     name_min_length = 4
     name_max_length = 50
-    name_regex_pattern = '^[a-zA-Z0-9- .,\']*$'
+    name_regex_pattern = '^[a-zA-Z0-9][a-zA-Z0-9- .,\']*$'
     description_min_length = 1
     description_max_length = 140
+    title_min_length = 1
+    title_max_length = 50
+    title_regex_pattern = '^[a-zA-Z0-9].*'
 
     @staticmethod
     def validate_oid(oid, field_name='oid'):
@@ -39,6 +42,12 @@ class FieldValidator:
         if len(field_value) < min_length or len(field_value) > max_length:
             raise ValueError('{0} must be between {1} and {2} characters long'
                              .format(field_name, min_length, max_length))
+        if field_value.startswith(' '):
+            raise ValueError('{0} must not have leading spaces'
+                             .format(field_name))
+        if field_value.endswith(' '):
+            raise ValueError('{0} must not have trailing spaces'
+                             .format(field_name))
         if regex_pattern is not None:
             regex = re.compile(regex_pattern)
             if not regex.match(field_value):
@@ -65,4 +74,15 @@ class FieldValidator:
             field_name=field_name,
             min_length=FieldValidator.description_min_length,
             max_length=FieldValidator.description_max_length
+        )
+
+    @staticmethod
+    def validate_title(title, field_name='title'):
+        return FieldValidator.validate_string(
+            field_value=title,
+            field_name=field_name,
+            min_length=FieldValidator.title_min_length,
+            max_length=FieldValidator.title_max_length,
+            regex_pattern=FieldValidator.title_regex_pattern,
+            pattern_hint=(field_name + ' must begin with an alphanumeric character'),
         )
