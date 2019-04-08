@@ -37,3 +37,26 @@ class TestFieldValidation:
         post = create_good_post()
         post.title = None
         self.verify_validation_raises(post)
+
+    def test_title_validated(self):
+        post = create_good_post()
+        post.title = '! bad title'
+        self.verify_validation_raises(post)
+
+    def test_author_oid_required(self):
+        post = create_good_post()
+        post.author_oid = None
+        self.verify_validation_raises(post)
+
+    def test_author_oid_validated(self):
+        post = create_good_post()
+        post.author_oid = 'bad author oid'
+        self.verify_validation_raises(post)
+
+    def test_author_oid_validation_exception_states_correct_field_name(self):
+        post = create_good_post()
+        post.author_oid = 'bad author oid'
+        with pytest.raises(ValueError) as excinfo:
+            PostValidator.validate_fields(post)
+        assert str(excinfo.value).startswith('author_oid')
+        

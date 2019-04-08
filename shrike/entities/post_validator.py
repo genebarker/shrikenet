@@ -8,3 +8,4 @@ class PostValidator(RecordValidator):
     def validate_fields(post):
         FieldValidator.validate_oid(post.oid)
         FieldValidator.validate_title(post.title)
+        FieldValidator.validate_oid(post.author_oid, 'author_oid')
