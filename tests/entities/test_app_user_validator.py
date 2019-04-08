@@ -53,3 +53,9 @@ class TestFieldValidation:
         app_user = create_good_app_user()
         app_user.name = 'A *bad* Name'
         self.verify_validation_raises(app_user)
+
+class TestReferenceValidation:
+
+    def test_successful_validation_returns_none(self):
+        app_user = create_good_app_user()
+        assert AppUserValidator.validate_references(app_user, None) is None

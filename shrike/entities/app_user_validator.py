@@ -9,3 +9,7 @@ class AppUserValidator(RecordValidator):
         FieldValidator.validate_oid(app_user.oid)
         FieldValidator.validate_username(app_user.username)
         FieldValidator.validate_name(app_user.name)
+
+    @staticmethod
+    def validate_references(app_user, storage_provider):
+        pass
