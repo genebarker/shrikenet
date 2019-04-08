@@ -59,4 +59,20 @@ class TestFieldValidation:
         with pytest.raises(ValueError) as excinfo:
             PostValidator.validate_fields(post)
         assert str(excinfo.value).startswith('author_oid')
-        
+
+    def test_created_time_required(self):
+        post = create_good_post()
+        post.created_time = None
+        self.verify_validation_raises(post)
+
+    def test_created_time_validated(self):
+        post = create_good_post()
+        post.created_time = 'bad time value'
+        self.verify_validation_raises(post)
+
+    def test_created_time_validation_exception_states_correct_field_name(self):
+        post = create_good_post()
+        post.created_time = 'bad time value'
+        with pytest.raises(ValueError) as excinfo:
+            PostValidator.validate_fields(post)
+        assert str(excinfo.value).startswith('created_time')
