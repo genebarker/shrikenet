@@ -1,6 +1,14 @@
+from datetime import datetime, timedelta, timezone
+
 import pytest
 
 from shrike.entities.field_validator import FieldValidator
+
+
+def confirm_call_raises(function_call, field_name, field_value, expected_message):
+    with pytest.raises(ValueError) as excinfo:
+        function_call(field_value, field_name)
+    assert str(excinfo.value) == expected_message
 
 
 class TestOIDValidation:
@@ -19,9 +27,10 @@ class TestOIDValidation:
 
     @staticmethod
     def confirm_raises(expected_message, given_oid, field_name='oid'):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_oid(given_oid, field_name)
-        assert str(excinfo.value) == expected_message
+        confirm_call_raises(function_call=FieldValidator.validate_oid,
+                       field_name=field_name,
+                       field_value=given_oid,
+                       expected_message=expected_message)
 
     def test_none_with_alternate_name_raises(self):
         oid = None
@@ -63,9 +72,10 @@ class TestUsernameValidation:
 
     @staticmethod
     def confirm_raises(expected_message, given_username, field_name='username'):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_username(given_username, field_name)
-        assert str(excinfo.value) == expected_message
+        confirm_call_raises(function_call=FieldValidator.validate_username,
+                       field_name=field_name,
+                       field_value=given_username,
+                       expected_message=expected_message)
 
     def test_none_with_alternate_name_raises(self):
         username = None
@@ -141,9 +151,10 @@ class TestNameValidation:
 
     @staticmethod
     def confirm_raises(expected_message, given_name, field_name='name'):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_name(given_name, field_name)
-        assert str(excinfo.value) == expected_message
+        confirm_call_raises(function_call=FieldValidator.validate_name,
+                       field_name=field_name,
+                       field_value=given_name,
+                       expected_message=expected_message)
 
     def test_too_short_raises(self):
         name = 'a' * (FieldValidator.name_min_length - 1)
@@ -170,9 +181,9 @@ class TestNameValidation:
         assert FieldValidator.validate_name(name) == name
 
     def test_trailing_spaces_raises(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_name('trailing spaces  ')
-        assert str(excinfo.value) == self.trailing_spaces_message
+        name = 'trailing spaces  '
+        expected_message = self.trailing_spaces_message
+        self.confirm_raises(expected_message, name)
 
 
 class TestDescriptionValidation:
@@ -184,29 +195,36 @@ class TestDescriptionValidation:
     leading_spaces_message = 'description must not have leading spaces'
     trailing_spaces_message = 'description must not have trailing spaces'
 
-    def test_good_description_returns_its_value(self):
+    def test_good_returns_its_value(self):
         description = 'This is a good test.'
         assert FieldValidator.validate_description(description) == description
 
-    def test_description_none_throws(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_description(None)
-        assert str(excinfo.value) == self.missing_message
+    def test_none_raises(self):
+        description = None
+        expected_message = self.missing_message
+        self.confirm_raises(expected_message, description)
 
-    def test_description_too_long_throws(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_description('a' * (FieldValidator.description_max_length + 1))
-        assert str(excinfo.value) == self.out_of_range_message
+    @staticmethod
+    def confirm_raises(expected_message, given_description):
+        confirm_call_raises(function_call=FieldValidator.validate_description,
+                       field_name='description',
+                       field_value=given_description,
+                       expected_message=expected_message)
+
+    def test_too_long_raises(self):
+        description = 'a' * (FieldValidator.description_max_length + 1)
+        expected_message = self.out_of_range_message
+        self.confirm_raises(expected_message, description)
 
     def test_leading_spaces_raises(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_description('  leading spaces')
-        assert str(excinfo.value) == self.leading_spaces_message
+        description = '  leading spaces'
+        expected_message = self.leading_spaces_message
+        self.confirm_raises(expected_message, description)
 
     def test_trailing_spaces_raises(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_description('trailing spaces  ')
-        assert str(excinfo.value) == self.trailing_spaces_message
+        description = 'trailing spaces  '
+        expected_message = self.trailing_spaces_message
+        self.confirm_raises(expected_message, description)
 
 
 class TestTitleValidation:
@@ -218,26 +236,78 @@ class TestTitleValidation:
     bad_lead_message = 'title must begin with an alphanumeric character'
     trailing_spaces_message = 'title must not have trailing spaces'
 
-    def test_good_title_returns_its_value(self):
+    def test_good_returns_its_value(self):
         title = 'This is a Good Title'
         assert FieldValidator.validate_title(title) == title
 
-    def test_title_none_raises(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_title(None)
-        assert str(excinfo.value) == self.missing_message
+    def test_none_raises(self):
+        title = None
+        expected_message = self.missing_message
+        self.confirm_raises(expected_message, title)
 
-    def test_title_too_long_throws(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_title('a' * (FieldValidator.title_max_length + 1))
-        assert str(excinfo.value) == self.out_of_range_message
+    @staticmethod
+    def confirm_raises(expected_message, given_title):
+        confirm_call_raises(function_call=FieldValidator.validate_title,
+                       field_name='title',
+                       field_value=given_title,
+                       expected_message=expected_message)
+
+    def test_too_long_raises(self):
+        title = 'a' * (FieldValidator.title_max_length + 1)
+        expected_message = self.out_of_range_message
+        self.confirm_raises(expected_message, title)
 
     def test_leading_non_alphanumeric_raises(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_title('!bad lead')
-        assert str(excinfo.value) == self.bad_lead_message
+        title = '!bad lead'
+        expected_message = self.bad_lead_message
+        self.confirm_raises(expected_message, title)
 
     def test_trailing_spaces_raises(self):
-        with pytest.raises(ValueError) as excinfo:
-            FieldValidator.validate_title('trailing spaces  ')
-        assert str(excinfo.value) == self.trailing_spaces_message
+        title = 'trailing spaces  '
+        expected_message = self.trailing_spaces_message
+        self.confirm_raises(expected_message, title)
+
+
+class TestInstantValidation:
+
+    missing_message = 'instant must be provided'
+    bad_value_message = 'instant must be datetime object with timezone'
+
+    GOOD_INSTANT = datetime(2018, 12, 31, 23, 58, tzinfo=timezone.utc)
+
+    def test_good_returns_its_value(self):
+        assert FieldValidator.validate_instant(self.GOOD_INSTANT) == self.GOOD_INSTANT
+
+    def test_none_raises(self):
+        instant = None
+        expected_message = self.missing_message
+        self.confirm_raises(expected_message, instant)
+
+    @staticmethod
+    def confirm_raises(expected_message, given_instant, field_name='instant'):
+        confirm_call_raises(function_call=FieldValidator.validate_instant,
+                            field_name=field_name,
+                            field_value=given_instant,
+                            expected_message=expected_message)
+
+    def test_none_with_alternate_name_raises(self):
+        instant = None
+        alternate_field_name = 'filing_time'
+        expected_message = self.missing_message.replace('instant', alternate_field_name, 1)
+        self.confirm_raises(expected_message, instant, alternate_field_name)
+
+    def test_non_datetime_raises(self):
+        instant = 'bad datetime'
+        expected_message = self.bad_value_message
+        self.confirm_raises(expected_message, instant)
+
+    def test_non_datetime_with_alternate_name_raises(self):
+        instant = 'bad datetime'
+        alternate_field_name = 'timestamp'
+        expected_message = self.bad_value_message.replace('instant', alternate_field_name, 1)
+        self.confirm_raises(expected_message, instant, field_name=alternate_field_name)
+
+    def test_datetime_without_timezone_raises(self):
+        instant = datetime.utcnow()
+        expected_message = self.bad_value_message
+        self.confirm_raises(expected_message, instant)

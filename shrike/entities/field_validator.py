@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 
 class FieldValidator:
@@ -86,3 +87,11 @@ class FieldValidator:
             regex_pattern=FieldValidator.title_regex_pattern,
             pattern_hint=(field_name + ' must begin with an alphanumeric character'),
         )
+
+    @staticmethod
+    def validate_instant(instant, field_name='instant'):
+        if instant is None:
+            raise ValueError('{0} must be provided'.format(field_name))
+        if not isinstance(instant, datetime) or instant.tzinfo is None:
+            raise ValueError('{0} must be datetime object with timezone'.format(field_name))
+        return instant
