@@ -4,8 +4,6 @@ from shrike.adapters.memory_adapter import MemoryAdapter
 from shrike.entities.app_user import AppUser
 from shrike.entities.storage_provider import StorageProvider
 
-storage_provider2 = None
-
 class TestMemoryAdapter:
 
     storage_provider = None
