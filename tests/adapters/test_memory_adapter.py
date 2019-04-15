@@ -85,6 +85,22 @@ class TestMemoryAdapter:
         oid2 = self.storage_provider.get_next_app_user_oid()
         assert oid2 > oid1
 
+    def test_get_next_post_oid_positive(self):
+        next_oid = self.storage_provider.get_next_post_oid()
+        assert next_oid > 0
+
+    def test_get_next_post_oid_increments(self):
+        oid1 = self.storage_provider.get_next_post_oid()
+        oid2 = self.storage_provider.get_next_post_oid()
+        assert oid2 == oid1 + 1
+
+    def test_get_next_post_oid_doesnt_rollback(self):
+        self.storage_provider.commit()
+        oid1 = self.storage_provider.get_next_post_oid()
+        self.storage_provider.rollback()
+        oid2 = self.storage_provider.get_next_post_oid()
+        assert oid2 > oid1
+
     #endregion
 
 

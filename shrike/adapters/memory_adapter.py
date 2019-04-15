@@ -11,6 +11,7 @@ class MemoryAdapter(StorageProvider):
     def __init__(self):
         self.app_user = {}
         self.app_user_next_oid = 1
+        self.post_next_oid = 1
         self.is_open = False
 
     def save_tables(self):
@@ -54,6 +55,11 @@ class MemoryAdapter(StorageProvider):
     def get_next_app_user_oid(self):
         next_oid = self.app_user_next_oid
         self.app_user_next_oid += 1
+        return next_oid
+
+    def get_next_post_oid(self):
+        next_oid = self.post_next_oid
+        self.post_next_oid += 1
         return next_oid
 
     def get_app_user_by_username(self, username):
