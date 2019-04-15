@@ -43,6 +43,31 @@ class TestFieldValidation:
         post.title = '! bad title'
         self.verify_validation_raises(post)
 
+    def test_body_can_be_none(self):
+        post = create_good_post()
+        post.body = None
+        assert PostValidator.validate_fields(post) is None
+
+    def test_non_none_empty_body_raises(self):
+        post = create_good_post()
+        post.body = ''
+        self.verify_validation_raises(post)
+
+    def test_body_with_leading_spaces_raises(self):
+        post = create_good_post()
+        post.body = ' ' + post.body
+        self.verify_validation_raises(post)
+
+    def test_body_with_trailing_spaces_raises(self):
+        post = create_good_post()
+        post.body = post.body + ' '
+        self.verify_validation_raises(post)
+
+    def test_body_too_long_raises(self):
+        post = create_good_post()
+        post.body = 'x' * (PostValidator.MAX_POST_CHARACTERS + 1)
+        self.verify_validation_raises(post)
+
     def test_author_oid_required(self):
         post = create_good_post()
         post.author_oid = None
