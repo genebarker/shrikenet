@@ -29,3 +29,7 @@ class PostValidator(RecordValidator):
             min_length=cls.MIN_POST_CHARACTERS,
             max_length=cls.MAX_POST_CHARACTERS,
         )
+
+    @staticmethod
+    def validate_references(post, storage_provider):
+        storage_provider.get_app_user_by_oid(post.author_oid)

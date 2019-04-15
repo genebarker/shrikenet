@@ -92,7 +92,7 @@ class TestMemoryAdapter:
 
     #region - test app_user methods
 
-    def test_get_app_user_unknown_raises(self):
+    def test_get_app_user_by_username_unknown_raises(self):
         with pytest.raises(KeyError, match='app_user .username=xyz. does not exist'):
             self.storage_provider.get_app_user_by_username('xyz')
 
@@ -114,6 +114,10 @@ class TestMemoryAdapter:
         original_user = self.add_test_app_user('getAppUserByOIDGETS')
         stored_user = self.storage_provider.get_app_user_by_oid(original_user.oid)
         assert stored_user == original_user
+
+    def test_get_app_user_by_oid_unknown_raises(self):
+        with pytest.raises(KeyError, match='app_user .oid=12345. does not exist'):
+            self.storage_provider.get_app_user_by_oid('12345')
 
     def test_get_app_user_returns_a_copy(self):
         self.add_test_app_user('getAppUserRETURNS')

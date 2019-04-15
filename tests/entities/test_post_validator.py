@@ -1,8 +1,10 @@
 import pytest
 
+from shrike.adapters.memory_adapter import MemoryAdapter
 from shrike.entities.post_validator import PostValidator
 from shrike.entities.record_validator import RecordValidator
 
+from tests.entities.test_app_user import create_good_app_user
 from tests.entities.test_post import create_good_post
 
 
@@ -101,3 +103,31 @@ class TestFieldValidation:
         with pytest.raises(ValueError) as excinfo:
             PostValidator.validate_fields(post)
         assert str(excinfo.value).startswith('created_time')
+
+class TestReferenceValidation:
+
+    @pytest.fixture
+    def storage_provider(self):
+        provider = MemoryAdapter()
+        provider.open()
+        yield provider
+        provider.close()
+
+    def test_successful_validation_returns_none(self, storage_provider):
+        post = self.create_good_post_with_references(storage_provider)
+        assert PostValidator.validate_references(post, storage_provider) is None
+
+    @staticmethod
+    def create_good_post_with_references(storage_provider):
+        app_user = create_good_app_user()
+        storage_provider.add_app_user(app_user)
+        post = create_good_post()
+        post.author_oid = app_user.oid
+        return post
+
+    def test_unknown_author_oid_raises(self, storage_provider):
+        post = create_good_post()
+        with pytest.raises(KeyError) as excinfo:
+            PostValidator.validate_references(post, storage_provider)
+        expected_message = 'app_user (oid={0}) does not exist'.format(post.author_oid)
+        assert expected_message in str(excinfo.value)
