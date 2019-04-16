@@ -129,5 +129,5 @@ class TestReferenceValidation:
         post = create_good_post()
         with pytest.raises(KeyError) as excinfo:
             PostValidator.validate_references(post, storage_provider)
-        expected_message = 'app_user (oid={0}) does not exist'.format(post.author_oid)
+        expected_message = 'app_user (oid={}) does not exist'.format(post.author_oid)
         assert expected_message in str(excinfo.value)

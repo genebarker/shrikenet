@@ -4,7 +4,7 @@ from shrike.entities.storage_provider import StorageProvider
 
 class PostgreSQLAdapter(StorageProvider):
 
-    VERSION_PREFIX = "PostgreSQL"
+    VERSION_PREFIX = 'PostgreSQL'
 
     def __init__(self, db_name, db_user, db_password):
         self.connection = None

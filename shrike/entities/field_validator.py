@@ -18,9 +18,9 @@ class FieldValidator:
     @staticmethod
     def validate_oid(oid, field_name='oid'):
         if oid is None:
-            raise ValueError('{0} must be provided'.format(field_name))
+            raise ValueError('{} must be provided'.format(field_name))
         if not isinstance(oid, int) or oid < 0:
-            raise ValueError('{0} must be a positive integer'.format(field_name))
+            raise ValueError('{} must be a positive integer'.format(field_name))
         return oid
 
     @staticmethod
@@ -39,15 +39,15 @@ class FieldValidator:
     def validate_string(field_value, field_name, min_length, max_length,
                         regex_pattern=None, pattern_hint=None):
         if field_value is None or field_value == '':
-            raise ValueError('{0} must be provided'.format(field_name))
+            raise ValueError('{} must be provided'.format(field_name))
         if len(field_value) < min_length or len(field_value) > max_length:
             raise ValueError('{0} must be between {1} and {2} characters long'
                              .format(field_name, min_length, max_length))
         if field_value.startswith(' '):
-            raise ValueError('{0} must not have leading spaces'
+            raise ValueError('{} must not have leading spaces'
                              .format(field_name))
         if field_value.endswith(' '):
-            raise ValueError('{0} must not have trailing spaces'
+            raise ValueError('{} must not have trailing spaces'
                              .format(field_name))
         if regex_pattern is not None:
             regex = re.compile(regex_pattern)
@@ -91,7 +91,7 @@ class FieldValidator:
     @staticmethod
     def validate_instant(instant, field_name='instant'):
         if instant is None:
-            raise ValueError('{0} must be provided'.format(field_name))
+            raise ValueError('{} must be provided'.format(field_name))
         if not isinstance(instant, datetime) or instant.tzinfo is None:
-            raise ValueError('{0} must be datetime object with timezone'.format(field_name))
+            raise ValueError('{} must be datetime object with timezone'.format(field_name))
         return instant

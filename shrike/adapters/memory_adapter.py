@@ -5,8 +5,8 @@ from shrike.entities.storage_provider import StorageProvider
 
 class MemoryAdapter(StorageProvider):
 
-    VERSION_PREFIX = "MemoryStore"
-    VERSION_NUMBER = "1.0"
+    VERSION_PREFIX = 'MemoryStore'
+    VERSION_NUMBER = '1.0'
 
     def __init__(self):
         self.app_user = {}
@@ -28,7 +28,7 @@ class MemoryAdapter(StorageProvider):
     # restrict access to attributes when closed
     def __getattribute__(self, name):
         if (name not in ('open', 'is_open') and not self.is_open):
-            error = '{0} is not available since the connection is closed'.format(name)
+            error = '{} is not available since the connection is closed'.format(name)
             raise Exception(error)
         return object.__getattribute__(self, name)
 
@@ -49,7 +49,7 @@ class MemoryAdapter(StorageProvider):
         self.restore_tables()
 
     def get_version(self):
-        return ("{0} {1} - a lightweight in-memory database for unit testing"
+        return ('{0} {1} - a lightweight in-memory database for unit testing'
                 .format(self.VERSION_PREFIX, self.VERSION_NUMBER))
         
     def get_next_app_user_oid(self):
