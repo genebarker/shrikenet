@@ -1,7 +1,10 @@
+from datetime import datetime, timezone
+
 import pytest
 
 from shrike.adapters.memory_adapter import MemoryAdapter
 from shrike.entities.app_user import AppUser
+from shrike.entities.post import Post
 from shrike.entities.storage_provider import StorageProvider
 
 class TestMemoryAdapter:
@@ -107,14 +110,14 @@ class TestMemoryAdapter:
         storage_provider.add_app_user(app_user)
         return app_user
 
+    def test_get_app_user_by_oid_unknown_raises(self, storage_provider):
+        with pytest.raises(KeyError, match='app_user .oid=12345. does not exist'):
+            storage_provider.get_app_user_by_oid('12345')
+
     def test_get_app_user_by_oid_gets_record(self, storage_provider):
         original_user = self.add_test_app_user('getAppUserByOIDGETS', storage_provider)
         stored_user = storage_provider.get_app_user_by_oid(original_user.oid)
         assert stored_user == original_user
-
-    def test_get_app_user_by_oid_unknown_raises(self, storage_provider):
-        with pytest.raises(KeyError, match='app_user .oid=12345. does not exist'):
-            storage_provider.get_app_user_by_oid('12345')
 
     def test_get_app_user_returns_a_copy(self, storage_provider):
         self.add_test_app_user('getAppUserRETURNS', storage_provider)
@@ -176,5 +179,39 @@ class TestMemoryAdapter:
         self.add_test_app_user('rollbackAppUserWORKS', storage_provider)
         storage_provider.rollback()
         assert not storage_provider.exists_app_username('rollbackAppUserWORKS')
+
+    #endregion
+
+
+    #region - test app_user methods
+
+    def test_get_post_by_oid_unknown_raises(self, storage_provider):
+        with pytest.raises(KeyError, match='post .oid=12345. does not exist'):
+            storage_provider.get_post_by_oid('12345')
+
+    def test_get_post_by_oid_gets_record(self, storage_provider):
+        author = self.add_test_app_user('getPostByOIDGETS', storage_provider)
+        original_post = self.add_test_post(author, storage_provider)
+        stored_post = storage_provider.get_post_by_oid(original_post.oid)
+        assert stored_post == original_post
+
+    def add_test_post(self, author, storage_provider):
+        title = author.name + "'s Post"
+        body = 'My name is ' + author.name + '.'
+        post = Post(title, body)
+        post.author_oid = author.oid
+        post.created_time = datetime.now(timezone.utc)
+        post.oid = storage_provider.get_next_post_oid()
+        storage_provider.add_post(post)
+        return post
+
+    def test_get_post_returns_a_copy(self, storage_provider):
+        author = self.add_test_app_user('getPostRETURNS', storage_provider)
+        original_post = self.add_test_post(author, storage_provider)
+        copied_post = storage_provider.get_post_by_oid(original_post.oid)
+        copied_post.title = 'Different'
+        stored_post = storage_provider.get_post_by_oid(original_post.oid)
+        assert stored_post != copied_post
+        
 
     #endregion

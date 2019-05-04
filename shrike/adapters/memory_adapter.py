@@ -11,6 +11,7 @@ class MemoryAdapter(StorageProvider):
     def __init__(self):
         self.app_user = {}
         self.app_user_next_oid = 1
+        self.post = {}
         self.post_next_oid = 1
         self.is_open = False
 
@@ -95,3 +96,13 @@ class MemoryAdapter(StorageProvider):
     
     def exists_app_username(self, username):
         return self._get_app_user_oid_for_username(username) is not None
+
+    def get_post_by_oid(self, oid):
+        if oid not in self.post:
+            message = 'post (oid={}) does not exist'.format(oid)
+            raise KeyError(message)
+        post = self.post[oid]
+        return copy.copy(post)
+
+    def add_post(self, post):
+        self.post[post.oid] = post
