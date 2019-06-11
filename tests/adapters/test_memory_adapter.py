@@ -21,17 +21,6 @@ class TestMemoryAdapter:
         yield provider
         provider.close()
 
-    @pytest.fixture
-    def app_user(self, storage_provider):
-        username = 'mawesome'
-        name = 'Mr. Awesome'
-        password_hash = 'xxYYYzzzz'
-        app_user = AppUser(username, name, password_hash)
-        oid = storage_provider.get_next_app_user_oid()
-        app_user.oid = oid
-        storage_provider.add_app_user(app_user)
-        return app_user
-
     #region - test general properties
 
     def test_is_a_storage_provider(self, storage_provider):
@@ -103,6 +92,17 @@ class TestMemoryAdapter:
 
 
     #region - test app_user methods
+
+    @pytest.fixture
+    def app_user(self, storage_provider):
+        username = 'mawesome'
+        name = 'Mr. Awesome'
+        password_hash = 'xxYYYzzzz'
+        app_user = AppUser(username, name, password_hash)
+        oid = storage_provider.get_next_app_user_oid()
+        app_user.oid = oid
+        storage_provider.add_app_user(app_user)
+        return app_user
 
     def test_get_app_user_by_username_unknown_raises(self, storage_provider):
         with pytest.raises(KeyError, match='app_user .username=xyz. does not exist'):
@@ -180,33 +180,43 @@ class TestMemoryAdapter:
 
     #region - test post methods
 
-    def test_get_post_by_oid_unknown_raises(self, storage_provider):
-        with pytest.raises(KeyError, match='post .oid=12345. does not exist'):
-            storage_provider.get_post_by_oid('12345')
-
-    def test_get_post_by_oid_gets_record(self, app_user, storage_provider):
-        author = app_user
-        original_post = self.add_test_post(author, storage_provider)
-        stored_post = storage_provider.get_post_by_oid(original_post.oid)
-        assert stored_post == original_post
-
-    def add_test_post(self, author, storage_provider):
-        title = author.name + "'s Post"
-        body = 'My name is ' + author.name + '.'
+    @pytest.fixture
+    def post(self, app_user, storage_provider):
+        title = 'Post Title'
+        body = 'This is the body.'
         post = Post(title, body)
-        post.author_oid = author.oid
+        post.author_oid = app_user.oid
         post.created_time = datetime.now(timezone.utc)
         post.oid = storage_provider.get_next_post_oid()
         storage_provider.add_post(post)
         return post
 
-    def test_get_post_returns_a_copy(self, app_user, storage_provider):
-        author = app_user
-        original_post = self.add_test_post(author, storage_provider)
-        copied_post = storage_provider.get_post_by_oid(original_post.oid)
+    def test_get_post_by_oid_unknown_raises(self, storage_provider):
+        with pytest.raises(KeyError, match='post .oid=12345. does not exist'):
+            storage_provider.get_post_by_oid('12345')
+
+    def test_get_post_by_oid_gets_record(self, post, storage_provider):
+        stored_post = storage_provider.get_post_by_oid(post.oid)
+        assert stored_post == post
+
+    def test_get_post_returns_a_copy(self, post, storage_provider):
+        copied_post = storage_provider.get_post_by_oid(post.oid)
         copied_post.title = 'Different'
-        stored_post = storage_provider.get_post_by_oid(original_post.oid)
+        stored_post = storage_provider.get_post_by_oid(post.oid)
         assert stored_post != copied_post
         
+    def test_add_post_adds_record(self, post, storage_provider):
+        stored_post = storage_provider.get_post_by_oid(post.oid)
+        assert stored_post == post
+
+    def test_add_post_adds_a_copy(self, post, storage_provider):
+        post.title = 'Different'
+        stored_post = storage_provider.get_post_by_oid(post.oid)
+        assert stored_post != post
+
+    def test_add_post_with_duplicate_oid_raises(self, post, storage_provider):
+        new_post = copy.copy(post)
+        with pytest.raises(ValueError, match='post .oid={0}. already exists'.format(new_post.oid)):
+            storage_provider.add_post(new_post)
 
     #endregion

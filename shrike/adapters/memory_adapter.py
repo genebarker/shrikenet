@@ -105,4 +105,7 @@ class MemoryAdapter(StorageProvider):
         return copy.copy(post)
 
     def add_post(self, post):
-        self.post[post.oid] = post
+        if post.oid in self.post:
+            message = 'post (oid={}) already exists'.format(post.oid)
+            raise ValueError(message)
+        self.post[post.oid] = copy.copy(post)
