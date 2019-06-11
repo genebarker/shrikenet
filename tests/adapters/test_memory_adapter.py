@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime, timezone
 
 import pytest
@@ -13,12 +14,23 @@ class TestMemoryAdapter:
     def get_storage_provider():
         return MemoryAdapter()
 
-    @pytest.fixture(scope='class')
+    @pytest.fixture
     def storage_provider(self):
         provider = self.get_storage_provider()
         provider.open()
         yield provider
         provider.close()
+
+    @pytest.fixture
+    def app_user(self, storage_provider):
+        username = 'mawesome'
+        name = 'Mr. Awesome'
+        password_hash = 'xxYYYzzzz'
+        app_user = AppUser(username, name, password_hash)
+        oid = storage_provider.get_next_app_user_oid()
+        app_user.oid = oid
+        storage_provider.add_app_user(app_user)
+        return app_user
 
     #region - test general properties
 
@@ -96,101 +108,84 @@ class TestMemoryAdapter:
         with pytest.raises(KeyError, match='app_user .username=xyz. does not exist'):
             storage_provider.get_app_user_by_username('xyz')
 
-    def test_get_app_user_by_username_gets_record(self, storage_provider):
-        original_user = self.add_test_app_user('getAppUserGETS', storage_provider)
-        stored_user = storage_provider.get_app_user_by_username('getAppUserGETS')
+    def test_get_app_user_by_username_gets_record(self, app_user, storage_provider):
+        original_user = app_user
+        stored_user = storage_provider.get_app_user_by_username(original_user.username)
         assert stored_user == original_user
-
-    def add_test_app_user(self, username, storage_provider):
-        name = 'The ' + username
-        password_hash = 'xxx' + username + 'YYY'
-        app_user = AppUser(username, name, password_hash)
-        oid = storage_provider.get_next_app_user_oid()
-        app_user.oid = oid
-        storage_provider.add_app_user(app_user)
-        return app_user
 
     def test_get_app_user_by_oid_unknown_raises(self, storage_provider):
         with pytest.raises(KeyError, match='app_user .oid=12345. does not exist'):
             storage_provider.get_app_user_by_oid('12345')
 
-    def test_get_app_user_by_oid_gets_record(self, storage_provider):
-        original_user = self.add_test_app_user('getAppUserByOIDGETS', storage_provider)
-        stored_user = storage_provider.get_app_user_by_oid(original_user.oid)
-        assert stored_user == original_user
+    def test_get_app_user_by_oid_gets_record(self, app_user, storage_provider):
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
+        assert stored_user == app_user
 
-    def test_get_app_user_returns_a_copy(self, storage_provider):
-        self.add_test_app_user('getAppUserRETURNS', storage_provider)
-        copied_user = storage_provider.get_app_user_by_username('getAppUserRETURNS')
+    def test_get_app_user_returns_a_copy(self, app_user, storage_provider):
+        copied_user = storage_provider.get_app_user_by_oid(app_user.oid)
         copied_user.name = 'Different'
-        stored_user = storage_provider.get_app_user_by_username('getAppUserRETURNS')
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
         assert stored_user != copied_user
 
-    def test_add_app_user_adds_record(self, storage_provider):
-        original_user = self.add_test_app_user('addAppUserADDS', storage_provider)
-        stored_user = storage_provider.get_app_user_by_username('addAppUserADDS')
-        assert stored_user == original_user
+    def test_add_app_user_adds_record(self, app_user, storage_provider):
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
+        assert stored_user == app_user
 
-    def test_add_app_user_adds_a_copy(self, storage_provider):
-        some_user = self.add_test_app_user('addAppUserAddsCOPY', storage_provider)
-        some_user.name = 'Different'
-        stored_user = storage_provider.get_app_user_by_username('addAppUserAddsCOPY')
-        assert stored_user != some_user
+    def test_add_app_user_adds_a_copy(self, app_user, storage_provider):
+        app_user.name = 'Different'
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
+        assert stored_user != app_user
 
-    def test_add_app_user_with_duplicate_username_raises(self, storage_provider):
-        some_user = self.add_test_app_user('addAppUserDupeUsername', storage_provider)
-        with pytest.raises(ValueError, match='app_user .username=addAppUserDupeUsername. already exists'):
-            storage_provider.add_app_user(some_user)
+    def test_add_app_user_with_duplicate_username_raises(self, app_user, storage_provider):
+        new_user = copy.copy(app_user)
+        new_user.oid = 100
+        with pytest.raises(ValueError, match='app_user .username={}. already exists'.format(app_user.username)):
+            storage_provider.add_app_user(new_user)
 
-    def test_add_app_user_with_duplicate_oid_raises(self, storage_provider):
-        some_user = self.add_test_app_user('addAppUserDupeOID', storage_provider)
-        with pytest.raises(ValueError, match='app_user .oid={0}. already exists'.format(some_user.oid)):
-            some_user.username = 'Different'
-            storage_provider.add_app_user(some_user)
+    def test_add_app_user_with_duplicate_oid_raises(self, app_user, storage_provider):
+        new_user = copy.copy(app_user)
+        new_user.username = 'Different'
+        with pytest.raises(ValueError, match='app_user .oid={0}. already exists'.format(new_user.oid)):
+            storage_provider.add_app_user(new_user)
 
-    def test_update_app_user_updates_record(self, storage_provider):
-        some_user = self.add_test_app_user('updateAppUserUpdates', storage_provider)
-        some_user.name = 'Differnt'
-        storage_provider.update_app_user(some_user)
-        stored_user = storage_provider.get_app_user_by_username('updateAppUserUpdates')
-        assert stored_user == some_user
+    def test_update_app_user_updates_record(self, app_user, storage_provider):
+        app_user.name = 'Different'
+        storage_provider.update_app_user(app_user)
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
+        assert stored_user == app_user
 
-    def test_update_app_user_updates_a_copy(self, storage_provider):
-        some_user = self.add_test_app_user('updateAppUserUpdatesCopy', storage_provider)
-        some_user.name = 'Different'
-        storage_provider.update_app_user(some_user)
-        some_user.name = 'Very Different'
-        stored_user = storage_provider.get_app_user_by_username('updateAppUserUpdatesCopy')
-        assert stored_user != some_user
+    def test_update_app_user_updates_a_copy(self, app_user, storage_provider):
+        app_user.name = 'Different'
+        storage_provider.update_app_user(app_user)
+        app_user.name = 'Very Different'
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
+        assert stored_user != app_user
 
-    def test_exists_app_user_true_for_known(self, storage_provider):
-        self.add_test_app_user('existsAppUserTRUE', storage_provider)
-        assert storage_provider.exists_app_username('existsAppUserTRUE')
+    def test_exists_app_user_true_for_known(self, app_user, storage_provider):
+        assert storage_provider.exists_app_username(app_user.username)
 
     def test_exists_app_user_false_for_unknown(self, storage_provider):
-        assert storage_provider.exists_app_username('existsAppUserUNKNOWN') is False
+        assert storage_provider.exists_app_username('UNKNOWN') is False
 
-    def test_add_app_user_record_exists_after_commit(self, storage_provider):
-        self.add_test_app_user('commitAppUserWORKS', storage_provider)
+    def test_add_app_user_record_exists_after_commit(self, app_user, storage_provider):
         storage_provider.commit()
-        assert storage_provider.exists_app_username('commitAppUserWORKS')
+        assert storage_provider.exists_app_username(app_user.username)
 
-    def test_add_app_user_record_gone_after_rollback(self, storage_provider):
-        self.add_test_app_user('rollbackAppUserWORKS', storage_provider)
+    def test_add_app_user_record_gone_after_rollback(self, app_user, storage_provider):
         storage_provider.rollback()
-        assert not storage_provider.exists_app_username('rollbackAppUserWORKS')
+        assert not storage_provider.exists_app_username(app_user.username)
 
     #endregion
 
 
-    #region - test app_user methods
+    #region - test post methods
 
     def test_get_post_by_oid_unknown_raises(self, storage_provider):
         with pytest.raises(KeyError, match='post .oid=12345. does not exist'):
             storage_provider.get_post_by_oid('12345')
 
-    def test_get_post_by_oid_gets_record(self, storage_provider):
-        author = self.add_test_app_user('getPostByOIDGETS', storage_provider)
+    def test_get_post_by_oid_gets_record(self, app_user, storage_provider):
+        author = app_user
         original_post = self.add_test_post(author, storage_provider)
         stored_post = storage_provider.get_post_by_oid(original_post.oid)
         assert stored_post == original_post
@@ -205,8 +200,8 @@ class TestMemoryAdapter:
         storage_provider.add_post(post)
         return post
 
-    def test_get_post_returns_a_copy(self, storage_provider):
-        author = self.add_test_app_user('getPostRETURNS', storage_provider)
+    def test_get_post_returns_a_copy(self, app_user, storage_provider):
+        author = app_user
         original_post = self.add_test_post(author, storage_provider)
         copied_post = storage_provider.get_post_by_oid(original_post.oid)
         copied_post.title = 'Different'
