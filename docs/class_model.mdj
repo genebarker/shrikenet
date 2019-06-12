@@ -622,13 +622,30 @@
 											"height": 13,
 											"text": "+add_post(post)",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFrTPnewa06hp4=",
+											"_parent": {
+												"$ref": "AAAAAAFpdIqSbZjj39w="
+											},
+											"model": {
+												"$ref": "AAAAAAFrTPnenK03IPw="
+											},
+											"font": "Arial;13;0",
+											"left": 301,
+											"top": 311,
+											"width": 239.56689453125,
+											"height": 13,
+											"text": "+update_post(post)",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 296,
 									"top": 96,
 									"width": 249.56689453125,
-									"height": 218
+									"height": 233
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -668,7 +685,7 @@
 							"left": 296,
 							"top": 48,
 							"width": 249.56689453125,
-							"height": 267,
+							"height": 282,
 							"stereotypeDisplay": "icon",
 							"nameCompartment": {
 								"$ref": "AAAAAAFpdIqSbZjdWHw="
@@ -945,7 +962,7 @@
 								"$ref": "AAAAAAFpdKLTgpkJ4lY="
 							},
 							"lineStyle": 1,
-							"points": "205:131;408.783447265625:67.345115234375",
+							"points": "205:132;408.783447265625:67.704044921875",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFpdKNL1pk0P/4="
@@ -1555,7 +1572,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 495,
-									"top": 149,
+									"top": 150,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -1575,8 +1592,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 485,
-									"top": 160,
+									"left": 484,
+									"top": 161,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -1597,7 +1614,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 516,
-									"top": 128,
+									"top": 129,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -1615,7 +1632,7 @@
 								"$ref": "AAAAAAFpnaZvULkSvRs="
 							},
 							"lineStyle": 1,
-							"points": "583:219;430.0132450331126:71",
+							"points": "583:222;429.6923076923077:71",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFpnaoLhrmJUlY="
@@ -2194,7 +2211,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 303,
-									"top": 110,
+									"top": 111,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -2215,7 +2232,7 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"left": 295,
-									"top": 97,
+									"top": 98,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -2236,7 +2253,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 318,
-									"top": 135,
+									"top": 136,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -2254,7 +2271,7 @@
 								"$ref": "AAAAAAFpscj0SLoQUEo="
 							},
 							"lineStyle": 1,
-							"points": "214:188;408.783447265625:70.30628515625",
+							"points": "214:190;408.783447265625:70.66521484375",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFpsclydLo7k5Q="
@@ -3127,6 +3144,25 @@
 									"_id": "AAAAAAFrSBQBJAyFTb8=",
 									"_parent": {
 										"$ref": "AAAAAAFrSBO+xQx+OGU="
+									},
+									"name": "post",
+									"type": ""
+								}
+							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFrTPnenK03IPw=",
+							"_parent": {
+								"$ref": "AAAAAAFpdIqSbJjaSA0="
+							},
+							"name": "update_post",
+							"parameters": [
+								{
+									"_type": "UMLParameter",
+									"_id": "AAAAAAFrTPpbsq0+jEg=",
+									"_parent": {
+										"$ref": "AAAAAAFrTPnenK03IPw="
 									},
 									"name": "post",
 									"type": ""

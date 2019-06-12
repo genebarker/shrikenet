@@ -219,4 +219,27 @@ class TestMemoryAdapter:
         with pytest.raises(ValueError, match='post .oid={0}. already exists'.format(new_post.oid)):
             storage_provider.add_post(new_post)
 
+    def test_update_post_updates_record(self, post, storage_provider):
+        post.title = 'Different'
+        storage_provider.update_post(post)
+        stored_post = storage_provider.get_post_by_oid(post.oid)
+        assert stored_post == post
+
+    def test_update_post_updates_a_copy(self, post, storage_provider):
+        post.title = 'Different'
+        storage_provider.update_post(post)
+        post.title = 'Very Different'
+        stored_post = storage_provider.get_post_by_oid(post.oid)
+        assert stored_post != post
+
+    def test_add_post_record_exists_after_commit(self, post, storage_provider):
+        storage_provider.commit()
+        stored_post = storage_provider.get_post_by_oid(post.oid)
+        assert stored_post == post
+
+    def test_add_post_record_gone_after_rollback(self, post, storage_provider):
+        storage_provider.rollback()
+        with pytest.raises(KeyError):
+            storage_provider.get_post_by_oid(post.oid)
+
     #endregion

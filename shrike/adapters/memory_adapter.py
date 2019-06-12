@@ -17,14 +17,19 @@ class MemoryAdapter(StorageProvider):
 
     def save_tables(self):
         self.saved_app_user = {}
+        self.saved_post = {}
         for key, value in self.app_user.items():
             self.saved_app_user[key] = copy.copy(value)
+        for key, value in self.post.items():
+            self.saved_post[key] = copy.copy(value)
 
     def restore_tables(self):
         self.app_user = {}
+        self.post = {}
         for key, value in self.saved_app_user.items():
             self.app_user[key] = copy.copy(value)
-
+        for key, value in self.saved_post.items():
+            self.post[key] = copy.copy(value)
 
     # restrict access to attributes when closed
     def __getattribute__(self, name):
@@ -108,4 +113,7 @@ class MemoryAdapter(StorageProvider):
         if post.oid in self.post:
             message = 'post (oid={}) already exists'.format(post.oid)
             raise ValueError(message)
+        self.post[post.oid] = copy.copy(post)
+
+    def update_post(self, post):
         self.post[post.oid] = copy.copy(post)
