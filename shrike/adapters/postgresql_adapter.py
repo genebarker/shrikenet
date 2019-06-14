@@ -3,6 +3,7 @@ import os
 import psycopg2 as driver
 
 from shrike.entities.app_user import AppUser
+from shrike.entities.post import Post
 from shrike.entities.storage_provider import StorageProvider
 
 class PostgreSQLAdapter(StorageProvider):
@@ -53,7 +54,7 @@ class PostgreSQLAdapter(StorageProvider):
         self._execute_sql_file(self.RESET_FILENAME)
 
     def get_version(self):
-        sql = "SELECT version();"
+        sql = "SELECT version()"
         error = "can not get version information, reason: "
         return self._execute_select_value(sql, error)
 
@@ -71,12 +72,12 @@ class PostgreSQLAdapter(StorageProvider):
             return value
 
     def get_next_app_user_oid(self):
-        sql = "SELECT nextval('app_user_seq');"
+        sql = "SELECT nextval('app_user_seq')"
         error = "can not get next app_user oid, reason: "
         return self._execute_select_value(sql, error)
 
     def get_next_post_oid(self):
-        sql = "SELECT nextval('post_seq');"
+        sql = "SELECT nextval('post_seq')"
         error = "can not get next post oid, reason: "
         return self._execute_select_value(sql, error)
 
@@ -141,3 +142,32 @@ class PostgreSQLAdapter(StorageProvider):
         parms = (username,)
         error = 'can not check if app_user exists (username={}), reason: '.format(username)
         return self._execute_select_value(sql, error, parms) == 1
+
+    def get_post_by_oid(self, oid):
+        sql = "SELECT * FROM post WHERE oid = %s"
+        parms = (oid,)
+        error = 'can not get post (oid={}), reason: '.format(oid)
+        row = self._execute_select_row(sql, parms, error)
+        return self._create_post_from_row(row)
+
+    def _create_post_from_row(self, row):
+        post = Post(
+            oid=row[0],
+            title=row[1],
+            body=row[2],
+            author_oid=row[3],
+            created_time=row[4],
+            )
+        return post
+
+    def add_post(self, post):
+        sql = "INSERT INTO post (oid, title, body, author_oid, created_time) VALUES(%s, %s, %s, %s, %s)"
+        parms = (post.oid, post.title, post.body, post.author_oid, post.created_time)
+        error = 'can not add post (oid={}, title={}), reason: '.format(post.oid, post.title)
+        self._execute_process_sql(sql, parms, error)
+
+    def update_post(self, post):
+        sql = "UPDATE post SET title = %s, body = %s, author_oid = %s, created_time = %s WHERE oid = %s"
+        parms = (post.title, post.body, post.author_oid, post.created_time, post.oid)
+        error = 'can not update post (oid={}), reason: '.format(post.oid)
+        self._execute_process_sql(sql, parms, error)

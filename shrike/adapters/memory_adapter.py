@@ -71,13 +71,13 @@ class MemoryAdapter(StorageProvider):
     def get_app_user_by_username(self, username):
         oid = self._get_app_user_oid_for_username(username)
         if oid is None:
-            message = 'can not get app_user (username={}), reason: does not exist'.format(username)
+            message = 'can not get app_user (username={}), reason: record does not exist'.format(username)
             raise KeyError(message)
         return self.get_app_user_by_oid(oid)
 
     def get_app_user_by_oid(self, oid):
         if oid not in self.app_user:
-            message = 'can not get app_user (oid={}), reason: does not exist'.format(oid)
+            message = 'can not get app_user (oid={}), reason: record does not exist'.format(oid)
             raise KeyError(message)
         app_user = self.app_user[oid]
         return copy.copy(app_user)
@@ -90,10 +90,10 @@ class MemoryAdapter(StorageProvider):
     def add_app_user(self, app_user):
         error = 'can not add app_user (oid={}, username={}), reason: '.format(app_user.oid, app_user.username)
         if self.exists_app_username(app_user.username):
-            reason = 'username already exists'
+            reason = 'record with this username already exists'
             raise ValueError(error + reason)
         if app_user.oid in self.app_user:
-            reason = 'oid already exists'
+            reason = 'record with this oid already exists'
             raise ValueError(error + reason)
         self.app_user[app_user.oid] = copy.copy(app_user)
 
@@ -105,14 +105,14 @@ class MemoryAdapter(StorageProvider):
 
     def get_post_by_oid(self, oid):
         if oid not in self.post:
-            message = 'post (oid={}) does not exist'.format(oid)
+            message = 'can not get post (oid={}), reason: record does not exist'.format(oid)
             raise KeyError(message)
         post = self.post[oid]
         return copy.copy(post)
 
     def add_post(self, post):
         if post.oid in self.post:
-            message = 'post (oid={}) already exists'.format(post.oid)
+            message = 'can not add post (oid={}, title={}), reason: record with this oid already exists'.format(post.oid, post.title)
             raise ValueError(message)
         self.post[post.oid] = copy.copy(post)
 
