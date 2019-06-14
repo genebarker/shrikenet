@@ -104,7 +104,7 @@ class TestMemoryAdapter:
         return app_user
 
     def test_get_app_user_by_username_unknown_raises(self, storage_provider):
-        with pytest.raises(KeyError, match='app_user .username=xyz. does not exist'):
+        with pytest.raises(Exception, match='can not get app_user .username=xyz., reason: '):
             storage_provider.get_app_user_by_username('xyz')
 
     def test_get_app_user_by_username_gets_record(self, app_user, storage_provider):
@@ -113,7 +113,7 @@ class TestMemoryAdapter:
         assert stored_user == original_user
 
     def test_get_app_user_by_oid_unknown_raises(self, storage_provider):
-        with pytest.raises(KeyError, match='app_user .oid=12345. does not exist'):
+        with pytest.raises(Exception, match='can not get app_user .oid=12345., reason: '):
             storage_provider.get_app_user_by_oid('12345')
 
     def test_get_app_user_by_oid_gets_record(self, app_user, storage_provider):
@@ -138,13 +138,13 @@ class TestMemoryAdapter:
     def test_add_app_user_with_duplicate_username_raises(self, app_user, storage_provider):
         new_user = copy.copy(app_user)
         new_user.oid = 100
-        with pytest.raises(ValueError, match='app_user .username={}. already exists'.format(app_user.username)):
+        with pytest.raises(Exception, match='can not add app_user .oid={}, username={}., reason: '.format(new_user.oid, app_user.username)):
             storage_provider.add_app_user(new_user)
 
     def test_add_app_user_with_duplicate_oid_raises(self, app_user, storage_provider):
         new_user = copy.copy(app_user)
         new_user.username = 'Different'
-        with pytest.raises(ValueError, match='app_user .oid={0}. already exists'.format(new_user.oid)):
+        with pytest.raises(Exception, match='can not add app_user .oid={}, username={}., reason: '.format(app_user.oid, new_user.username)):
             storage_provider.add_app_user(new_user)
 
     def test_update_app_user_updates_record(self, app_user, storage_provider):
@@ -177,68 +177,68 @@ class TestMemoryAdapter:
     #endregion
 
 
-    #region - test post methods
+    # #region - test post methods
 
-    @pytest.fixture
-    def post(self, app_user, storage_provider):
-        title = 'Post Title'
-        body = 'This is the body.'
-        post = Post(title, body)
-        post.author_oid = app_user.oid
-        post.created_time = datetime.now(timezone.utc)
-        post.oid = storage_provider.get_next_post_oid()
-        storage_provider.add_post(post)
-        return post
+    # @pytest.fixture
+    # def post(self, app_user, storage_provider):
+    #     title = 'Post Title'
+    #     body = 'This is the body.'
+    #     post = Post(title, body)
+    #     post.author_oid = app_user.oid
+    #     post.created_time = datetime.now(timezone.utc)
+    #     post.oid = storage_provider.get_next_post_oid()
+    #     storage_provider.add_post(post)
+    #     return post
 
-    def test_get_post_by_oid_unknown_raises(self, storage_provider):
-        with pytest.raises(KeyError, match='post .oid=12345. does not exist'):
-            storage_provider.get_post_by_oid('12345')
+    # def test_get_post_by_oid_unknown_raises(self, storage_provider):
+    #     with pytest.raises(KeyError, match='post .oid=12345. does not exist'):
+    #         storage_provider.get_post_by_oid('12345')
 
-    def test_get_post_by_oid_gets_record(self, post, storage_provider):
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post == post
+    # def test_get_post_by_oid_gets_record(self, post, storage_provider):
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post == post
 
-    def test_get_post_returns_a_copy(self, post, storage_provider):
-        copied_post = storage_provider.get_post_by_oid(post.oid)
-        copied_post.title = 'Different'
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post != copied_post
+    # def test_get_post_returns_a_copy(self, post, storage_provider):
+    #     copied_post = storage_provider.get_post_by_oid(post.oid)
+    #     copied_post.title = 'Different'
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post != copied_post
         
-    def test_add_post_adds_record(self, post, storage_provider):
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post == post
+    # def test_add_post_adds_record(self, post, storage_provider):
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post == post
 
-    def test_add_post_adds_a_copy(self, post, storage_provider):
-        post.title = 'Different'
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post != post
+    # def test_add_post_adds_a_copy(self, post, storage_provider):
+    #     post.title = 'Different'
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post != post
 
-    def test_add_post_with_duplicate_oid_raises(self, post, storage_provider):
-        new_post = copy.copy(post)
-        with pytest.raises(ValueError, match='post .oid={0}. already exists'.format(new_post.oid)):
-            storage_provider.add_post(new_post)
+    # def test_add_post_with_duplicate_oid_raises(self, post, storage_provider):
+    #     new_post = copy.copy(post)
+    #     with pytest.raises(ValueError, match='post .oid={0}. already exists'.format(new_post.oid)):
+    #         storage_provider.add_post(new_post)
 
-    def test_update_post_updates_record(self, post, storage_provider):
-        post.title = 'Different'
-        storage_provider.update_post(post)
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post == post
+    # def test_update_post_updates_record(self, post, storage_provider):
+    #     post.title = 'Different'
+    #     storage_provider.update_post(post)
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post == post
 
-    def test_update_post_updates_a_copy(self, post, storage_provider):
-        post.title = 'Different'
-        storage_provider.update_post(post)
-        post.title = 'Very Different'
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post != post
+    # def test_update_post_updates_a_copy(self, post, storage_provider):
+    #     post.title = 'Different'
+    #     storage_provider.update_post(post)
+    #     post.title = 'Very Different'
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post != post
 
-    def test_add_post_record_exists_after_commit(self, post, storage_provider):
-        storage_provider.commit()
-        stored_post = storage_provider.get_post_by_oid(post.oid)
-        assert stored_post == post
+    # def test_add_post_record_exists_after_commit(self, post, storage_provider):
+    #     storage_provider.commit()
+    #     stored_post = storage_provider.get_post_by_oid(post.oid)
+    #     assert stored_post == post
 
-    def test_add_post_record_gone_after_rollback(self, post, storage_provider):
-        storage_provider.rollback()
-        with pytest.raises(KeyError):
-            storage_provider.get_post_by_oid(post.oid)
+    # def test_add_post_record_gone_after_rollback(self, post, storage_provider):
+    #     storage_provider.rollback()
+    #     with pytest.raises(KeyError):
+    #         storage_provider.get_post_by_oid(post.oid)
 
-    #endregion
+    # #endregion

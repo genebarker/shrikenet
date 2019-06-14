@@ -71,13 +71,13 @@ class MemoryAdapter(StorageProvider):
     def get_app_user_by_username(self, username):
         oid = self._get_app_user_oid_for_username(username)
         if oid is None:
-            message = 'app_user (username={}) does not exist'.format(username)
+            message = 'can not get app_user (username={}), reason: does not exist'.format(username)
             raise KeyError(message)
         return self.get_app_user_by_oid(oid)
 
     def get_app_user_by_oid(self, oid):
         if oid not in self.app_user:
-            message = 'app_user (oid={}) does not exist'.format(oid)
+            message = 'can not get app_user (oid={}), reason: does not exist'.format(oid)
             raise KeyError(message)
         app_user = self.app_user[oid]
         return copy.copy(app_user)
@@ -88,12 +88,13 @@ class MemoryAdapter(StorageProvider):
         return None
 
     def add_app_user(self, app_user):
+        error = 'can not add app_user (oid={}, username={}), reason: '.format(app_user.oid, app_user.username)
         if self.exists_app_username(app_user.username):
-            message = 'app_user (username={}) already exists'.format(app_user.username)
-            raise ValueError(message)
+            reason = 'username already exists'
+            raise ValueError(error + reason)
         if app_user.oid in self.app_user:
-            message = 'app_user (oid={}) already exists'.format(app_user.oid)
-            raise ValueError(message)
+            reason = 'oid already exists'
+            raise ValueError(error + reason)
         self.app_user[app_user.oid] = copy.copy(app_user)
 
     def update_app_user(self, app_user):
