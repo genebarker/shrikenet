@@ -1,9 +1,13 @@
+import os
+
 import psycopg2 as driver
 
 from shrike.entities.storage_provider import StorageProvider
 
 class PostgreSQLAdapter(StorageProvider):
 
+    SCHEMA_FILENAME = 'postgresql_schema.sql'
+    RESET_FILENAME = 'postgresql_reset.sql'
     VERSION_PREFIX = 'PostgreSQL'
 
     def __init__(self, db_name, db_user, db_password):
@@ -27,6 +31,29 @@ class PostgreSQLAdapter(StorageProvider):
 
     def commit(self):
         self.connection.commit()
+
+    def rollback(self):
+        self.connection.rollback()
+
+    def initialize_database(self):
+        self.rollback()
+        self._execute_sql_file(self.SCHEMA_FILENAME)
+        self.commit()
+
+    def _execute_sql_file(self, filename):
+        file_path = self._get_sql_file_path(filename)
+        with self.connection.cursor() as cursor:
+            sql_file = open(file_path, 'r')
+            cursor.execute(sql_file.read())
+
+    def _get_sql_file_path(self, filename):
+        dir_path = os.path.dirname(__file__)
+        return os.path.join(dir_path, filename)
+
+    def reset_database_objects(self):
+        self.rollback()
+        self._execute_sql_file(self.RESET_FILENAME)
+        self.commit()
 
     def get_version(self):
         with self.connection.cursor() as cursor:
