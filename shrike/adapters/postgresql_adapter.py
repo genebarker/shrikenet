@@ -8,8 +8,8 @@ from shrike.entities.storage_provider import StorageProvider
 
 class PostgreSQLAdapter(StorageProvider):
 
-    SCHEMA_FILENAME = 'postgresql_schema.sql'
-    RESET_FILENAME = 'postgresql_reset.sql'
+    SCHEMA_FILENAME = 'pg_build_schema.sql'
+    RESET_FILENAME = 'pg_reset_objects.sql'
     VERSION_PREFIX = 'PostgreSQL'
 
     def __init__(self, db_name, db_user, db_password):
@@ -37,7 +37,7 @@ class PostgreSQLAdapter(StorageProvider):
     def rollback(self):
         self.connection.rollback()
 
-    def initialize_database(self):
+    def build_database_schema(self):
         self._execute_sql_file(self.SCHEMA_FILENAME)
 
     def _execute_sql_file(self, filename):

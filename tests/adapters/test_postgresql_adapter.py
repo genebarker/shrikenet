@@ -16,7 +16,7 @@ class TestPostgreSQLAdapter(TestMemoryAdapter):
         password = config['development']['db_password']
         postgresql_adapter = PostgreSQLAdapter(dbname, user, password)
         postgresql_adapter.open()
-        postgresql_adapter.initialize_database()
+        postgresql_adapter.build_database_schema()
         postgresql_adapter.commit()
         yield postgresql_adapter
         postgresql_adapter.close()
