@@ -8,12 +8,15 @@ class MemoryAdapter(StorageProvider):
     VERSION_PREFIX = 'MemoryStore'
     VERSION_NUMBER = '1.0'
 
-    def __init__(self):
+    def __init__(self, db_name=None, db_user=None, db_password=None):
+        self._build_schema()
+        self.is_open = False
+
+    def _build_schema(self):
         self.app_user = {}
         self.app_user_next_oid = 1
         self.post = {}
         self.post_next_oid = 1
-        self.is_open = False
 
     def save_tables(self):
         self.saved_app_user = {}
@@ -33,7 +36,7 @@ class MemoryAdapter(StorageProvider):
 
     # restrict access to attributes when closed
     def __getattribute__(self, name):
-        if (name not in ('open', 'is_open') and not self.is_open):
+        if (name not in ('open', 'is_open', '_build_schema') and not self.is_open):
             error = '{} is not available since the connection is closed'.format(name)
             raise Exception(error)
         return object.__getattribute__(self, name)
@@ -53,6 +56,9 @@ class MemoryAdapter(StorageProvider):
 
     def rollback(self):
         self.restore_tables()
+
+    def build_database_schema(self):
+        self._build_schema()
 
     def get_version(self):
         return ('{0} {1} - a lightweight in-memory database for unit testing'
