@@ -147,9 +147,9 @@ class PostgreSQLAdapter(StorageProvider):
         parms = (oid,)
         error = 'can not get post (oid={}), reason: '.format(oid)
         row = self._execute_select_row(sql, parms, error)
-        return self._create_post_from_row(row)
+        return self._create_deep_post_from_row(row)
 
-    def _create_post_from_row(self, row):
+    def _create_deep_post_from_row(self, row):
         post = Post(
             oid=row[0],
             title=row[1],
