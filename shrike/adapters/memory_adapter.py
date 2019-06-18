@@ -9,7 +9,7 @@ class MemoryAdapter(StorageProvider):
     VERSION_PREFIX = 'MemoryStore'
     VERSION_NUMBER = '1.0'
 
-    def __init__(self, db_name=None, db_user=None, db_password=None):
+    def __init__(self, db_config=None):
         self._build_schema()
         self.is_open = False
 

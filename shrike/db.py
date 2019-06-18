@@ -28,11 +28,12 @@ def get_services():
 def initialize_services():
     storage_module = importlib.import_module(current_app.config['STORAGE_PROVIDER_MODULE'])
     storage_class = getattr(storage_module, current_app.config['STORAGE_PROVIDER_CLASS'])
-    storage_provider = storage_class(
-        current_app.config['DB_NAME'],
-        current_app.config['DB_USER'],
-        current_app.config['DB_PASSWORD'],
-    )
+    db_config = {
+        'db_name': current_app.config['DB_NAME'],
+        'db_user': current_app.config['DB_USER'],
+        'db_password': current_app.config['DB_PASSWORD'],
+    }
+    storage_provider = storage_class(db_config)
     storage_provider.open()
     return Services(storage_provider)
 

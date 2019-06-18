@@ -3,6 +3,10 @@ from abc import ABC, abstractmethod
 class StorageProvider(ABC):
 
     @abstractmethod
+    def __init__(self, db_config):
+        pass
+
+    @abstractmethod
     def open(self):
         pass
 

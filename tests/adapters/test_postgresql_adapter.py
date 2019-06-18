@@ -11,10 +11,12 @@ class TestPostgreSQLAdapter(TestMemoryAdapter):
     def postgresql_adapter(self):
         config = ConfigParser()
         config.read('database.cfg')
-        dbname = config['development']['db_name']
-        user = config['development']['db_user']
-        password = config['development']['db_password']
-        postgresql_adapter = PostgreSQLAdapter(dbname, user, password)
+        db_config = {
+            'db_name': config['development']['db_name'],
+            'db_user': config['development']['db_user'],
+            'db_password': config['development']['db_password'],
+        }
+        postgresql_adapter = PostgreSQLAdapter(db_config)
         postgresql_adapter.open()
         postgresql_adapter.build_database_schema()
         postgresql_adapter.commit()

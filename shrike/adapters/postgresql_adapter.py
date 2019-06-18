@@ -12,11 +12,11 @@ class PostgreSQLAdapter(StorageProvider):
     RESET_FILENAME = 'pg_reset_objects.sql'
     VERSION_PREFIX = 'PostgreSQL'
 
-    def __init__(self, db_name, db_user, db_password):
+    def __init__(self, db_config):
         self.connection = None
-        self.__db_name = db_name
-        self.__db_user = db_user
-        self.__db_password = db_password
+        self.__db_name = db_config['db_name']
+        self.__db_user = db_config['db_user']
+        self.__db_password = db_config['db_password']
 
     def open(self):
         if self.connection is not None:
