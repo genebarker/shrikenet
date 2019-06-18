@@ -1,5 +1,6 @@
 import copy
 
+from shrike.entities.post import DeepPost
 from shrike.entities.storage_provider import StorageProvider
 
 
@@ -114,7 +115,8 @@ class MemoryAdapter(StorageProvider):
             message = 'can not get post (oid={}), reason: record does not exist'.format(oid)
             raise KeyError(message)
         post = self.post[oid]
-        return copy.copy(post)
+        author = self.app_user[post.author_oid]
+        return DeepPost(post, author.username)
 
     def add_post(self, post):
         if post.oid in self.post:

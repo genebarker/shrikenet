@@ -3,7 +3,7 @@ import os
 import psycopg2 as driver
 
 from shrike.entities.app_user import AppUser
-from shrike.entities.post import Post
+from shrike.entities.post import DeepPost, Post
 from shrike.entities.storage_provider import StorageProvider
 
 class PostgreSQLAdapter(StorageProvider):
@@ -143,7 +143,7 @@ class PostgreSQLAdapter(StorageProvider):
         return self._execute_select_value(sql, error, parms) == 1
 
     def get_post_by_oid(self, oid):
-        sql = "SELECT * FROM post WHERE oid = %s"
+        sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid WHERE p.oid = %s"
         parms = (oid,)
         error = 'can not get post (oid={}), reason: '.format(oid)
         row = self._execute_select_row(sql, parms, error)
@@ -157,7 +157,7 @@ class PostgreSQLAdapter(StorageProvider):
             author_oid=row[3],
             created_time=row[4],
             )
-        return post
+        return DeepPost(post, row[5])
 
     def add_post(self, post):
         sql = "INSERT INTO post (oid, title, body, author_oid, created_time) VALUES(%s, %s, %s, %s, %s)"

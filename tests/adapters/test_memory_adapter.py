@@ -92,10 +92,12 @@ class TestMemoryAdapter:
 
     #region - test app_user methods
 
+    GOOD_USERNAME = 'mawesome'
+
     @pytest.fixture
     def app_user(self, storage_provider):
         oid = storage_provider.get_next_app_user_oid()
-        username = 'mawesome'
+        username = self.GOOD_USERNAME
         name = 'Mr. Awesome'
         password_hash = 'xxYYYzzzz'
         app_user = AppUser(oid, username, name, password_hash)
@@ -196,6 +198,10 @@ class TestMemoryAdapter:
     def test_get_post_by_oid_gets_record(self, post, storage_provider):
         stored_post = storage_provider.get_post_by_oid(post.oid)
         assert stored_post == post
+
+    def test_get_post_gets_deep_version(self, post, storage_provider):
+        deep_post = storage_provider.get_post_by_oid(post.oid)
+        assert deep_post.author_username == self.GOOD_USERNAME
 
     def test_get_post_returns_a_copy(self, post, storage_provider):
         copied_post = storage_provider.get_post_by_oid(post.oid)
