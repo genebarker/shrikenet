@@ -1,9 +1,11 @@
+import importlib
 import sqlite3
 
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
+from shrike.entities.services import Services
 
 def get_db():
     if 'db' not in g:
@@ -16,6 +18,25 @@ def get_db():
     return g.db
 
 
+def get_services():
+    if 'services' not in g:
+        g.services = initialize_services()
+
+    return g.services
+
+
+def initialize_services():
+    storage_module = importlib.import_module(current_app.config['STORAGE_PROVIDER_MODULE'])
+    storage_class = getattr(storage_module, current_app.config['STORAGE_PROVIDER_CLASS'])
+    storage_provider = storage_class(
+        current_app.config['DB_NAME'],
+        current_app.config['DB_USER'],
+        current_app.config['DB_PASSWORD'],
+    )
+    storage_provider.open()
+    return Services(storage_provider)
+
+
 def close_db(e=None):
     db = g.pop('db', None)
 
@@ -23,11 +44,22 @@ def close_db(e=None):
         db.close()
 
 
+def close_services(e=None):
+    services = g.pop('services', None)
+
+    if services is not None:
+        services.storage_provider.close()
+
+
 def init_db():
     db = get_db()
 
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
+
+    services = get_services()
+    services.storage_provider.build_database_schema()
+    services.storage_provider.commit()
 
 
 @click.command('init-db')
@@ -40,4 +72,5 @@ def init_db_command():
 
 def init_app(app):
     app.teardown_appcontext(close_db)
+    app.teardown_appcontext(close_services)
     app.cli.add_command(init_db_command)
