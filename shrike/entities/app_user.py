@@ -1,7 +1,7 @@
 class AppUser:
 
-    def __init__(self, username, name, password_hash):
-        self.oid = None
+    def __init__(self, oid, username, name, password_hash):
+        self.oid = oid
         self.username = username
         self.name = name
         self.password_hash = password_hash

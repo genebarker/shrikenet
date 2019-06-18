@@ -103,8 +103,7 @@ class PostgreSQLAdapter(StorageProvider):
             return row
 
     def _create_app_user_from_row(self, row):
-        app_user = AppUser(row[1], row[2], row[3])
-        app_user.oid = row[0]
+        app_user = AppUser(row[0], row[1], row[2], row[3])
         return app_user
 
     def get_app_user_by_oid(self, oid):

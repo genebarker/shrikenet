@@ -94,12 +94,11 @@ class TestMemoryAdapter:
 
     @pytest.fixture
     def app_user(self, storage_provider):
+        oid = storage_provider.get_next_app_user_oid()
         username = 'mawesome'
         name = 'Mr. Awesome'
         password_hash = 'xxYYYzzzz'
-        app_user = AppUser(username, name, password_hash)
-        oid = storage_provider.get_next_app_user_oid()
-        app_user.oid = oid
+        app_user = AppUser(oid, username, name, password_hash)
         storage_provider.add_app_user(app_user)
         return app_user
 
