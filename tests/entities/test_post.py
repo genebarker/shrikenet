@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrike.entities.post import Post
+from shrike.entities.post import DeepPost, Post
 
 
 GOOD_OID = 100
@@ -79,3 +79,16 @@ class TestEquals:
             created_time=created_time,
         )
         assert post_one != post_two
+
+class TestDeepPost:
+
+    def test_can_create_from_parent(self):
+        post = create_good_post()
+        deep_post = DeepPost(post)
+        assert post == deep_post
+
+    def test_has_extra_attributes(self):
+        post = create_good_post()
+        author_username = 'fmulder'
+        deep_post = DeepPost(post, author_username)
+        assert deep_post.author_username == author_username

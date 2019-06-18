@@ -14,3 +14,9 @@ class Post:
                 self.body == other.body and
                 self.author_oid == other.author_oid and
                 self.created_time == other.created_time)
+
+class DeepPost(Post):
+
+    def __init__(self, post, author_username=None):
+        super().__init__(post.title, post.body, post.oid, post.author_oid, post.created_time)
+        self.author_username = author_username
