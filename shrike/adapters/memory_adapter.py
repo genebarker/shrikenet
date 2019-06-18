@@ -61,6 +61,9 @@ class MemoryAdapter(StorageProvider):
     def build_database_schema(self):
         self._build_schema()
 
+    def reset_database_objects(self):
+        self._build_schema()
+
     def get_version(self):
         return ('{0} {1} - a lightweight in-memory database for unit testing'
                 .format(self.VERSION_PREFIX, self.VERSION_NUMBER))
