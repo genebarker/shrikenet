@@ -271,6 +271,11 @@ class TestMemoryAdapter:
         stored_post = storage_provider.get_post_by_oid(post.oid)
         assert stored_post != post
 
+    def test_delete_post_deletes(self, post, storage_provider):
+        storage_provider.delete_post_by_oid(post.oid)
+        with pytest.raises(KeyError):
+            storage_provider.get_post_by_oid(post.oid)
+
     def test_add_post_record_exists_after_commit(self, post, storage_provider):
         storage_provider.commit()
         stored_post = storage_provider.get_post_by_oid(post.oid)

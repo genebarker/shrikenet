@@ -176,6 +176,12 @@ class PostgreSQLAdapter(StorageProvider):
         error = 'can not update post (oid={}), reason: '.format(post.oid)
         self._execute_process_sql(sql, parms, error)
 
+    def delete_post_by_oid(self, oid):
+        sql = "DELETE FROM post WHERE oid = %s"
+        parms = (oid,)
+        error = 'can not delete post (oid={}), reason: '.format(oid)
+        self._execute_process_sql(sql, parms, error)
+
     def get_post_count(self):
         sql = "SELECT count(*) FROM post"
         error = "can not get count of post records, reason: "

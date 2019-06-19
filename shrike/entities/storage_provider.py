@@ -79,6 +79,10 @@ class StorageProvider(ABC):
         raise NotImplementedError #pragma: no cover
 
     @abstractmethod
+    def delete_post_by_oid(self, oid):
+        raise NotImplementedError #pragma: no cover
+
+    @abstractmethod
     def get_post_count(self):
         raise NotImplementedError #pragma: no cover
 

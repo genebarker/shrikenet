@@ -133,6 +133,9 @@ class MemoryAdapter(StorageProvider):
     def update_post(self, post):
         self.post[post.oid] = copy.copy(post)
 
+    def delete_post_by_oid(self, oid):
+        del self.post[oid]
+
     def get_post_count(self):
         return len(self.post)
 
