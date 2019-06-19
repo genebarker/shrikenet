@@ -186,7 +186,6 @@ class PostgreSQLAdapter(StorageProvider):
         parms = None
         error = 'can not get posts, reason: '
         rows = self._execute_select_all_rows(sql, parms, error)
-        if rows is None: return None
         posts = []
         for row in rows:
             posts.append(self._create_deep_post_from_row(row))

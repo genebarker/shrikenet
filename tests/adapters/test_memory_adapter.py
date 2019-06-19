@@ -297,4 +297,8 @@ class TestMemoryAdapter:
             assert isinstance(post, DeepPost)
             assert post.author_username == self.GOOD_USERNAME
 
+    def test_get_posts_returns_empty_list_when_empty(self, storage_provider):
+        posts = storage_provider.get_posts()
+        assert len(posts) == 0
+
     #endregion
