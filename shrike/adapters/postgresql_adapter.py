@@ -59,8 +59,12 @@ class PostgreSQLAdapter(StorageProvider):
         return self._execute_select_value(sql, error)
 
     def _execute_select_value(self, sql, error, parms=None):
+        return self._execute_select('_select_value', sql, parms, error)
+
+    def _execute_select(self, function_name, sql, parms, error):
         try:
-            return self._select_value(sql, parms)
+            func = getattr(self, function_name)
+            return func(sql, parms)
         except Exception as e:
             reason = str(e)
             raise type(e)(error + reason)
@@ -90,14 +94,6 @@ class PostgreSQLAdapter(StorageProvider):
 
     def _execute_select_row(self, sql, parms, error):
         return self._execute_select('_select_row', sql, parms, error)
-
-    def _execute_select(self, function_name, sql, parms, error):
-        try:
-            func = getattr(self, function_name)
-            return func(sql, parms)
-        except Exception as e:
-            reason = str(e)
-            raise type(e)(error + reason)
 
     def _select_row(self, sql, parms):
         with self.connection.cursor() as cursor:

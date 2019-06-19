@@ -62,6 +62,25 @@ class TestMemoryAdapter:
     #endregion
 
 
+    #region - test schema build / reset methods
+
+    def test_schema_exists_after_build(self, storage_provider):
+        storage_provider.build_database_schema()
+        self.assert_database_in_initial_state(storage_provider)
+
+    def assert_database_in_initial_state(self, storage_provider):
+        assert storage_provider.get_app_user_count() == 0
+        assert storage_provider.get_post_count() == 0
+        assert storage_provider.get_next_app_user_oid() == 1
+        assert storage_provider.get_next_post_oid() == 1
+
+    def test_database_objects_reset_to_initial_state(self, storage_provider):
+        storage_provider.reset_database_objects()
+        self.assert_database_in_initial_state(storage_provider)
+
+    #endregion
+
+
     #region - test get next ID methods
 
     GET_NEXT_OID_METHODS = ['get_next_app_user_oid', 'get_next_post_oid',]
