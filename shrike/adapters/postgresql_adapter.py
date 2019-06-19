@@ -140,6 +140,11 @@ class PostgreSQLAdapter(StorageProvider):
         error = 'can not update app_user (oid={}), reason: '.format(app_user.oid)
         self._execute_process_sql(sql, parms, error)
 
+    def get_app_user_count(self):
+        sql = "SELECT count(*) FROM app_user"
+        error = "can not get count of app_user records, reason: "
+        return self._execute_select_value(sql, error)
+
     def exists_app_username(self, username):
         sql = "SELECT count(*) FROM app_user WHERE username = %s"
         parms = (username,)
@@ -174,6 +179,11 @@ class PostgreSQLAdapter(StorageProvider):
         parms = (post.title, post.body, post.author_oid, post.created_time, post.oid)
         error = 'can not update post (oid={}), reason: '.format(post.oid)
         self._execute_process_sql(sql, parms, error)
+
+    def get_post_count(self):
+        sql = "SELECT count(*) FROM post"
+        error = "can not get count of post records, reason: "
+        return self._execute_select_value(sql, error)
 
     def get_posts(self):
         sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid ORDER BY p.oid"

@@ -109,7 +109,10 @@ class MemoryAdapter(StorageProvider):
 
     def update_app_user(self, app_user):
         self.app_user[app_user.oid] = copy.copy(app_user)
-    
+
+    def get_app_user_count(self):
+        return len(self.app_user)
+
     def exists_app_username(self, username):
         return self._get_app_user_oid_for_username(username) is not None
 
@@ -129,6 +132,9 @@ class MemoryAdapter(StorageProvider):
 
     def update_post(self, post):
         self.post[post.oid] = copy.copy(post)
+
+    def get_post_count(self):
+        return len(self.post)
 
     def get_posts(self):
         posts = []

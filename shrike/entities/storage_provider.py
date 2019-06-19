@@ -59,6 +59,10 @@ class StorageProvider(ABC):
         raise NotImplementedError #pragma: no cover
 
     @abstractmethod
+    def get_app_user_count(self):
+        raise NotImplementedError #pragma: no cover
+
+    @abstractmethod
     def exists_app_username(self, username):
         raise NotImplementedError #pragma: no cover
 
@@ -72,6 +76,10 @@ class StorageProvider(ABC):
 
     @abstractmethod
     def update_post(self, post):
+        raise NotImplementedError #pragma: no cover
+
+    @abstractmethod
+    def get_post_count(self):
         raise NotImplementedError #pragma: no cover
 
     @abstractmethod

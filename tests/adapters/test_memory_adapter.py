@@ -161,6 +161,12 @@ class TestMemoryAdapter:
         stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
         assert stored_user != app_user
 
+    def test_get_app_user_count_zero_when_empty(self, storage_provider):
+        assert storage_provider.get_app_user_count() == 0
+
+    def test_get_app_user_count_matches_that_stored(self, app_user, storage_provider):
+        assert storage_provider.get_app_user_count() == 1
+
     def test_exists_app_user_true_for_known(self, app_user, storage_provider):
         assert storage_provider.exists_app_username(app_user.username)
 
@@ -255,6 +261,12 @@ class TestMemoryAdapter:
         storage_provider.rollback()
         with pytest.raises(KeyError):
             storage_provider.get_post_by_oid(post.oid)
+
+    def test_get_post_count_zero_when_empty(self, storage_provider):
+        assert storage_provider.get_post_count() == 0
+
+    def test_get_post_count_matches_that_stored(self, posts, storage_provider):
+        assert storage_provider.get_post_count() == len(posts)
 
     def test_get_posts_gets_them(self, posts, storage_provider):
         stored_posts = storage_provider.get_posts()
