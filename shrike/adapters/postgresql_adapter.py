@@ -89,8 +89,12 @@ class PostgreSQLAdapter(StorageProvider):
         return self._create_app_user_from_row(row)
 
     def _execute_select_row(self, sql, parms, error):
+        return self._execute_select('_select_row', sql, parms, error)
+
+    def _execute_select(self, function_name, sql, parms, error):
         try:
-            return self._select_row(sql, parms)
+            func = getattr(self, function_name)
+            return func(sql, parms)
         except Exception as e:
             reason = str(e)
             raise type(e)(error + reason)
@@ -170,3 +174,22 @@ class PostgreSQLAdapter(StorageProvider):
         parms = (post.title, post.body, post.author_oid, post.created_time, post.oid)
         error = 'can not update post (oid={}), reason: '.format(post.oid)
         self._execute_process_sql(sql, parms, error)
+
+    def get_posts(self):
+        sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid ORDER BY p.oid"
+        parms = None
+        error = 'can not get posts, reason: '
+        rows = self._execute_select_all_rows(sql, parms, error)
+        if rows is None: return None
+        posts = []
+        for row in rows:
+            posts.append(self._create_deep_post_from_row(row))
+        return posts
+
+    def _execute_select_all_rows(self, sql, parms, error):
+        return self._execute_select('_select_all_rows', sql, parms, error)
+
+    def _select_all_rows(self, sql, parms):
+        with self.connection.cursor() as cursor:
+            cursor.execute(sql, parms)
+            return cursor.fetchall()

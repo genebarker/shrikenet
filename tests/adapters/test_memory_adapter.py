@@ -5,7 +5,7 @@ import pytest
 
 from shrike.adapters.memory_adapter import MemoryAdapter
 from shrike.entities.app_user import AppUser
-from shrike.entities.post import Post
+from shrike.entities.post import DeepPost, Post
 from shrike.entities.storage_provider import StorageProvider
 
 class TestMemoryAdapter:
@@ -182,14 +182,24 @@ class TestMemoryAdapter:
 
     @pytest.fixture
     def post(self, app_user, storage_provider):
-        title = 'Post Title'
-        body = 'This is the body.'
+        return self.create_and_store_post(99, app_user, storage_provider)
+
+    def create_and_store_post(self, index, app_user, storage_provider):
+        title = 'Post Title #{}'.format(index)
+        body = 'This is the body for post #{}.'.format(index)
         post = Post(title, body)
         post.author_oid = app_user.oid
         post.created_time = datetime.now(timezone.utc)
         post.oid = storage_provider.get_next_post_oid()
         storage_provider.add_post(post)
         return post
+
+    @pytest.fixture
+    def posts(self, app_user, storage_provider):
+        posts = []
+        for i in range(1, 6):
+            posts.append(self.create_and_store_post(i, app_user, storage_provider))
+        return posts
 
     def test_get_post_by_oid_unknown_raises(self, storage_provider):
         with pytest.raises(Exception, match='can not get post .oid=12345., reason: '):
@@ -245,5 +255,15 @@ class TestMemoryAdapter:
         storage_provider.rollback()
         with pytest.raises(KeyError):
             storage_provider.get_post_by_oid(post.oid)
+
+    def test_get_posts_gets_them(self, posts, storage_provider):
+        stored_posts = storage_provider.get_posts()
+        assert posts == stored_posts
+
+    def test_get_posts_gets_deep_versions(self, posts, storage_provider):
+        stored_posts = storage_provider.get_posts()
+        for post in stored_posts:
+            assert isinstance(post, DeepPost)
+            assert post.author_username == self.GOOD_USERNAME
 
     #endregion

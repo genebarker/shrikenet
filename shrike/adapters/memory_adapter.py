@@ -129,3 +129,10 @@ class MemoryAdapter(StorageProvider):
 
     def update_post(self, post):
         self.post[post.oid] = copy.copy(post)
+
+    def get_posts(self):
+        posts = []
+        for post in self.post.values():
+            author_username = self.app_user[post.author_oid].username if post.author_oid in self.app_user else None
+            posts.append(DeepPost(post, author_username))
+        return posts

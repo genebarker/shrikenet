@@ -73,3 +73,7 @@ class StorageProvider(ABC):
     @abstractmethod
     def update_post(self, post):
         pass
+
+    @abstractmethod
+    def get_posts(self):
+        pass
