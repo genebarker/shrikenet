@@ -5,7 +5,8 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from shrike.db import get_db
+from shrike.db import get_services
+from shrike.entities.app_user import AppUser
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -15,24 +16,27 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
+        storage_provider = get_services().storage_provider
         error = None
 
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-        elif db.execute(
-            'SELECT id FROM user WHERE username = ?', (username,)
-        ).fetchone() is not None:
+        elif storage_provider.exists_app_username(username):
             error = 'User {} is already registered.'.format(username)
 
         if error is None:
-            db.execute(
-                'INSERT INTO user (username, password) VALUES (?, ?)',
-                (username, generate_password_hash(password))
+            print('length of password hash is {}'.format(len(generate_password_hash(password))))
+            
+            new_user = AppUser(
+                oid=storage_provider.get_next_app_user_oid(),
+                username=username,
+                name=None,
+                password_hash=generate_password_hash(password),
             )
-            db.commit()
+            storage_provider.add_app_user(new_user)
+            storage_provider.commit()
             return redirect(url_for('auth.login'))
 
         flash(error)
@@ -45,20 +49,21 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        db = get_db()
+        storage_provider = get_services().storage_provider
         error = None
-        user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
-        ).fetchone()
+        try:
+            user = storage_provider.get_app_user_by_username(username)
+        except Exception:
+            user = None
 
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user['password'], password):
+        elif not check_password_hash(user.password_hash, password):
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user.oid
             return redirect(url_for('index'))
 
         flash(error)
@@ -79,9 +84,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        g.user = get_services().storage_provider.get_app_user_by_oid(user_id)
 
 
 def login_required(view):
