@@ -4,76 +4,76 @@ class StorageProvider(ABC):
 
     @abstractmethod
     def __init__(self, db_config):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def open(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def close(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def commit(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def rollback(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def build_database_schema(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def reset_database_objects(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_version(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_next_app_user_oid(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_next_post_oid(self):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_app_user_by_username(self, username):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_app_user_by_oid(self, oid):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def add_app_user(self, app_user):
-        pass
+        raise NotImplementedError #pragma: no cover
     
     @abstractmethod
     def update_app_user(self, app_user):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def exists_app_username(self, username):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_post_by_oid(self, oid):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def add_post(self, post):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def update_post(self, post):
-        pass
+        raise NotImplementedError #pragma: no cover
 
     @abstractmethod
     def get_posts(self):
-        pass
+        raise NotImplementedError #pragma: no cover
