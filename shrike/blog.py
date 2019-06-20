@@ -50,9 +50,9 @@ def create():
 
 def get_post(id, check_author=True):
     storage_provider = get_services().storage_provider
-    post = storage_provider.get_post_by_oid(id)
-
-    if post is None:
+    try:
+        post = storage_provider.get_post_by_oid(id)
+    except KeyError:
         abort(404, "Post id {0} doesn't exist.".format(id))
 
     if check_author and post.author_oid != g.user.oid:

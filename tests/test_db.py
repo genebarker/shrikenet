@@ -1,18 +1,18 @@
 import sqlite3
 
 import pytest
-from shrike.db import get_db
+from shrike.db import get_services
 
 
-def test_get_close_db(app):
+def test_get_close_storage_provider(app):
     with app.app_context():
-        db = get_db()
-        assert db is get_db()
+        services = get_services()
+        assert services is get_services()
     
-    with pytest.raises(sqlite3.ProgrammingError) as e:
-        db.execute('SELECT 1')
+    with pytest.raises(RuntimeError) as e:
+        get_services()
     
-    assert 'closed' in str(e)
+    assert 'outside of application context' in str(e)
 
 
 def test_init_db_command(runner, monkeypatch):

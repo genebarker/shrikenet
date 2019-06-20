@@ -1,5 +1,5 @@
 import pytest
-from shrike.db import get_db
+from shrike.db import get_services
 
 
 def test_index(client, auth):
@@ -29,9 +29,11 @@ def test_login_required(client, path):
 def test_author_required(app, client, auth):
     # change the post author to another user
     with app.app_context():
-        db = get_db()
-        db.execute('UPDATE post SET author_id = 2 WHERE id = 1')
-        db.commit()
+        storage_provider = get_services().storage_provider
+        post = storage_provider.get_post_by_oid(1)
+        post.author_oid = 2
+        storage_provider.update_post(post)
+        storage_provider.commit()
 
     auth.login()
     # current user can't modify other user's post
@@ -56,8 +58,8 @@ def test_create(client, auth, app):
     client.post('/create', data={'title': 'created', 'body': ''})
 
     with app.app_context():
-        db = get_db()
-        count = db.execute('SELECT COUNT(id) FROM post').fetchone()[0]
+        storage_provider = get_services().storage_provider
+        count = storage_provider.get_post_count()
         assert count == 2
 
 
@@ -67,9 +69,9 @@ def test_update(client, auth, app):
     client.post('/1/update', data={'title': 'updated', 'body': ''})
 
     with app.app_context():
-        db = get_db()
-        post = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
-        assert post['title'] == 'updated'
+        storage_provider = get_services().storage_provider
+        post = storage_provider.get_post_by_oid(1)
+        assert post.title == 'updated'
 
 
 @pytest.mark.parametrize('path', (
@@ -88,6 +90,6 @@ def test_delete(client, auth, app):
     assert response.headers['Location'] == 'http://localhost/'
 
     with app.app_context():
-        db = get_db()
-        post = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
-        assert post is None
+        storage_provider = get_services().storage_provider
+        with pytest.raises(KeyError):
+            storage_provider.get_post_by_oid(1)

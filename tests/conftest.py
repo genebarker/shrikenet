@@ -1,31 +1,32 @@
-import os
-import tempfile
+from configparser import ConfigParser
 
 import pytest
+
 from shrike import create_app
-from shrike.db import get_db, init_db
-
-with open(os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb') as f:
-    _data_sql = f.read().decode('utf8')
-
+from shrike.db import get_services, init_db
 
 @pytest.fixture
 def app():
-    db_fd, db_path = tempfile.mkstemp()
-
+    config = ConfigParser()
+    config.read('database.cfg')
     app = create_app({
         'TESTING': True,
-        'DATABASE': db_path,
+        'STORAGE_PROVIDER_MODULE': 'shrike.adapters.postgresql_adapter',
+        'STORAGE_PROVIDER_CLASS': 'PostgreSQLAdapter',
+        'DB_NAME': config['development']['db_name'],
+        'DB_USER': config['development']['db_user'],
+        'DB_PASSWORD': config['development']['db_password'],
     })
 
     with app.app_context():
         init_db()
-        get_db().executescript(_data_sql)
+        postgresql_adapter = get_services().storage_provider
+        postgresql_adapter._execute_sql_file('pg_load_test_data.sql')
+        postgresql_adapter.commit()
 
     yield app
 
-    os.close(db_fd)
-    os.unlink(db_path)
+    pass
 
 
 @pytest.fixture
