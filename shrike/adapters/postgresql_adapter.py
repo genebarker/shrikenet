@@ -188,7 +188,7 @@ class PostgreSQLAdapter(StorageProvider):
         return self._execute_select_value(sql, error)
 
     def get_posts(self):
-        sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid ORDER BY p.oid"
+        sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid ORDER BY p.created_time DESC"
         parms = None
         error = 'can not get posts, reason: '
         rows = self._execute_select_all_rows(sql, parms, error)

@@ -1,4 +1,5 @@
 import copy
+from operator import attrgetter
 
 from shrike.entities.post import DeepPost
 from shrike.entities.storage_provider import StorageProvider
@@ -144,4 +145,5 @@ class MemoryAdapter(StorageProvider):
         for post in self.post.values():
             author_username = self.app_user[post.author_oid].username if post.author_oid in self.app_user else None
             posts.append(DeepPost(post, author_username))
+        posts.sort(key=attrgetter('created_time'), reverse=True)
         return posts

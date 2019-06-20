@@ -1,5 +1,6 @@
 import copy
 from datetime import datetime, timezone
+from operator import attrgetter
 
 import pytest
 
@@ -292,9 +293,9 @@ class TestMemoryAdapter:
     def test_get_post_count_matches_that_stored(self, posts, storage_provider):
         assert storage_provider.get_post_count() == len(posts)
 
-    def test_get_posts_gets_them(self, posts, storage_provider):
+    def test_get_posts_matches_that_stored_and_sorted_by_descending_created_time(self, posts, storage_provider):
         stored_posts = storage_provider.get_posts()
-        assert posts == stored_posts
+        assert stored_posts == sorted(posts, key=attrgetter('created_time'), reverse=True)
 
     def test_get_posts_gets_deep_versions(self, posts, storage_provider):
         stored_posts = storage_provider.get_posts()
