@@ -13,7 +13,7 @@
     <header>
         <div>
             <h1>{{ post.title }}</h1>
-            <div class="about">by {{ post.author_username }} on {{ post.created_time.astimezone().strftime('%a %d %b %Y' if post.created_time.astimezone().date() != today else '%I:%M %p') }}</div>
+            <div class="about">by {{ post.author_username }} {{ post.created_time.astimezone().strftime('on %a %d %b %Y' if post.created_time.astimezone().date() != today else 'at %I:%M %p') }}</div>
         </div>
         {% if g.user.oid == post.author_oid %}
         <a class="action" href="{{ url_for('blog.update', id=post.oid) }}">Edit</a>
