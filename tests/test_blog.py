@@ -1,4 +1,7 @@
+from datetime import datetime, timezone
+
 import pytest
+
 from shrike.db import get_services
 
 
@@ -9,9 +12,13 @@ def test_index(client, auth):
 
     auth.login()
     response = client.get('/')
+    print(response.data)
     assert b'Log Out' in response.data
     assert b'test title' in response.data
-    assert b'by test on Mon 01 Jan 2018' in response.data
+    created_year = datetime(2018, 1, 1, tzinfo=timezone.utc).astimezone().date().year
+    author_str = b'by test on Mon 01 Jan 2018' if created_year == 2018 \
+        else b'by test on Sun 31 Dec 2017'
+    assert author_str in response.data
     assert b'test\nbody' in response.data
     assert b'href="/1/update"' in response.data
 

@@ -5,4 +5,4 @@ VALUES
 
 INSERT INTO post (oid, title, body, author_oid, created_time)
 VALUES
-    (nextval('post_seq'), 'test title', 'test' || E'\n' || 'body', 1, '2018-01-01 00:00:00');
+    (nextval('post_seq'), 'test title', 'test' || E'\n' || 'body', 1, '2018-01-01 00:00:00+0');
