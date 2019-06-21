@@ -9,7 +9,7 @@ def test_validate_fields_uncallable():
         RecordValidator.validate_fields(the_object)
 
 
-def test_placeholder_for_validate_references():
+def test_validate_references_uncallable():
     with pytest.raises(NotImplementedError):
         the_object = 'Some object'
         storage_provider = None
