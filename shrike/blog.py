@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
@@ -16,7 +16,8 @@ bp = Blueprint('blog', __name__)
 def index():
     storage_provider = get_services().storage_provider
     posts = storage_provider.get_posts()
-    return render_template('blog/index.html', posts=posts)
+    today = date.today()
+    return render_template('blog/index.html', posts=posts, today=today)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
