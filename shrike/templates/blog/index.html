@@ -19,7 +19,9 @@
         <a class="action" href="{{ url_for('blog.update', id=post.oid) }}">Edit</a>
         {% endif %}
     </header>
-    <p class="body">{{ post.body }}</p>
+    {% autoescape false %}
+    <p class="body">{{ g.services.text_transformer.transform_to_html(post.body) }}</p>
+    {% endautoescape %}
 </article>
 {% if not loop.last %}
 <hr>

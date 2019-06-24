@@ -5,6 +5,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
+from shrike.adapters.markdown_adapter import MarkdownAdapter
 from shrike.entities.services import Services
 
 def get_services():
@@ -23,7 +24,8 @@ def initialize_services():
     }
     storage_provider = storage_class(db_config)
     storage_provider.open()
-    return Services(storage_provider)
+    text_transformer = MarkdownAdapter()
+    return Services(storage_provider, text_transformer)
 
 def close_services(e=None):
     services = g.pop('services', None)
