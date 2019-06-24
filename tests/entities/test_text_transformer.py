@@ -34,8 +34,8 @@ class TestMarkdownAdapterUsed:
     def test_empty_string_when_none(self, text_transformer):
         assert text_transformer.transform_to_html(None) == ''
 
-    # def test_empty_when_just_whitespace(self, text_transformer):
-    #     assert text_transformer.transform_to_html('   ') == ''
+    def test_empty_when_just_whitespace(self, text_transformer):
+        assert text_transformer.transform_to_html('   ') == ''
 
-    # def test_performs_a_markdown_transform(self, text_transformer):
-    #     assert text_transformer.transform_to_html('*foo bar*') == '<p><em>foo bar</em></p>'
+    def test_performs_a_markdown_transform(self, text_transformer):
+        assert text_transformer.transform_to_html('*foo bar*') == '<p><em>foo bar</em></p>\n'
