@@ -18,7 +18,7 @@ def test_index(client, auth):
     author_str = b'by test on Mon 01 Jan 2018' if created_year == 2018 \
         else b'by test on Sun 31 Dec 2017'
     assert author_str in response.data
-    assert b'<p>test\nbody</p>' in response.data
+    assert b'<p>test body</p>' in response.data
     assert b'href="/1/update"' in response.data
 
 

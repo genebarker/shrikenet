@@ -1,6 +1,6 @@
-import io 
+import html
 
-import mistletoe
+import pypandoc
 
 from shrike.entities.text_transformer import TextTransformer
 
@@ -10,6 +10,9 @@ class MarkdownAdapter(TextTransformer):
         pass
 
     def transform_to_html(self, plain_text):
-        text_stream = io.StringIO(plain_text)
-        with text_stream as stream:
-            return mistletoe.markdown(stream)
+        if plain_text is None: return ''
+        escaped_text = html.escape(plain_text)
+        input_format = 'md'
+        output_format = 'html5'
+        output = pypandoc.convert_text(escaped_text, output_format, input_format)
+        return output
