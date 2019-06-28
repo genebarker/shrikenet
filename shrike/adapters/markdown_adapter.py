@@ -1,5 +1,3 @@
-import html
-
 import pypandoc
 
 from shrike.entities.text_transformer import TextTransformer
@@ -11,8 +9,7 @@ class MarkdownAdapter(TextTransformer):
 
     def transform_to_html(self, plain_text):
         if plain_text is None: return ''
-        escaped_text = html.escape(plain_text)
-        input_format = 'md'
+        input_format = 'markdown-raw_html'
         output_format = 'html5'
-        output = pypandoc.convert_text(escaped_text, output_format, input_format)
+        output = pypandoc.convert_text(plain_text, output_format, input_format)
         return output
