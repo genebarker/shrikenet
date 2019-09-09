@@ -1,5 +1,3 @@
-import sqlite3
-
 import pytest
 from shrike.db import get_services
 
@@ -9,10 +7,10 @@ def test_get_close_storage_provider(app):
         services = get_services()
         assert services is get_services()
     
-    with pytest.raises(RuntimeError) as e:
+    with pytest.raises(RuntimeError) as excinfo:
         get_services()
-    
-    assert 'outside of application context' in str(e)
+
+    assert 'outside of application context' in str(excinfo.value)
 
 
 def test_init_db_command(runner, monkeypatch):
