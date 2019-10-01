@@ -5,17 +5,16 @@ from shrike.entities.text_transformer import TextTransformer
 
 class TestInterfaceIsAbstract:
 
+    def test_interface_cant_be_instantiated(self):
+        with pytest.raises(NotImplementedError):
+            TextTransformer()
+
     @pytest.fixture
     def text_transformer(self):
         class FakeTransformer(TextTransformer):
             def __init__(self):
                 pass
-        
         return FakeTransformer()
-
-    def test_interface_cant_be_instantiated(self):
-        with pytest.raises(NotImplementedError):
-            TextTransformer()
 
     def test_transform_method_cant_be_called(self, text_transformer):
         with pytest.raises(NotImplementedError):

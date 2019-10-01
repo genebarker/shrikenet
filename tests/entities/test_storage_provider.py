@@ -4,7 +4,7 @@ from shrike.entities.storage_provider import StorageProvider
 
 class TestStorageProvider:
 
-    def test_cant_be_instantiated(self):
+    def test_interface_cant_be_instantiated(self):
         with pytest.raises(NotImplementedError):
             StorageProvider(None)
 
