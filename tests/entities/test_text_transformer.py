@@ -1,6 +1,5 @@
 import pytest
 
-from shrike.adapters.markdown_adapter import MarkdownAdapter
 from shrike.entities.text_transformer import TextTransformer
 
 class TestTextTransformer:
