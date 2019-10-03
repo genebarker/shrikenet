@@ -6,7 +6,7 @@ from shrike.entities.crypto_provider import CryptoProvider
 class TestMD5Adapter:
 
     TEST_STRING = 'scully'
-    HASH_OF_TEST_STRING = 'a3aab32ace277bdf141f92c1e68f6cef'
+    HASH_OF_TEST_STRING = 'SCULLY'
     
     @staticmethod
     def get_crypto_provider():
