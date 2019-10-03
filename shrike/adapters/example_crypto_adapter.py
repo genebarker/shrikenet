@@ -1,6 +1,6 @@
 from shrike.entities.crypto_provider import CryptoProvider
 
-class MD5Adapter(CryptoProvider):
+class ExampleCryptoAdapter(CryptoProvider):
 
     def __init__(self):
         pass

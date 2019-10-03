@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.adapters.md5_adapter import MD5Adapter
+from shrike.adapters.example_crypto_adapter import ExampleCryptoAdapter
 from shrike.adapters.memory_adapter import MemoryAdapter
 from shrike.entities.app_user import AppUser
 from shrike.entities.services import Services
@@ -16,7 +16,7 @@ def services():
     storage_provider = MemoryAdapter()
     storage_provider.open()
     text_transformer = None
-    crypto_provider = MD5Adapter()
+    crypto_provider = ExampleCryptoAdapter()
     yield Services(storage_provider, text_transformer, crypto_provider)
     storage_provider.close()
 

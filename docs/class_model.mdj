@@ -1304,23 +1304,23 @@
 					"ownedElements": [
 						{
 							"_type": "UMLClass",
-							"_id": "AAAAAAFtGMPnYRKisKg=",
+							"_id": "AAAAAAFtW6RvcNGpDkw=",
 							"_parent": {
 								"$ref": "AAAAAAFtGMD3sxKZZaI="
 							},
-							"name": "MemoryAdapter",
+							"name": "ExampleCryptoAdapter",
 							"ownedElements": [
 								{
 									"_type": "UMLInterfaceRealization",
-									"_id": "AAAAAAFtGMkS1BMyPCU=",
+									"_id": "AAAAAAFtW6T599HVjJo=",
 									"_parent": {
-										"$ref": "AAAAAAFtGMPnYRKisKg="
+										"$ref": "AAAAAAFtW6RvcNGpDkw="
 									},
 									"source": {
-										"$ref": "AAAAAAFtGMPnYRKisKg="
+										"$ref": "AAAAAAFtW6RvcNGpDkw="
 									},
 									"target": {
-										"$ref": "AAAAAAFtGMewDBKvBqc="
+										"$ref": "AAAAAAFtW6FqXdAZyiE="
 									}
 								}
 							]
@@ -1344,6 +1344,29 @@
 									},
 									"target": {
 										"$ref": "AAAAAAFtGMg4+BKzR/k="
+									}
+								}
+							]
+						},
+						{
+							"_type": "UMLClass",
+							"_id": "AAAAAAFtGMPnYRKisKg=",
+							"_parent": {
+								"$ref": "AAAAAAFtGMD3sxKZZaI="
+							},
+							"name": "MemoryAdapter",
+							"ownedElements": [
+								{
+									"_type": "UMLInterfaceRealization",
+									"_id": "AAAAAAFtGMkS1BMyPCU=",
+									"_parent": {
+										"$ref": "AAAAAAFtGMPnYRKisKg="
+									},
+									"source": {
+										"$ref": "AAAAAAFtGMPnYRKisKg="
+									},
+									"target": {
+										"$ref": "AAAAAAFtGMewDBKvBqc="
 									}
 								}
 							]
@@ -2760,8 +2783,8 @@
 													},
 													"visible": false,
 													"font": "Arial;13;0",
-													"left": -80,
-													"top": -94,
+													"left": -144,
+													"top": -142,
 													"height": 13
 												},
 												{
@@ -2771,11 +2794,11 @@
 														"$ref": "AAAAAAFtW6TDRtGvufU="
 													},
 													"font": "Arial;13;1",
-													"left": 117,
-													"top": 407,
-													"width": 76.5654296875,
+													"left": 85,
+													"top": 383,
+													"width": 144.47900390625,
 													"height": 13,
-													"text": "MD5Adapter"
+													"text": "ExampleCryptoAdapter"
 												},
 												{
 													"_type": "LabelView",
@@ -2785,8 +2808,8 @@
 													},
 													"visible": false,
 													"font": "Arial;13;0",
-													"left": -80,
-													"top": -94,
+													"left": -144,
+													"top": -142,
 													"width": 88.86083984375,
 													"height": 13,
 													"text": "(from adapters)"
@@ -2799,16 +2822,16 @@
 													},
 													"visible": false,
 													"font": "Arial;13;0",
-													"left": -80,
-													"top": -94,
+													"left": -144,
+													"top": -142,
 													"height": 13,
 													"horizontalAlignment": 1
 												}
 											],
 											"font": "Arial;13;0",
-											"left": 112,
-											"top": 400,
-											"width": 86.5654296875,
+											"left": 80,
+											"top": 376,
+											"width": 154.47900390625,
 											"height": 25,
 											"stereotypeLabel": {
 												"$ref": "AAAAAAFtW6TDRtGwv6c="
@@ -2833,9 +2856,9 @@
 												"$ref": "AAAAAAFtW6RvcNGpDkw="
 											},
 											"font": "Arial;13;0",
-											"left": 112,
-											"top": 425,
-											"width": 86.5654296875,
+											"left": 80,
+											"top": 401,
+											"width": 154.47900390625,
 											"height": 10
 										},
 										{
@@ -2848,9 +2871,9 @@
 												"$ref": "AAAAAAFtW6RvcNGpDkw="
 											},
 											"font": "Arial;13;0",
-											"left": 112,
-											"top": 435,
-											"width": 86.5654296875,
+											"left": 80,
+											"top": 411,
+											"width": 154.47900390625,
 											"height": 10
 										},
 										{
@@ -2864,8 +2887,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -40,
-											"top": -47,
+											"left": -72,
+											"top": -71,
 											"width": 10,
 											"height": 10
 										},
@@ -2880,17 +2903,17 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": -40,
-											"top": -47,
+											"left": -72,
+											"top": -71,
 											"width": 10,
 											"height": 10
 										}
 									],
 									"font": "Arial;13;0",
 									"containerChangeable": true,
-									"left": 112,
-									"top": 400,
-									"width": 86.5654296875,
+									"left": 80,
+									"top": 376,
+									"width": 154.47900390625,
 									"height": 45,
 									"nameCompartment": {
 										"$ref": "AAAAAAFtW6TDRtGvufU="
@@ -2929,8 +2952,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 259,
-											"top": 401,
+											"left": 277,
+											"top": 391,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 15,
@@ -2950,8 +2973,8 @@
 											},
 											"visible": null,
 											"font": "Arial;13;0",
-											"left": 259,
-											"top": 386,
+											"left": 279,
+											"top": 376,
 											"height": 13,
 											"alpha": 1.5707963267948966,
 											"distance": 30,
@@ -2971,8 +2994,8 @@
 											},
 											"visible": false,
 											"font": "Arial;13;0",
-											"left": 258,
-											"top": 430,
+											"left": 274,
+											"top": 420,
 											"height": 13,
 											"alpha": -1.5707963267948966,
 											"distance": 15,
@@ -2990,7 +3013,7 @@
 										"$ref": "AAAAAAFtW6TDRtGu1Fc="
 									},
 									"lineStyle": 1,
-									"points": "199:422;319:423",
+									"points": "234:407;319:417",
 									"showVisibility": true,
 									"nameLabel": {
 										"$ref": "AAAAAAFtW6T5+NHXi4A="
@@ -3000,29 +3023,6 @@
 									},
 									"propertyLabel": {
 										"$ref": "AAAAAAFtW6T5+NHZgxA="
-									}
-								}
-							]
-						},
-						{
-							"_type": "UMLClass",
-							"_id": "AAAAAAFtW6RvcNGpDkw=",
-							"_parent": {
-								"$ref": "AAAAAAFtGMD3sxKZZaI="
-							},
-							"name": "MD5Adapter",
-							"ownedElements": [
-								{
-									"_type": "UMLInterfaceRealization",
-									"_id": "AAAAAAFtW6T599HVjJo=",
-									"_parent": {
-										"$ref": "AAAAAAFtW6RvcNGpDkw="
-									},
-									"source": {
-										"$ref": "AAAAAAFtW6RvcNGpDkw="
-									},
-									"target": {
-										"$ref": "AAAAAAFtW6FqXdAZyiE="
 									}
 								}
 							]

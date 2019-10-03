@@ -1,16 +1,16 @@
 import pytest
 
-from shrike.adapters.md5_adapter import MD5Adapter
+from shrike.adapters.example_crypto_adapter import ExampleCryptoAdapter
 from shrike.entities.crypto_provider import CryptoProvider
 
-class TestMD5Adapter:
+class TestExampleCryptoAdapter:
 
     TEST_STRING = 'scully'
     HASH_OF_TEST_STRING = 'SCULLY'
     
     @staticmethod
     def get_crypto_provider():
-        return MD5Adapter()
+        return ExampleCryptoAdapter()
 
     @pytest.fixture
     def crypto_provider(self):
