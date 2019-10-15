@@ -45,6 +45,8 @@ def create_and_store_user(username, password, services):
 
 def test_wrong_password_login_fail(services):
     username = GOOD_USER_USERNAME
+    password = GOOD_USER_PASSWORD
+    create_and_store_user(username, password, services)
     password = 'wrong'
     login_input = LoginToSystemInput(username, password, services)
     login_output = LoginToSystem.execute(login_input)
