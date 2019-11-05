@@ -2,7 +2,9 @@
 
 ![User Goal](level_sea.png)
 
-Users need the ability to change their password. This function allows a user to change their password to another and ensures that it's of sufficient strength.
+Users need the ability to change their password. This function allows a user
+to change their password to another and ensures that it's of sufficient
+strength.
 
 **Primary Actor:** All users
 
@@ -15,7 +17,8 @@ Users need the ability to change their password. This function allows a user to 
 1. User decides to change their password.
 2. User enters a new password.
 3. System verifies that new password meets requirements.
-4. System logs that the password has changed, the username, IP address, and time.
+4. System logs that the password has changed, the username, IP address, and
+   time.
 
 **Extensions:**
 
@@ -35,8 +38,10 @@ None.
 
 **Related Information:**
 
-- See the [zxcvbn][1] utility from Dropbox for one method of determining password strength.
+- See the [zxcvbn][1] utility from Dropbox for one method of determining
+  password strength.
 - See the [zxcvbn-python][2] for the Python port of zxcvbn.
+
 
 [1]: https://github.com/dropbox/zxcvbn
 [2]: https://github.com/dwolfhub/zxcvbn-python

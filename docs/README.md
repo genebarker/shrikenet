@@ -1,8 +1,8 @@
 # Project Design Documentation
 
-This folder contains the project's design documentation. The
-documentation is written in plain text, then supplemented as-needed
-with pictures and models:
+This folder contains the project's design documentation. The documentation
+is written in plain text, then supplemented as-needed with pictures and
+models:
 
 Type        Format
 ----------- -------------------------
