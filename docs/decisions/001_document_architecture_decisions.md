@@ -30,4 +30,3 @@ and this decision's filename.
 
 Decision documents requiring ongoing attention are now part of the code
 repository.
-

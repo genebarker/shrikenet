@@ -14,13 +14,15 @@ system will lock the user's account for a set time (i.e. one hour) to
 prevent their account from being compromised, AND inform the system's
 administrators of the lock.
 
-**Primary Actor:** All users
+## Primary Actor
 
-**Precondition(s):**
+All users
+
+## Precondition(s)
 
 - User is *not* logged in to the system.
 
-**Main Success Scenario:**
+## Main Success Scenario
 
 1. User decides to use the system.
 2. System asks user for their username and password.
@@ -31,7 +33,7 @@ administrators of the lock.
 6. System provides access to functions for which user is authorized.
 7. System logs the login, username, IP address, and time.
 
-**Extensions:**
+## Extensions
 
 4a. Bad password provided:
 
@@ -59,14 +61,14 @@ administrators of the lock.
 
   1. See __change password__.
 
-**Technology & Data Variations List:**
+## Technology & Data Variations List
 
 - `DENY_THRESHOLD_VALID` - Number of consecutive failed logins that triggers
   the account being locked.
 - `AGE_RESET_VALID` - Number of minutes to wait after the last failed login
   attempt to reset the count of failures to zero.
 
-**Related Information:**
+## Related Information
 
 - See the [DenyHosts][1] utility for the inspiration behind the deny
   threshold and age reset functionality.

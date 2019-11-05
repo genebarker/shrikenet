@@ -6,13 +6,15 @@ Users need the ability to change their password. This function allows a user
 to change their password to another and ensures that it's of sufficient
 strength.
 
-**Primary Actor:** All users
+## Primary Actor
 
-**Precondition(s):**
+All users
+
+## Precondition(s)
 
 - User is __logged in to system__.
 
-**Main Success Scenario:**
+## Main Success Scenario
 
 1. User decides to change their password.
 2. User enters a new password.
@@ -20,7 +22,7 @@ strength.
 4. System logs that the password has changed, the username, IP address, and
    time.
 
-**Extensions:**
+## Extensions
 
 3a. Password strength too low:
 
@@ -32,11 +34,11 @@ strength.
   1. System informs user that they must enter a different password.
   2. User enters a different password.
 
-**Technology & Data Variations List:**
+## Technology & Data Variations List
 
 None.
 
-**Related Information:**
+## Related Information
 
 - See the [zxcvbn][1] utility from Dropbox for one method of determining
   password strength.
