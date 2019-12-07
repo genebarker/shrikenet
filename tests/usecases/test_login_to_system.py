@@ -47,10 +47,10 @@ def validate_login_fails(services, username, password):
     presenter = SimpleResultPresenter()
     login_to_system = LoginToSystem(services, presenter)
     result = login_to_system.run(username, password)
-    assert presenter.present_method_called
     assert result.was_successful is False
     assert result.must_change_password is False
     assert result.message == 'Login attempt failed.'
+    assert presenter.present_method_called
 
 
 class SimpleResultPresenter:
@@ -69,5 +69,5 @@ def test_login_succeeds_for_good_credentials(services, good_user):
     presenter = SimpleResultPresenter()
     login_to_system = LoginToSystem(services, presenter)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
-    assert presenter.present_method_called
     assert result.was_successful
+    assert presenter.present_method_called
