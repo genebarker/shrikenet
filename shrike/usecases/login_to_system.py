@@ -17,7 +17,8 @@ class LoginToSystem:
             return result
 
         user = storage_provider.get_app_user_by_username(username)
-        if crypto_provider.hash_matches_string(user.password_hash, password) is False:
+        if crypto_provider.hash_matches_string(
+                user.password_hash, password) is False:
             result = LoginToSystemResult('Login attempt failed.')
             self.presenter.present(result)
             return result
