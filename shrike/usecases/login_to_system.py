@@ -1,18 +1,28 @@
-from shrike.usecases.login_to_system_output import LoginToSystemOutput
+from shrike.usecases.login_to_system_result import LoginToSystemResult
 
 
 class LoginToSystem:
 
-    @staticmethod
-    def execute(input):
-        storage_provider = input.services.storage_provider
-        crypto_provider = input.services.crypto_provider
+    def __init__(self, services, presenter):
+        self.services = services
+        self.presenter = presenter
 
-        if storage_provider.exists_app_username(input.username) is False:
-            return LoginToSystemOutput(False)
+    def run(self, username, password):
+        storage_provider = self.services.storage_provider
+        crypto_provider = self.services.crypto_provider
 
-        user = storage_provider.get_app_user_by_username(input.username)
-        if crypto_provider.hash_matches_string(user.password_hash, input.password):
-            return LoginToSystemOutput(True)
+        if storage_provider.exists_app_username(username) is False:
+            result = LoginToSystemResult('Login attempt failed.')
+            self.presenter.present(result)
+            return result
 
-        return LoginToSystemOutput(False)
+        user = storage_provider.get_app_user_by_username(username)
+        if crypto_provider.hash_matches_string(user.password_hash, password) is False:
+            result = LoginToSystemResult('Login attempt failed.')
+            self.presenter.present(result)
+            return result
+
+        result = LoginToSystemResult('Login successful.',
+                                     was_successful=True)
+        self.presenter.present(result)
+        return result
