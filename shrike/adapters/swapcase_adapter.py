@@ -7,7 +7,7 @@ class SwapcaseAdapter(CryptoProvider):
         pass
 
     def generate_hash_from_string(self, password):
-        return password.swapcase() 
+        return password.swapcase()
 
     def hash_matches_string(self, hash_, string):
         if string is None:
