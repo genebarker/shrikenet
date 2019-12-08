@@ -13,8 +13,8 @@ def test_register(client, app):
     with app.app_context():
         storage_provider = get_services().storage_provider
         assert storage_provider.exists_app_username('a')
- 
-    
+
+
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('', '', b'Username is required.'),
     ('a', '', b'Password is required.'),

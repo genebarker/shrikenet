@@ -5,6 +5,7 @@ import pytest
 from shrike import create_app
 from shrike.db import get_services, init_db
 
+
 @pytest.fixture
 def app():
     config = ConfigParser()

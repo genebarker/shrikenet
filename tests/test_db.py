@@ -6,7 +6,7 @@ def test_get_close_storage_provider(app):
     with app.app_context():
         services = get_services()
         assert services is get_services()
-    
+
     with pytest.raises(RuntimeError) as excinfo:
         get_services()
 
