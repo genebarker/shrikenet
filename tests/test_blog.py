@@ -14,12 +14,19 @@ def test_index(client, auth):
     response = client.get('/')
     assert b'Log Out' in response.data
     assert b'test title' in response.data
-    created_year = datetime(2018, 1, 1, tzinfo=timezone.utc).astimezone().date().year
-    author_str = b'by test on Mon 01 Jan 2018' if created_year == 2018 \
+
+    created_time_utc = datetime(2018, 1, 1, tzinfo=timezone.utc)
+    created_time_local = created_time_utc.astimezone()
+    created_year_local = created_time_local.date().year
+    author_str = b'by test on Mon 01 Jan 2018' if created_year_local == 2018 \
         else b'by test on Sun 31 Dec 2017'
     assert author_str in response.data
     assert b'<p>test body</p>' in response.data
     assert b'href="/1/update"' in response.data
+
+
+def get_year_in_local_time_zone(dt):
+    return dt.astimezone().date().year
 
 
 @pytest.mark.parametrize('path', (
