@@ -1,7 +1,7 @@
 import pytest
 
-from shrike.adapters.example_crypto_adapter import ExampleCryptoAdapter
 from shrike.adapters.memory_adapter import MemoryAdapter
+from shrike.adapters.swapcase_adapter import SwapcaseAdapter
 from shrike.entities.app_user import AppUser
 from shrike.entities.services import Services
 from shrike.usecases.login_to_system import LoginToSystem
@@ -16,7 +16,7 @@ def services():
     storage_provider = MemoryAdapter()
     storage_provider.open()
     text_transformer = None
-    crypto_provider = ExampleCryptoAdapter()
+    crypto_provider = SwapcaseAdapter()
     yield Services(storage_provider, text_transformer, crypto_provider)
     storage_provider.close()
 

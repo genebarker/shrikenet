@@ -1,16 +1,17 @@
 import pytest
 
-from shrike.adapters.example_crypto_adapter import ExampleCryptoAdapter
+from shrike.adapters.swapcase_adapter import SwapcaseAdapter
 from shrike.entities.crypto_provider import CryptoProvider
+
 
 class TestExampleCryptoAdapter:
 
     TEST_STRING = 'scully'
     HASH_OF_TEST_STRING = 'SCULLY'
-    
+
     @staticmethod
     def get_crypto_provider():
-        return ExampleCryptoAdapter()
+        return SwapcaseAdapter()
 
     @pytest.fixture
     def crypto_provider(self):
