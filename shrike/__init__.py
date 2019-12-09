@@ -13,6 +13,8 @@ def create_app(test_config=None):
         DB_NAME='unused',
         DB_USER='unused',
         DB_PASSWORD='unused',
+        TEXT_TRANSFORMER_MODULE='shrike.adapters.markdown_adapter',
+        TEXT_TRANSFORMER_CLASS='MarkdownAdapter',
     )
 
     if test_config is None:

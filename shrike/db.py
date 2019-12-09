@@ -7,15 +7,26 @@ from flask.cli import with_appcontext
 from shrike.adapters.markdown_adapter import MarkdownAdapter
 from shrike.entities.services import Services
 
+
 def get_services():
     if 'services' not in g:
         g.services = initialize_services()
 
     return g.services
 
+
 def initialize_services():
-    storage_module = importlib.import_module(current_app.config['STORAGE_PROVIDER_MODULE'])
-    storage_class = getattr(storage_module, current_app.config['STORAGE_PROVIDER_CLASS'])
+    services = Services()
+    services.storage_provider = get_storage_provider()
+    services.text_transformer = get_text_transformer()
+    return services
+
+
+def get_storage_provider():
+    storage_module = importlib.import_module(current_app.config[
+                                             'STORAGE_PROVIDER_MODULE'])
+    storage_class = getattr(storage_module,
+                            current_app.config['STORAGE_PROVIDER_CLASS'])
     db_config = {
         'db_name': current_app.config['DB_NAME'],
         'db_user': current_app.config['DB_USER'],
@@ -23,8 +34,17 @@ def initialize_services():
     }
     storage_provider = storage_class(db_config)
     storage_provider.open()
-    text_transformer = MarkdownAdapter()
-    return Services(storage_provider, text_transformer)
+    return storage_provider
+
+
+def get_text_transformer():
+    transformer_module = importlib.import_module(current_app.config[
+                                                 'TEXT_TRANSFORMER_MODULE'])
+    transformer_class = getattr(transformer_module,
+                                current_app.config['TEXT_TRANSFORMER_CLASS'])
+    text_transformer = transformer_class()
+    return text_transformer
+
 
 def close_services(e=None):
     services = g.pop('services', None)
@@ -32,10 +52,12 @@ def close_services(e=None):
     if services is not None:
         services.storage_provider.close()
 
+
 def init_db():
     services = get_services()
     services.storage_provider.build_database_schema()
     services.storage_provider.commit()
+
 
 @click.command('init-db')
 @with_appcontext
@@ -43,6 +65,7 @@ def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
     click.echo('Initialized the database.')
+
 
 def init_app(app):
     app.teardown_appcontext(close_services)
