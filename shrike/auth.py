@@ -3,7 +3,6 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 from shrike.db import get_services
 from shrike.entities.app_user import AppUser
@@ -17,6 +16,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         storage_provider = get_services().storage_provider
+        crypto_provider = get_services().crypto_provider
         error = None
 
         if not username:
@@ -27,13 +27,12 @@ def register():
             error = 'User {} is already registered.'.format(username)
 
         if error is None:
-            print('length of password hash is {}'.format(len(generate_password_hash(password))))
-            
             new_user = AppUser(
                 oid=storage_provider.get_next_app_user_oid(),
                 username=username,
                 name=None,
-                password_hash=generate_password_hash(password),
+                password_hash=crypto_provider.generate_hash_from_string(
+                    password),
             )
             storage_provider.add_app_user(new_user)
             storage_provider.commit()
@@ -50,6 +49,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         storage_provider = get_services().storage_provider
+        crypto_provider = get_services().crypto_provider
         error = None
         try:
             user = storage_provider.get_app_user_by_username(username)
@@ -58,7 +58,8 @@ def login():
 
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user.password_hash, password):
+        elif not crypto_provider.hash_matches_string(user.password_hash,
+                                                     password):
             error = 'Incorrect password.'
 
         if error is None:
