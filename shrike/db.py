@@ -19,14 +19,13 @@ def initialize_services():
     services = Services()
     services.storage_provider = get_storage_provider()
     services.text_transformer = get_text_transformer()
+    services.crypto_provider = get_crypto_provider()
     return services
 
 
 def get_storage_provider():
-    storage_module = importlib.import_module(current_app.config[
-                                             'STORAGE_PROVIDER_MODULE'])
-    storage_class = getattr(storage_module,
-                            current_app.config['STORAGE_PROVIDER_CLASS'])
+    storage_class = get_class_from_app_config('STORAGE_PROVIDER_MODULE',
+                                              'STORAGE_PROVIDER_CLASS')
     db_config = {
         'db_name': current_app.config['DB_NAME'],
         'db_user': current_app.config['DB_USER'],
@@ -37,13 +36,24 @@ def get_storage_provider():
     return storage_provider
 
 
+def get_class_from_app_config(module_name, class_name):
+    module = importlib.import_module(current_app.config[module_name])
+    class_ = getattr(module, current_app.config[class_name])
+    return class_
+
+
 def get_text_transformer():
-    transformer_module = importlib.import_module(current_app.config[
-                                                 'TEXT_TRANSFORMER_MODULE'])
-    transformer_class = getattr(transformer_module,
-                                current_app.config['TEXT_TRANSFORMER_CLASS'])
+    transformer_class = get_class_from_app_config('TEXT_TRANSFORMER_MODULE',
+                                                  'TEXT_TRANSFORMER_CLASS')
     text_transformer = transformer_class()
     return text_transformer
+
+
+def get_crypto_provider():
+    crypto_class = get_class_from_app_config('CRYPTO_PROVIDER_MODULE',
+                                             'CRYPTO_PROVIDER_CLASS')
+    crypto_provider = crypto_class()
+    return crypto_provider
 
 
 def close_services(e=None):

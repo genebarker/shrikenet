@@ -15,6 +15,8 @@ def create_app(test_config=None):
         DB_PASSWORD='unused',
         TEXT_TRANSFORMER_MODULE='shrike.adapters.markdown_adapter',
         TEXT_TRANSFORMER_CLASS='MarkdownAdapter',
+        CRYPTO_PROVIDER_MODULE='shrike.adapters.swapcase_adapter',
+        CRYPTO_PROVIDER_CLASS='SwapcaseAdapter',
     )
 
     if test_config is None:
