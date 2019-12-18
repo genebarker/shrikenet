@@ -23,6 +23,13 @@ class LoginToSystem:
             self.presenter.present(result)
             return result
 
+        if user.needs_password_change:
+            result = LoginToSystemResult('Password marked for reset. Must '
+                                         'supply new_password.')
+            result.must_change_password = True
+            self.presenter.present(result)
+            return result
+
         result = LoginToSystemResult('Login successful.',
                                      was_successful=True)
         self.presenter.present(result)
