@@ -7,6 +7,8 @@ GOOD_OID = 100
 GOOD_USERNAME = 'fmulder'
 GOOD_NAME = 'Fox Mulder'
 GOOD_PASSWORD_HASH = 'xxxYYY'
+DEFAULT_NEEDS_PASSWORD_CHANGE = False
+
 
 def create_good_app_user():
     return AppUser(
@@ -25,6 +27,7 @@ class TestGeneralProperties:
         assert user.username == GOOD_USERNAME
         assert user.name == GOOD_NAME
         assert user.password_hash == GOOD_PASSWORD_HASH
+        assert user.needs_password_change is DEFAULT_NEEDS_PASSWORD_CHANGE
 
 
 class TestEquals:
@@ -36,23 +39,41 @@ class TestEquals:
 
     def test_unequal_when_class_different(self):
         class FakeUser:
-            def __init__(self, oid, username, name, password_hash):
+            def __init__(self, oid, username, name, password_hash,
+                         needs_password_change):
                 self.oid = oid
                 self.username = username
                 self.name = name
                 self.password_hash = password_hash
-        
-        user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH)
-        user_two = FakeUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH)
+                self.needs_password_change = needs_password_change
+
+        user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
+                           GOOD_PASSWORD_HASH, DEFAULT_NEEDS_PASSWORD_CHANGE)
+        user_two = FakeUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
+                            GOOD_PASSWORD_HASH, DEFAULT_NEEDS_PASSWORD_CHANGE)
         assert user_one != user_two
 
-    @pytest.mark.parametrize(('oid', 'username', 'name', 'password_hash'), (
-        (999, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH),
-        (GOOD_OID, 'otherusername', GOOD_NAME, GOOD_PASSWORD_HASH),
-        (GOOD_OID, GOOD_USERNAME, 'Other Name', GOOD_PASSWORD_HASH),
-        (GOOD_OID, GOOD_USERNAME, GOOD_NAME, 'otherHASH'),
-    ))
-    def test_unequal_when_attribute_different(self, oid, username, name, password_hash):
-        user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH)
-        user_two = AppUser(oid, username, name, password_hash)
+    @pytest.mark.parametrize(
+        ('oid', 'username', 'name', 'password_hash',
+         'needs_password_change'),
+        (
+            (999, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
+             DEFAULT_NEEDS_PASSWORD_CHANGE),
+            (GOOD_OID, 'otherusername', GOOD_NAME, GOOD_PASSWORD_HASH,
+             DEFAULT_NEEDS_PASSWORD_CHANGE),
+            (GOOD_OID, GOOD_USERNAME, 'Other Name', GOOD_PASSWORD_HASH,
+             DEFAULT_NEEDS_PASSWORD_CHANGE),
+            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, 'otherHASH',
+             DEFAULT_NEEDS_PASSWORD_CHANGE),
+            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
+             not DEFAULT_NEEDS_PASSWORD_CHANGE),
+        )
+    )
+    def test_unequal_when_attribute_different(
+            self, oid, username, name, password_hash,
+            needs_password_change):
+        user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
+                           GOOD_PASSWORD_HASH, DEFAULT_NEEDS_PASSWORD_CHANGE)
+        user_two = AppUser(oid, username, name, password_hash,
+                           needs_password_change)
         assert user_one != user_two
