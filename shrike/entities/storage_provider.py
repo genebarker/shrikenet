@@ -38,7 +38,7 @@ class StorageProvider:
 
     def add_app_user(self, app_user):
         raise NotImplementedError
-    
+
     def update_app_user(self, app_user):
         raise NotImplementedError
 
