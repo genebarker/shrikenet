@@ -5,6 +5,7 @@ import pytest
 from shrike.adapters.postgresql_adapter import PostgreSQLAdapter
 from tests.adapters.test_memory_adapter import TestMemoryAdapter
 
+
 class TestPostgreSQLAdapter(TestMemoryAdapter):
 
     @pytest.fixture(scope='class')
@@ -32,5 +33,5 @@ class TestPostgreSQLAdapter(TestMemoryAdapter):
         storage_provider.rollback()
 
     def test_get_version_returns_provider_info(self, storage_provider):
-        assert storage_provider.get_version().startswith(storage_provider.VERSION_PREFIX)
-
+        assert storage_provider.get_version().startswith(
+            storage_provider.VERSION_PREFIX)
