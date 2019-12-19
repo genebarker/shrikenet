@@ -6,6 +6,7 @@ from shrike.entities.app_user import AppUser
 from shrike.entities.post import DeepPost, Post
 from shrike.entities.storage_provider import StorageProvider
 
+
 class PostgreSQLAdapter(StorageProvider):
 
     SCHEMA_FILENAME = 'pg_build_schema.sql'
@@ -103,7 +104,13 @@ class PostgreSQLAdapter(StorageProvider):
             return row
 
     def _create_app_user_from_row(self, row):
-        app_user = AppUser(row[0], row[1], row[2], row[3])
+        app_user = AppUser(
+            oid=row[0],
+            username=row[1],
+            name=row[2],
+            password_hash=row[3],
+            needs_password_change=row[4],
+            )
         return app_user
 
     def get_app_user_by_oid(self, oid):
@@ -114,9 +121,12 @@ class PostgreSQLAdapter(StorageProvider):
         return self._create_app_user_from_row(row)
 
     def add_app_user(self, app_user):
-        sql = "INSERT INTO app_user (oid, username, name, password_hash) VALUES(%s, %s, %s, %s)"
-        parms = (app_user.oid, app_user.username, app_user.name, app_user.password_hash)
-        error = 'can not add app_user (oid={}, username={}), reason: '.format(app_user.oid, app_user.username)
+        sql = ("INSERT INTO app_user (oid, username, name, password_hash, "
+               "needs_password_change) VALUES(%s, %s, %s, %s, %s)")
+        parms = (app_user.oid, app_user.username, app_user.name,
+                 app_user.password_hash, app_user.needs_password_change)
+        error = ('can not add app_user (oid={}, username={}), reason: '
+                 .format(app_user.oid, app_user.username))
         self._execute_process_sql(sql, parms, error)
 
     def _execute_process_sql(self, sql, parms, error):
@@ -131,9 +141,13 @@ class PostgreSQLAdapter(StorageProvider):
             cursor.execute(sql, parms)
 
     def update_app_user(self, app_user):
-        sql = "UPDATE app_user SET username = %s, name = %s, password_hash = %s WHERE oid = %s"
-        parms = (app_user.username, app_user.name, app_user.password_hash, app_user.oid)
-        error = 'can not update app_user (oid={}), reason: '.format(app_user.oid)
+        sql = ("UPDATE app_user SET username = %s, name = %s, "
+               "password_hash = %s , needs_password_change = %s "
+               "WHERE oid = %s")
+        parms = (app_user.username, app_user.name, app_user.password_hash,
+                 app_user.needs_password_change, app_user.oid)
+        error = ('can not update app_user (oid={}), reason: '
+                 .format(app_user.oid))
         self._execute_process_sql(sql, parms, error)
 
     def get_app_user_count(self):
@@ -144,11 +158,17 @@ class PostgreSQLAdapter(StorageProvider):
     def exists_app_username(self, username):
         sql = "SELECT count(*) FROM app_user WHERE username = %s"
         parms = (username,)
-        error = 'can not check if app_user exists (username={}), reason: '.format(username)
+        error = ('can not check if app_user exists (username={}), reason: '
+                 .format(username))
         return self._execute_select_value(sql, error, parms) == 1
 
     def get_post_by_oid(self, oid):
-        sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid WHERE p.oid = %s"
+        sql = ("SELECT p.oid, p.title, p.body, p.author_oid, "
+               "p.created_time, u.username AS author_username "
+               "FROM post p "
+               "LEFT OUTER JOIN app_user u "
+               "ON p.author_oid = u.oid "
+               "WHERE p.oid = %s")
         parms = (oid,)
         error = 'can not get post (oid={}), reason: '.format(oid)
         row = self._execute_select_row(sql, parms, error)
@@ -165,14 +185,19 @@ class PostgreSQLAdapter(StorageProvider):
         return DeepPost(post, row[5])
 
     def add_post(self, post):
-        sql = "INSERT INTO post (oid, title, body, author_oid, created_time) VALUES(%s, %s, %s, %s, %s)"
-        parms = (post.oid, post.title, post.body, post.author_oid, post.created_time)
-        error = 'can not add post (oid={}, title={}), reason: '.format(post.oid, post.title)
+        sql = ("INSERT INTO post (oid, title, body, author_oid, " 
+               "created_time) VALUES(%s, %s, %s, %s, %s)")
+        parms = (post.oid, post.title, post.body, post.author_oid,
+                 post.created_time)
+        error = ('can not add post (oid={}, title={}), reason: '
+                 .format(post.oid, post.title))
         self._execute_process_sql(sql, parms, error)
 
     def update_post(self, post):
-        sql = "UPDATE post SET title = %s, body = %s, author_oid = %s, created_time = %s WHERE oid = %s"
-        parms = (post.title, post.body, post.author_oid, post.created_time, post.oid)
+        sql = ("UPDATE post SET title = %s, body = %s, author_oid = %s, "
+               "created_time = %s WHERE oid = %s")
+        parms = (post.title, post.body, post.author_oid, post.created_time,
+                 post.oid)
         error = 'can not update post (oid={}), reason: '.format(post.oid)
         self._execute_process_sql(sql, parms, error)
 
@@ -188,7 +213,11 @@ class PostgreSQLAdapter(StorageProvider):
         return self._execute_select_value(sql, error)
 
     def get_posts(self):
-        sql = "SELECT p.oid, p.title, p.body, p.author_oid, p.created_time, u.username AS author_username FROM post p LEFT OUTER JOIN app_user u ON p.author_oid = u.oid ORDER BY p.created_time DESC"
+        sql = ("SELECT p.oid, p.title, p.body, p.author_oid, "
+               "p.created_time, u.username AS author_username "
+               "FROM post p "
+               "LEFT OUTER JOIN app_user u ON p.author_oid = u.oid "
+               "ORDER BY p.created_time DESC")
         parms = None
         error = 'can not get posts, reason: '
         rows = self._execute_select_all_rows(sql, parms, error)

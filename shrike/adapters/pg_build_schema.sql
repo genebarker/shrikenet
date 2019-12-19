@@ -11,7 +11,8 @@ CREATE TABLE app_user (
     oid integer PRIMARY KEY,
     username varchar(20) UNIQUE,
     name varchar(50),
-    password_hash varchar(128)
+    password_hash varchar(128),
+    needs_password_change boolean
 );
 
 DROP TABLE IF EXISTS post;
