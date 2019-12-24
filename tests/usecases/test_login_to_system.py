@@ -99,7 +99,8 @@ def test_credentials_checked_before_password_reset(services):
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
 
 
-def test_login_with_new_password_successful_result(services, good_user):
+def test_login_with_new_password_returns_successful_result(services,
+                                                           good_user):
     presenter = SimpleResultPresenter()
     login_to_system = LoginToSystem(services, presenter)
     new_password = reverse_string(GOOD_USER_PASSWORD)
