@@ -25,6 +25,7 @@ def services():
 def good_user(services):
     user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
     services.storage_provider.add_app_user(user)
+    return user
 
 
 def create_user(services, username, password):
@@ -66,7 +67,14 @@ def test_login_succeeds_for_good_credentials(services, good_user):
     presenter = SimpleResultPresenter()
     login_to_system = LoginToSystem(services, presenter)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
-    assert result.was_successful
+    validate_successful_result(presenter, result, 'Login successful.')
+
+
+def validate_successful_result(presenter, login_result,
+                               expected_login_message):
+    assert login_result.was_successful
+    assert not login_result.must_change_password
+    assert login_result.message.startswith(expected_login_message)
     assert presenter.present_method_called
 
 
@@ -89,3 +97,28 @@ def test_credentials_checked_before_password_reset(services):
     user.needs_password_change = True
     services.storage_provider.add_app_user(user)
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
+
+
+def test_login_with_new_password_successful_result(services, good_user):
+    presenter = SimpleResultPresenter()
+    login_to_system = LoginToSystem(services, presenter)
+    new_password = reverse_string(GOOD_USER_PASSWORD)
+    result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                                 new_password)
+    validate_successful_result(presenter, result,
+                               'Password successfully changed')
+
+
+def reverse_string(string):
+    return string[::-1]
+
+
+def test_login_with_new_password_changes_the_password(services, good_user):
+    presenter = SimpleResultPresenter()
+    login_to_system = LoginToSystem(services, presenter)
+    new_password = reverse_string(GOOD_USER_PASSWORD)
+    login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                        new_password)
+    user = services.storage_provider.get_app_user_by_oid(good_user.oid)
+    assert services.crypto_provider.hash_matches_string(user.password_hash,
+                                                        new_password)

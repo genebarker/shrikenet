@@ -7,7 +7,7 @@ class LoginToSystem:
         self.services = services
         self.presenter = presenter
 
-    def run(self, username, password):
+    def run(self, username, password, new_password=None):
         storage_provider = self.services.storage_provider
         crypto_provider = self.services.crypto_provider
 
@@ -27,6 +27,15 @@ class LoginToSystem:
             result = LoginToSystemResult('Password marked for reset. Must '
                                          'supply new_password.')
             result.must_change_password = True
+            self.presenter.present(result)
+            return result
+
+        if new_password is not None:
+            user.password_hash = crypto_provider.generate_hash_from_string(
+                new_password)
+            storage_provider.update_app_user(user)
+            result = LoginToSystemResult('Password successfully changed.',
+                                         was_successful=True)
             self.presenter.present(result)
             return result
 
