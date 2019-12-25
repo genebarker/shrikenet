@@ -34,6 +34,7 @@ class LoginToSystem:
             user.password_hash = crypto_provider.generate_hash_from_string(
                 new_password)
             storage_provider.update_app_user(user)
+            storage_provider.commit()
             result = LoginToSystemResult('Password successfully changed.',
                                          was_successful=True)
             self.presenter.present(result)

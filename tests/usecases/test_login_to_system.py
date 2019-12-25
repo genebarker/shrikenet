@@ -120,6 +120,7 @@ def test_login_with_new_password_changes_the_password(services, good_user):
     new_password = reverse_string(GOOD_USER_PASSWORD)
     login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
                         new_password)
+    services.storage_provider.rollback()
     user = services.storage_provider.get_app_user_by_oid(good_user.oid)
     assert services.crypto_provider.hash_matches_string(user.password_hash,
                                                         new_password)
