@@ -100,7 +100,8 @@ class PostgreSQLAdapter(StorageProvider):
         with self.connection.cursor() as cursor:
             cursor.execute(sql, parms)
             row = cursor.fetchone()
-            if row is None: raise KeyError('record does not exist')
+            if row is None:
+                raise KeyError('record does not exist')
             return row
 
     def _create_app_user_from_row(self, row):
@@ -110,6 +111,7 @@ class PostgreSQLAdapter(StorageProvider):
             name=row[2],
             password_hash=row[3],
             needs_password_change=row[4],
+            is_locked=row[5],
             )
         return app_user
 
@@ -122,9 +124,11 @@ class PostgreSQLAdapter(StorageProvider):
 
     def add_app_user(self, app_user):
         sql = ("INSERT INTO app_user (oid, username, name, password_hash, "
-               "needs_password_change) VALUES(%s, %s, %s, %s, %s)")
+               "needs_password_change, is_locked) "
+               "VALUES(%s, %s, %s, %s, %s, %s)")
         parms = (app_user.oid, app_user.username, app_user.name,
-                 app_user.password_hash, app_user.needs_password_change)
+                 app_user.password_hash, app_user.needs_password_change,
+                 app_user.is_locked)
         error = ('can not add app_user (oid={}, username={}), reason: '
                  .format(app_user.oid, app_user.username))
         self._execute_process_sql(sql, parms, error)
@@ -142,10 +146,12 @@ class PostgreSQLAdapter(StorageProvider):
 
     def update_app_user(self, app_user):
         sql = ("UPDATE app_user SET username = %s, name = %s, "
-               "password_hash = %s , needs_password_change = %s "
+               "password_hash = %s , needs_password_change = %s, "
+               "is_locked = %s "
                "WHERE oid = %s")
         parms = (app_user.username, app_user.name, app_user.password_hash,
-                 app_user.needs_password_change, app_user.oid)
+                 app_user.needs_password_change, app_user.is_locked,
+                 app_user.oid)
         error = ('can not update app_user (oid={}), reason: '
                  .format(app_user.oid))
         self._execute_process_sql(sql, parms, error)

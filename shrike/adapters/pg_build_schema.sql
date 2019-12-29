@@ -12,7 +12,8 @@ CREATE TABLE app_user (
     username varchar(20) UNIQUE,
     name varchar(50),
     password_hash varchar(128),
-    needs_password_change boolean
+    needs_password_change boolean,
+    is_locked boolean
 );
 
 DROP TABLE IF EXISTS post;

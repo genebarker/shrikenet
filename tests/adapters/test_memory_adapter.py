@@ -119,7 +119,7 @@ class TestMemoryAdapter:
         name = 'Mr. Awesome'
         password_hash = 'xxYYYzzzz'
         app_user = AppUser(oid, username, name, password_hash,
-                           needs_password_change=True)
+                           needs_password_change=True, is_locked=True)
         storage_provider.add_app_user(app_user)
         return app_user
 
