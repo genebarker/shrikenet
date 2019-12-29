@@ -32,9 +32,8 @@ class LoginToSystem:
             storage_provider.update_app_user(user)
             storage_provider.commit()
             result = LoginToSystemResult('Password successfully changed.',
-                                         was_successful=True)
+                                         has_failed=False)
             return result
 
-        result = LoginToSystemResult('Login successful.',
-                                     was_successful=True)
+        result = LoginToSystemResult('Login successful.', has_failed=False)
         return result

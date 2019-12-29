@@ -1,7 +1,7 @@
 class LoginToSystemResult:
 
-    def __init__(self, message, was_successful=False,
+    def __init__(self, message, has_failed=True,
                  must_change_password=False):
         self.message = message
-        self.was_successful = was_successful
+        self.has_failed = has_failed
         self.must_change_password = must_change_password
