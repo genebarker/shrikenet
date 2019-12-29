@@ -54,6 +54,7 @@ class TestFieldValidation:
         app_user.name = 'A *bad* Name'
         self.verify_validation_raises(app_user)
 
+
 class TestReferenceValidation:
 
     def test_successful_validation_returns_none(self):
