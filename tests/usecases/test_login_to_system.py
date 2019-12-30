@@ -42,12 +42,13 @@ def test_login_fails_on_unknown_username(services):
     validate_login_fails(services, 'unknown_username', 'some password')
 
 
-def validate_login_fails(services, username, password):
+def validate_login_fails(services, username, password,
+                         message='Login attempt failed.'):
     login_to_system = LoginToSystem(services)
     result = login_to_system.run(username, password)
     assert result.has_failed
     assert not result.must_change_password
-    assert result.message == 'Login attempt failed.'
+    assert result.message == message
 
 
 def test_login_fails_on_wrong_password(services, good_user):
@@ -109,6 +110,23 @@ def test_login_with_new_password_changes_the_password(services, good_user):
                                                         new_password)
 
 
+def test_login_fails_when_user_locked(services):
+    create_locked_user(services)
+    validate_login_fails(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                         message='Login attempt failed. User is locked.')
+
+
+def create_locked_user(services):
+    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    user.is_locked = True
+    services.storage_provider.add_app_user(user)
+    return user
+
+
+def test_password_checked_before_user_lock(services):
+    create_locked_user(services)
+    validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
+
 # def test_account_locks_on_consecutive_failures(services, good_user):
 #     login_to_system = LoginToSystem(services)
 #     result = None
@@ -117,5 +135,5 @@ def test_login_with_new_password_changes_the_password(services, good_user):
 #     user = services.storage_provider.get_app_user_by_username(
 #         GOOD_USER_USERNAME)
 #     assert user.is_locked
-#     assert not result.was_successful
+#     assert result.has_failed
 #     assert result.message == 'Login attempt failed. This account is locked.'

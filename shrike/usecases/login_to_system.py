@@ -20,6 +20,11 @@ class LoginToSystem:
             result = LoginToSystemResult('Login attempt failed.')
             return result
 
+        if user.is_locked:
+            result = LoginToSystemResult('Login attempt failed. User is '
+                                         'locked.')
+            return result
+
         if user.needs_password_change:
             result = LoginToSystemResult('Password marked for reset. Must '
                                          'supply new_password.')
