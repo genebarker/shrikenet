@@ -21,8 +21,8 @@ class LoginToSystem:
             return result
 
         if user.is_locked:
-            result = LoginToSystemResult('Login attempt failed. User is '
-                                         'locked.')
+            result = LoginToSystemResult('Login attempt failed. Your '
+                                         'account is locked.')
             return result
 
         if user.needs_password_change:

@@ -113,7 +113,8 @@ def test_login_with_new_password_changes_the_password(services, good_user):
 def test_login_fails_when_user_locked(services):
     create_locked_user(services)
     validate_login_fails(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                         message='Login attempt failed. User is locked.')
+                         message='Login attempt failed. Your account is '
+                                 'locked.')
 
 
 def create_locked_user(services):
