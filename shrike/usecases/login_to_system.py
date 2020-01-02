@@ -13,6 +13,7 @@ class LoginToSystem:
             user = db.get_app_user_by_username(username)
             self._verify_user_password_correct(user, password)
             self._verify_user_unlocked(user)
+            self._verify_user_active(user)
             self._verify_user_password_reset_satisfied(user, new_password)
         except LoginToSystemError as e:
             return LoginToSystemResult(
@@ -39,6 +40,11 @@ class LoginToSystem:
         crypto = self.services.crypto_provider
         if not crypto.hash_matches_string(user.password_hash, password):
             raise LoginToSystemError('Login attempt failed.')
+
+    def _verify_user_active(self, user):
+        if user.is_dormant:
+            raise LoginToSystemError('Login attempt failed. Your '
+                                     'credentials are invalid.')
 
     def _verify_user_unlocked(self, user):
         if user.is_locked:

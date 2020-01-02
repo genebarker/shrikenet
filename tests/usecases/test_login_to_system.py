@@ -148,6 +148,26 @@ def test_password_checked_before_user_lock(services):
     create_locked_user(services)
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
 
+
+def test_login_fails_when_user_dormant(services):
+    create_dormant_user(services)
+    validate_login_fails(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                         message='Login attempt failed. Your credentials '
+                                 'are invalid.')
+
+
+def create_dormant_user(services):
+    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    user.is_dormant = True
+    services.storage_provider.add_app_user(user)
+    return user
+
+
+def test_password_checked_before_user_dormant(services):
+    create_dormant_user(services)
+    validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
+
+
 # def test_account_locks_on_consecutive_failures(services, good_user):
 #     login_to_system = LoginToSystem(services)
 #     result = None
