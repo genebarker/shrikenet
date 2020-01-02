@@ -46,10 +46,7 @@ class LoginToSystem:
                                      'is locked.')
 
     def _verify_user_password_reset_satisfied(self, user, new_password):
-        if new_password is not None:
-            return
-
-        if user.needs_password_change:
+        if user.needs_password_change and new_password is None:
             raise LoginToSystemError('Password marked for reset. Must '
                                      'supply a new password.',
                                      must_change_password=True)
