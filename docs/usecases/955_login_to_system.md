@@ -52,7 +52,7 @@ All users
   1. System informs user that their account is locked.
   2. System logs the attempt, username, IP address, and time.
 
-4d. Inactive user:
+4d. Account dormant (turned-off):
 
   1. System informs user that their credentials are invalid.
   2. System logs the failure, username, IP address, and time.
