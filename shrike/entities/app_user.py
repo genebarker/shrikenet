@@ -1,13 +1,15 @@
 class AppUser:
 
     def __init__(self, oid, username, name, password_hash,
-                 needs_password_change=False, is_locked=False):
+                 needs_password_change=False, is_locked=False,
+                 is_dormant=False):
         self.oid = oid
         self.username = username
         self.name = name
         self.password_hash = password_hash
         self.needs_password_change = needs_password_change
         self.is_locked = is_locked
+        self.is_dormant = is_dormant
 
     def __eq__(self, other):
         return (isinstance(other, AppUser) and
@@ -16,4 +18,5 @@ class AppUser:
                 self.name == other.name and
                 self.password_hash == other.password_hash and
                 self.needs_password_change == other.needs_password_change and
-                self.is_locked == other.is_locked)
+                self.is_locked == other.is_locked and
+                self.is_dormant == other.is_dormant)
