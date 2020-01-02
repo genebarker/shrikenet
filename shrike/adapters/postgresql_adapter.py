@@ -192,7 +192,7 @@ class PostgreSQLAdapter(StorageProvider):
         return DeepPost(post, row[5])
 
     def add_post(self, post):
-        sql = ("INSERT INTO post (oid, title, body, author_oid, " 
+        sql = ("INSERT INTO post (oid, title, body, author_oid, "
                "created_time) VALUES(%s, %s, %s, %s, %s)")
         parms = (post.oid, post.title, post.body, post.author_oid,
                  post.created_time)
