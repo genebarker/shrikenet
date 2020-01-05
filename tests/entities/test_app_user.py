@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime, timezone
 
 import pytest
@@ -76,52 +77,21 @@ class TestEquals:
         assert user_one != user_two
 
     @pytest.mark.parametrize(
-        ('oid', 'username', 'name', 'password_hash',
-         'needs_password_change', 'is_locked', 'is_dormant',
-         'ongoing_login_failure_count', 'last_login_failure_time'),
+        ('attribute_name', 'attribute_value'),
         (
-            (999, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, 'otherusername', GOOD_NAME, GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, 'Other Name', GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, 'otherHASH',
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
-             not DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, not DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             not DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, 44,
-             DEFAULT_FAILURE_TIME),
-            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
-             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
-             datetime.now(timezone.utc)),
+            ('oid', 999),
+            ('username', 'otherusername'),
+            ('name', 'Other Name'),
+            ('password_hash', 'otherHASH'),
+            ('needs_password_change', not DEFAULT_NEEDS_PASSWORD_CHANGE),
+            ('is_locked', not DEFAULT_IS_LOCKED),
+            ('is_dormant', not DEFAULT_IS_DORMANT),
+            ('ongoing_login_failure_count', 999),
+            ('last_login_failure_time', datetime.now(timezone.utc)),
         )
     )
-    def test_unequal_when_attribute_different(
-            self, oid, username, name, password_hash,
-            needs_password_change, is_locked, is_dormant,
-            ongoing_login_failure_count, last_login_failure_time):
+    def test_unequal_when_attribute_different(self, attribute_name,
+                                              attribute_value):
         user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
                            GOOD_PASSWORD_HASH,
                            DEFAULT_NEEDS_PASSWORD_CHANGE,
@@ -129,8 +99,6 @@ class TestEquals:
                            DEFAULT_IS_DORMANT,
                            DEFAULT_FAILURE_COUNT,
                            DEFAULT_FAILURE_TIME)
-        user_two = AppUser(oid, username, name, password_hash,
-                           needs_password_change, is_locked, is_dormant,
-                           ongoing_login_failure_count,
-                           last_login_failure_time)
+        user_two = copy.deepcopy(user_one)
+        setattr(user_two, attribute_name, attribute_value)
         assert user_one != user_two
