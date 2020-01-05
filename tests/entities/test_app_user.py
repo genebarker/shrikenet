@@ -37,8 +37,8 @@ class TestGeneralProperties:
         assert user.needs_password_change is DEFAULT_NEEDS_PASSWORD_CHANGE
         assert user.is_locked is DEFAULT_IS_LOCKED
         assert user.is_dormant is DEFAULT_IS_DORMANT
-        assert user.ongoing_login_failure_count == DEFAULT_FAILURE_COUNT
-        assert user.last_login_failure_time == DEFAULT_FAILURE_TIME
+        assert user.ongoing_password_failure_count == DEFAULT_FAILURE_COUNT
+        assert user.last_password_failure_time == DEFAULT_FAILURE_TIME
 
 
 class TestEquals:
@@ -52,8 +52,8 @@ class TestEquals:
         class FakeUser:
             def __init__(self, oid, username, name, password_hash,
                          needs_password_change, is_locked, is_dormant,
-                         ongoing_login_failure_count,
-                         last_login_failure_time):
+                         ongoing_password_failure_count,
+                         last_password_failure_time):
                 self.oid = oid
                 self.username = username
                 self.name = name
@@ -61,8 +61,9 @@ class TestEquals:
                 self.needs_password_change = needs_password_change
                 self.is_locked = is_locked
                 self.is_dormant = is_dormant
-                self.ongoing_login_failure_count = ongoing_login_failure_count
-                self.last_login_failure_time = last_login_failure_time
+                self.ongoing_password_failure_count = \
+                    ongoing_password_failure_count
+                self.last_password_failure_time = last_password_failure_time
 
         user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
                            GOOD_PASSWORD_HASH,
@@ -86,8 +87,8 @@ class TestEquals:
             ('needs_password_change', not DEFAULT_NEEDS_PASSWORD_CHANGE),
             ('is_locked', not DEFAULT_IS_LOCKED),
             ('is_dormant', not DEFAULT_IS_DORMANT),
-            ('ongoing_login_failure_count', 999),
-            ('last_login_failure_time', datetime.now(timezone.utc)),
+            ('ongoing_password_failure_count', 999),
+            ('last_password_failure_time', datetime.now(timezone.utc)),
         )
     )
     def test_unequal_when_attribute_different(self, attribute_name,
