@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import pytest
 
 from shrike.entities.app_user import AppUser
@@ -10,6 +12,8 @@ GOOD_PASSWORD_HASH = 'xxxYYY'
 DEFAULT_NEEDS_PASSWORD_CHANGE = False
 DEFAULT_IS_LOCKED = False
 DEFAULT_IS_DORMANT = False
+DEFAULT_FAILURE_COUNT = 0
+DEFAULT_FAILURE_TIME = None
 
 
 def create_good_app_user():
@@ -32,6 +36,8 @@ class TestGeneralProperties:
         assert user.needs_password_change is DEFAULT_NEEDS_PASSWORD_CHANGE
         assert user.is_locked is DEFAULT_IS_LOCKED
         assert user.is_dormant is DEFAULT_IS_DORMANT
+        assert user.ongoing_login_failure_count == DEFAULT_FAILURE_COUNT
+        assert user.last_login_failure_time == DEFAULT_FAILURE_TIME
 
 
 class TestEquals:
@@ -44,7 +50,9 @@ class TestEquals:
     def test_unequal_when_class_different(self):
         class FakeUser:
             def __init__(self, oid, username, name, password_hash,
-                         needs_password_change, is_locked, is_dormant):
+                         needs_password_change, is_locked, is_dormant,
+                         ongoing_login_failure_count,
+                         last_login_failure_time):
                 self.oid = oid
                 self.username = username
                 self.name = name
@@ -52,52 +60,77 @@ class TestEquals:
                 self.needs_password_change = needs_password_change
                 self.is_locked = is_locked
                 self.is_dormant = is_dormant
+                self.ongoing_login_failure_count = ongoing_login_failure_count
+                self.last_login_failure_time = last_login_failure_time
 
         user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
                            GOOD_PASSWORD_HASH,
                            DEFAULT_NEEDS_PASSWORD_CHANGE,
-                           DEFAULT_IS_LOCKED, DEFAULT_IS_DORMANT)
+                           DEFAULT_IS_LOCKED, DEFAULT_IS_DORMANT,
+                           DEFAULT_FAILURE_COUNT, DEFAULT_FAILURE_TIME)
         user_two = FakeUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
                             GOOD_PASSWORD_HASH,
                             DEFAULT_NEEDS_PASSWORD_CHANGE,
-                            DEFAULT_IS_LOCKED, DEFAULT_IS_DORMANT)
+                            DEFAULT_IS_LOCKED, DEFAULT_IS_DORMANT,
+                            DEFAULT_FAILURE_COUNT, DEFAULT_FAILURE_TIME)
         assert user_one != user_two
 
     @pytest.mark.parametrize(
         ('oid', 'username', 'name', 'password_hash',
-         'needs_password_change', 'is_locked', 'is_dormant'),
+         'needs_password_change', 'is_locked', 'is_dormant',
+         'ongoing_login_failure_count', 'last_login_failure_time'),
         (
             (999, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
              DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT),
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
             (GOOD_OID, 'otherusername', GOOD_NAME, GOOD_PASSWORD_HASH,
              DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT),
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
             (GOOD_OID, GOOD_USERNAME, 'Other Name', GOOD_PASSWORD_HASH,
              DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT),
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
             (GOOD_OID, GOOD_USERNAME, GOOD_NAME, 'otherHASH',
              DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT),
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
             (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
              not DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT),
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
             (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
              DEFAULT_NEEDS_PASSWORD_CHANGE, not DEFAULT_IS_LOCKED,
-             DEFAULT_IS_DORMANT),
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
             (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
              DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
-             not DEFAULT_IS_DORMANT),
+             not DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             DEFAULT_FAILURE_TIME),
+            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
+             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
+             DEFAULT_IS_DORMANT, 44,
+             DEFAULT_FAILURE_TIME),
+            (GOOD_OID, GOOD_USERNAME, GOOD_NAME, GOOD_PASSWORD_HASH,
+             DEFAULT_NEEDS_PASSWORD_CHANGE, DEFAULT_IS_LOCKED,
+             DEFAULT_IS_DORMANT, DEFAULT_FAILURE_COUNT,
+             datetime.now(timezone.utc)),
         )
     )
     def test_unequal_when_attribute_different(
             self, oid, username, name, password_hash,
-            needs_password_change, is_locked, is_dormant):
+            needs_password_change, is_locked, is_dormant,
+            ongoing_login_failure_count, last_login_failure_time):
         user_one = AppUser(GOOD_OID, GOOD_USERNAME, GOOD_NAME,
                            GOOD_PASSWORD_HASH,
                            DEFAULT_NEEDS_PASSWORD_CHANGE,
                            DEFAULT_IS_LOCKED,
-                           DEFAULT_IS_DORMANT)
+                           DEFAULT_IS_DORMANT,
+                           DEFAULT_FAILURE_COUNT,
+                           DEFAULT_FAILURE_TIME)
         user_two = AppUser(oid, username, name, password_hash,
-                           needs_password_change, is_locked, is_dormant)
+                           needs_password_change, is_locked, is_dormant,
+                           ongoing_login_failure_count,
+                           last_login_failure_time)
         assert user_one != user_two
