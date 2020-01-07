@@ -4,13 +4,13 @@ from shrike.usecases.login_to_system_result import LoginToSystemResult
 class LoginToSystem:
 
     def __init__(self, services):
-        self.services = services
+        self.db = services.storage_provider
+        self.crypto = services.crypto_provider
 
     def run(self, username, password, new_password=None):
         try:
             self._verify_user_exists(username)
-            db = self.services.storage_provider
-            user = db.get_app_user_by_username(username)
+            user = self.db.get_app_user_by_username(username)
             self._verify_user_password_correct(user, password)
             self._verify_user_unlocked(user)
             self._verify_user_active(user)
@@ -28,17 +28,15 @@ class LoginToSystem:
             self._update_user_password(user, new_password)
             message = message + ' Password successfully changed.'
 
-        db.commit()
+        self.db.commit()
         return LoginToSystemResult(message=message, has_failed=False)
 
     def _verify_user_exists(self, username):
-        db = self.services.storage_provider
-        if db.exists_app_username(username) is False:
+        if self.db.exists_app_username(username) is False:
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_password_correct(self, user, password):
-        crypto = self.services.crypto_provider
-        if not crypto.hash_matches_string(user.password_hash, password):
+        if not self.crypto.hash_matches_string(user.password_hash, password):
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_active(self, user):
@@ -58,10 +56,9 @@ class LoginToSystem:
                                      must_change_password=True)
 
     def _update_user_password(self, user, new_password):
-        crypto = self.services.crypto_provider
-        user.password_hash = crypto.generate_hash_from_string(new_password)
-        db = self.services.storage_provider
-        db.update_app_user(user)
+        user.password_hash = self.crypto.generate_hash_from_string(
+            new_password)
+        self.db.update_app_user(user)
 
 
 class LoginToSystemError(Exception):
