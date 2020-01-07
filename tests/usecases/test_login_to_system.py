@@ -166,15 +166,3 @@ def create_dormant_user(services):
 def test_password_checked_before_user_dormant(services):
     create_dormant_user(services)
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
-
-
-# def test_account_locks_on_consecutive_failures(services, good_user):
-#     login_to_system = LoginToSystem(services)
-#     result = None
-#     for _ in range(Constants.LOGIN_FAIL_THRESHOLD_COUNT):
-#         result = login_to_system.run(GOOD_USER_USERNAME, 'wrong_password')
-#     user = services.storage_provider.get_app_user_by_username(
-#         GOOD_USER_USERNAME)
-#     assert user.is_locked
-#     assert result.has_failed
-#     assert result.message == 'Login attempt failed. This account is locked.'
