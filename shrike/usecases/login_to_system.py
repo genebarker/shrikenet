@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from shrike.usecases.login_to_system_result import LoginToSystemResult
 
 
@@ -37,6 +39,10 @@ class LoginToSystem:
 
     def _verify_user_password_correct(self, user, password):
         if not self.crypto.hash_matches_string(user.password_hash, password):
+            user.ongoing_password_failure_count += 1
+            user.last_password_failure_time = datetime.now(timezone.utc)
+            self.db.update_app_user(user)
+            self.db.commit()
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_active(self, user):

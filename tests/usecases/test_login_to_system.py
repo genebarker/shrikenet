@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 import pytest
 
 from shrike.adapters.memory_adapter import MemoryAdapter
@@ -26,6 +28,7 @@ def services():
 def good_user(services):
     user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
     services.storage_provider.add_app_user(user)
+    services.storage_provider.commit()
     return user
 
 
@@ -53,6 +56,46 @@ def validate_login_fails(services, username, password,
 
 def test_login_fails_on_wrong_password(services, good_user):
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
+
+
+def test_password_fail_count_increments_on_wrong_password(services):
+    user_before = create_user_with_two_password_failures(services)
+    login_to_system = LoginToSystem(services)
+    login_to_system.run(user_before.username, 'wrong_password')
+    db = services.storage_provider
+    user_after = db.get_app_user_by_username(user_before.username)
+    assert user_after.ongoing_password_failure_count == 3
+
+
+def create_user_with_two_password_failures(services):
+    db = services.storage_provider
+    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    user.ongoing_password_failure_count = 2
+    two_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=2)
+    user.last_password_failure_time = two_minutes_ago
+    db.add_app_user(user)
+    return user
+
+
+def test_password_fail_time_set_on_wrong_password(services, good_user):
+    login_to_system = LoginToSystem(services)
+    time_before_attempt = datetime.now(timezone.utc)
+    login_to_system.run(GOOD_USER_USERNAME, 'wrong_password')
+    time_after_attempt = datetime.now(timezone.utc)
+    db = services.storage_provider
+    user_after = db.get_app_user_by_username(GOOD_USER_USERNAME)
+    assert user_after.last_password_failure_time > time_before_attempt
+    assert user_after.last_password_failure_time < time_after_attempt
+
+
+def test_user_record_changes_on_wrong_password(services):
+    user_before = create_user_with_two_password_failures(services)
+    login_to_system = LoginToSystem(services)
+    login_to_system.run(user_before.username, 'wrong_password')
+    db = services.storage_provider
+    db.rollback()
+    user_after = db.get_app_user_by_username(user_before.username)
+    assert user_after != user_before
 
 
 def test_login_succeeds_for_good_credentials(services, good_user):
