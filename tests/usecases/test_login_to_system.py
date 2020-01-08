@@ -110,6 +110,16 @@ def validate_successful_result(login_result, expected_login_message):
     assert login_result.message.startswith(expected_login_message)
 
 
+def test_password_fail_count_reset_on_successful_login(services):
+    user_before = create_user_with_two_password_failures(services)
+    login_to_system = LoginToSystem(services)
+    login_to_system.run(user_before.username, GOOD_USER_PASSWORD)
+    db = services.storage_provider
+    db.rollback()
+    user_after = db.get_app_user_by_username(user_before.username)
+    assert user_after.ongoing_password_failure_count == 0
+
+
 def test_login_fails_when_password_marked_for_reset(services):
     create_needs_password_change_user(services)
     login_to_system = LoginToSystem(services)

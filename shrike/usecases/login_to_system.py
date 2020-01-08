@@ -30,6 +30,8 @@ class LoginToSystem:
             self._update_user_password(user, new_password)
             message = message + ' Password successfully changed.'
 
+        user.ongoing_password_failure_count = 0
+        self.db.update_app_user(user)
         self.db.commit()
         return LoginToSystemResult(message=message, has_failed=False)
 
