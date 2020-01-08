@@ -27,7 +27,8 @@ class LoginToSystem:
         message = 'Login successful.'
 
         if new_password is not None:
-            self._update_user_password(user, new_password)
+            user.password_hash = self.crypto.generate_hash_from_string(
+                new_password)
             message = message + ' Password successfully changed.'
 
         user.ongoing_password_failure_count = 0
@@ -62,11 +63,6 @@ class LoginToSystem:
             raise LoginToSystemError('Password marked for reset. Must '
                                      'supply a new password.',
                                      must_change_password=True)
-
-    def _update_user_password(self, user, new_password):
-        user.password_hash = self.crypto.generate_hash_from_string(
-            new_password)
-        self.db.update_app_user(user)
 
 
 class LoginToSystemError(Exception):
