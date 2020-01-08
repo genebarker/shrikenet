@@ -35,27 +35,27 @@ All users
 
 ## Extensions
 
-4a. Bad password provided:
+4a. Account dormant (turned-off):
+
+  1. System informs user that their credentials are invalid.
+  2. System logs the failure, username, IP address, and time.
+
+4b. Account locked:
+
+  1. System informs user that their account is locked.
+  2. System logs the attempt, username, IP address, and time.
+
+4c. Bad password provided:
 
   1. System informs user that the login attempt failed.
   2. System logs the failure, username, IP address, and time.
 
-4b. Too many consecutive password failures within time period:
+4d. Too many consecutive password failures within time period:
 
   1. System informs user that the login attempt failed.
   2. System locks user's account for a set time period.
   3. System emails administrators of the lock.
   4. System logs the lock, username, IP address, and time.
-
-4c. Account locked:
-
-  1. System informs user that their account is locked.
-  2. System logs the attempt, username, IP address, and time.
-
-4d. Account dormant (turned-off):
-
-  1. System informs user that their credentials are invalid.
-  2. System logs the failure, username, IP address, and time.
 
 6a. Password marked for reset:
 
