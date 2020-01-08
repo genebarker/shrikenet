@@ -14,7 +14,9 @@ CREATE TABLE app_user (
     password_hash varchar(128),
     needs_password_change boolean,
     is_locked boolean,
-    is_dormant boolean
+    is_dormant boolean,
+    ongoing_password_failure_count integer,
+    last_password_failure_time timestamp with time zone
 );
 
 DROP TABLE IF EXISTS post;

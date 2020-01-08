@@ -113,6 +113,8 @@ class PostgreSQLAdapter(StorageProvider):
             needs_password_change=row[4],
             is_locked=row[5],
             is_dormant=row[6],
+            ongoing_password_failure_count=row[7],
+            last_password_failure_time=row[8],
             )
         return app_user
 
@@ -125,11 +127,14 @@ class PostgreSQLAdapter(StorageProvider):
 
     def add_app_user(self, app_user):
         sql = ("INSERT INTO app_user (oid, username, name, password_hash, "
-               "needs_password_change, is_locked, is_dormant) "
-               "VALUES(%s, %s, %s, %s, %s, %s, %s)")
+               "needs_password_change, is_locked, is_dormant, "
+               "ongoing_password_failure_count, last_password_failure_time) "
+               "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)")
         parms = (app_user.oid, app_user.username, app_user.name,
                  app_user.password_hash, app_user.needs_password_change,
-                 app_user.is_locked, app_user.is_dormant)
+                 app_user.is_locked, app_user.is_dormant,
+                 app_user.ongoing_password_failure_count,
+                 app_user.last_password_failure_time)
         error = ('can not add app_user (oid={}, username={}), reason: '
                  .format(app_user.oid, app_user.username))
         self._execute_process_sql(sql, parms, error)
@@ -148,11 +153,16 @@ class PostgreSQLAdapter(StorageProvider):
     def update_app_user(self, app_user):
         sql = ("UPDATE app_user SET username = %s, name = %s, "
                "password_hash = %s , needs_password_change = %s, "
-               "is_locked = %s, is_dormant = %s "
+               "is_locked = %s, is_dormant = %s, "
+               "ongoing_password_failure_count = %s, "
+               "last_password_failure_time = %s "
                "WHERE oid = %s")
-        parms = (app_user.username, app_user.name, app_user.password_hash,
-                 app_user.needs_password_change, app_user.is_locked,
-                 app_user.is_dormant, app_user.oid)
+        parms = (app_user.username, app_user.name,
+                 app_user.password_hash, app_user.needs_password_change,
+                 app_user.is_locked, app_user.is_dormant,
+                 app_user.ongoing_password_failure_count,
+                 app_user.last_password_failure_time,
+                 app_user.oid)
         error = ('can not update app_user (oid={}), reason: '
                  .format(app_user.oid))
         self._execute_process_sql(sql, parms, error)

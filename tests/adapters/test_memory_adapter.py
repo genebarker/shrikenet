@@ -1,5 +1,5 @@
 import copy
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from operator import attrgetter
 
 import pytest
@@ -118,9 +118,13 @@ class TestMemoryAdapter:
         username = self.GOOD_USERNAME
         name = 'Mr. Awesome'
         password_hash = 'xxYYYzzzz'
+        time_now = datetime.now(timezone.utc)
         app_user = AppUser(oid, username, name, password_hash,
-                           needs_password_change=True, is_locked=True,
-                           is_dormant=True)
+                           needs_password_change=True,
+                           is_locked=True,
+                           is_dormant=True,
+                           ongoing_password_failure_count=2,
+                           last_password_failure_time=time_now)
         storage_provider.add_app_user(app_user)
         return app_user
 
@@ -193,6 +197,21 @@ class TestMemoryAdapter:
         app_user.name = 'Very Different'
         stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
         assert stored_user != app_user
+
+    def test_update_app_user_updates_every_field(self, app_user,
+                                                 storage_provider):
+        app_user.username += 'a'
+        app_user.name += 'b'
+        app_user.password_hash += 'c'
+        app_user.needs_password_change = not app_user.needs_password_change
+        app_user.is_locked = not app_user.is_locked
+        app_user.is_dormant = not app_user.is_dormant
+        app_user.ongoing_password_failure_count += 1
+        app_user.last_password_failure_time = (
+            app_user.last_password_failure_time - timedelta(hours=1))
+        storage_provider.update_app_user(app_user)
+        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
+        assert stored_user == app_user
 
     def test_get_app_user_count_zero_when_empty(self, storage_provider):
         assert storage_provider.get_app_user_count() == 0
