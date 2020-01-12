@@ -6,6 +6,7 @@ from flask import (
 
 from shrike.db import get_services
 from shrike.entities.app_user import AppUser
+from shrike.usecases.login_to_system import LoginToSystem
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -48,26 +49,16 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        storage_provider = get_services().storage_provider
-        crypto_provider = get_services().crypto_provider
-        error = None
-        try:
-            user = storage_provider.get_app_user_by_username(username)
-        except Exception:
-            user = None
+        login_to_system = LoginToSystem(get_services())
+        login_result = login_to_system.run(username, password)
 
-        if user is None:
-            error = 'Incorrect username.'
-        elif not crypto_provider.hash_matches_string(user.password_hash,
-                                                     password):
-            error = 'Incorrect password.'
+        if login_result.has_failed:
+            flash(login_result.message)
+            return render_template('auth/login.html')
 
-        if error is None:
-            session.clear()
-            session['user_id'] = user.oid
-            return redirect(url_for('index'))
-
-        flash(error)
+        session.clear()
+        session['user_id'] = login_result.user_oid
+        return redirect(url_for('index'))
 
     return render_template('auth/login.html')
 

@@ -9,7 +9,9 @@ VALUES
     (nextval('app_user_seq'), 'test', 'Mr. Test', 'TEST', false, false,
      false, 1, '2019-01-02 18:00:00+0'),
     (nextval('app_user_seq'), 'other', 'Mrs. Other', 'OTHER', false, false,
-     false, 0, NULL);
+     false, 0, NULL),
+    (nextval('app_user_seq'), 'mrlock', 'Mr. Lock', 'MRLOCK', false, true,
+     false, 10, '2019-01-03 18:00:00+0');
 
 INSERT INTO post (oid, title, body, author_oid, created_time)
 VALUES

@@ -40,8 +40,9 @@ def test_login(client, auth):
 
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
-    ('a', 'test', b'Incorrect username.'),
-    ('test', 'a', b'Incorrect password.'),
+    ('unknown_username', 'test', b'Login attempt failed.'),
+    ('test', 'wrong_password', b'Login attempt failed.'),
+    ('mrlock', 'MRLOCK', b'Your account is locked.'),
 ))
 def test_login_validate_input(auth, username, password, message):
     response = auth.login(username, password)
