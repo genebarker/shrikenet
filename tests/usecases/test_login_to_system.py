@@ -111,10 +111,11 @@ def test_user_locks_on_consecutive_password_failures(services, good_user):
 def test_login_succeeds_for_good_credentials(services, good_user):
     login_to_system = LoginToSystem(services)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
-    validate_successful_result(result, 'Login successful.')
+    validate_successful_result(good_user, result, 'Login successful.')
 
 
-def validate_successful_result(login_result, expected_login_message):
+def validate_successful_result(user, login_result, expected_login_message):
+    assert login_result.user_oid == user.oid
     assert not login_result.has_failed
     assert not login_result.must_change_password
     assert login_result.message.startswith(expected_login_message)
@@ -149,17 +150,17 @@ def create_needs_password_change_user(services):
 
 def test_login_succeeds_when_password_marked_for_reset_and_new_provided(
         services):
-    create_needs_password_change_user(services)
+    user = create_needs_password_change_user(services)
     login_to_system = LoginToSystem(services)
     new_password = reverse_string(GOOD_USER_PASSWORD)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
                                  new_password)
-    validate_successful_password_change_result(result)
+    validate_successful_password_change_result(user, result)
 
 
-def validate_successful_password_change_result(result):
-    validate_successful_result(result, 'Login successful. Password '
-                                       'successfully changed')
+def validate_successful_password_change_result(user, result):
+    validate_successful_result(user, result, 'Login successful. Password '
+                                             'successfully changed')
 
 
 def test_credentials_checked_before_password_reset(services):
@@ -175,7 +176,7 @@ def test_login_with_new_password_returns_successful_result(services,
     new_password = reverse_string(GOOD_USER_PASSWORD)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
                                  new_password)
-    validate_successful_password_change_result(result)
+    validate_successful_password_change_result(good_user, result)
 
 
 def reverse_string(string):

@@ -35,7 +35,9 @@ class LoginToSystem:
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
         self.db.commit()
-        return LoginToSystemResult(message=message, has_failed=False)
+        return LoginToSystemResult(message=message, has_failed=False,
+                                   must_change_password=False,
+                                   user_oid=user.oid)
 
     def _verify_user_exists(self, username):
         if self.db.exists_app_username(username) is False:
