@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask
@@ -17,6 +18,7 @@ def create_app(test_config=None):
         TEXT_TRANSFORMER_CLASS='MarkdownAdapter',
         CRYPTO_PROVIDER_MODULE='shrike.adapters.swapcase_adapter',
         CRYPTO_PROVIDER_CLASS='SwapcaseAdapter',
+        LOGGING_LEVEL='DEBUG',
     )
 
     if test_config is None:
@@ -25,6 +27,13 @@ def create_app(test_config=None):
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
+
+    # setup logging
+    logging.basicConfig(
+        level=getattr(logging, app.config['LOGGING_LEVEL']),
+        format='%(asctime)s %(levelname)s:%(name)s:%(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+    )
 
     # ensure the instance folder exists
     try:

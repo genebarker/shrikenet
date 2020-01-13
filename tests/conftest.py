@@ -21,6 +21,7 @@ def app():
         'TEST_TRANSFORMER_CLASS': 'MarkdownAdapter',
         'CRYPTO_PROVIDER_MODULE': 'shrike.adapters.swapcase_adapter',
         'CRYPTO_PROVIDER_CLASS': 'SwapcaseAdapter',
+        'LOGGING_LEVEL': 'DEBUG',
     })
 
     with app.app_context():

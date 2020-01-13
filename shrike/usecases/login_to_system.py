@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import logging
 
 from shrike.entities.constants import Constants
 from shrike.usecases.login_to_system_result import LoginToSystemResult
@@ -9,6 +10,7 @@ class LoginToSystem:
     def __init__(self, services):
         self.db = services.storage_provider
         self.crypto = services.crypto_provider
+        self.logger = logging.getLogger(__name__)
 
     def run(self, username, password, new_password=None):
         try:
@@ -35,6 +37,8 @@ class LoginToSystem:
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
         self.db.commit()
+        self.logger.info('App user (username=%s) successfully logged in.',
+                         user.username)
         return LoginToSystemResult(message=message, has_failed=False,
                                    must_change_password=False,
                                    user_oid=user.oid)
