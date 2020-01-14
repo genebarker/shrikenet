@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import os
 
 from flask import Flask
@@ -18,7 +19,12 @@ def create_app(test_config=None):
         TEXT_TRANSFORMER_CLASS='MarkdownAdapter',
         CRYPTO_PROVIDER_MODULE='shrike.adapters.swapcase_adapter',
         CRYPTO_PROVIDER_CLASS='SwapcaseAdapter',
+        LOGGING_FORMAT='%(asctime)s %(levelname)s %(name)s -> %(message)s',
+        LOGGING_DATE_FORMAT='%Y-%m-%d %H:%M:%S',
         LOGGING_LEVEL='DEBUG',
+        LOGGING_FILE=None,
+        LOGGING_FILE_MAX_BYTES=102400,
+        LOGGING_FILE_BACKUP_COUNT=5,
     )
 
     if test_config is None:
@@ -28,18 +34,31 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    # setup logging
-    logging.basicConfig(
-        level=getattr(logging, app.config['LOGGING_LEVEL']),
-        format='%(asctime)s %(levelname)s:%(name)s:%(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-    )
-
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    # setup logging
+    logging.basicConfig(
+        level=getattr(logging, app.config['LOGGING_LEVEL']),
+        format=app.config['LOGGING_FORMAT'],
+        datefmt=app.config['LOGGING_DATE_FORMAT'],
+    )
+    if app.config['LOGGING_FILE'] is not None:
+        handler = RotatingFileHandler(
+            filename=app.config['LOGGING_FILE'],
+            maxBytes=app.config['LOGGING_FILE_MAX_BYTES'],
+            backupCount=app.config['LOGGING_FILE_BACKUP_COUNT'],
+        )
+        formatter = logging.Formatter(
+            fmt=app.config['LOGGING_FORMAT'],
+            datefmt=app.config['LOGGING_DATE_FORMAT'],
+        )
+        handler.setFormatter(formatter)
+        logger = logging.getLogger()
+        logger.addHandler(handler)
 
     # a simple page that says hello
     @app.route('/hello')
