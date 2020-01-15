@@ -50,7 +50,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
         login_to_system = LoginToSystem(get_services())
-        login_result = login_to_system.run(username, password)
+        login_result = login_to_system.run(username, password,
+                                           request.remote_addr)
 
         if login_result.has_failed:
             flash(login_result.message)

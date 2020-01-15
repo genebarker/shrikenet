@@ -12,7 +12,7 @@ class LoginToSystem:
         self.crypto = services.crypto_provider
         self.logger = logging.getLogger(__name__)
 
-    def run(self, username, password, new_password=None):
+    def run(self, username, password, ip_address, new_password=None):
         try:
             self._verify_user_exists(username)
             user = self.db.get_app_user_by_username(username)

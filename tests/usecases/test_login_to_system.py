@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import logging
 
 import pytest
 
@@ -12,6 +13,11 @@ from shrike.usecases.login_to_system_result import LoginToSystemResult
 
 GOOD_USER_USERNAME = 'fmulder'
 GOOD_USER_PASSWORD = 'scully'
+GOOD_IP_ADDRESS = '1.2.3.4'
+MODULE_UNDER_TEST = 'shrike.usecases.login_to_system'
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 @pytest.fixture
@@ -48,7 +54,7 @@ def test_login_fails_on_unknown_username(services):
 def validate_login_fails(services, username, password,
                          message='Login attempt failed.'):
     login_to_system = LoginToSystem(services)
-    result = login_to_system.run(username, password)
+    result = login_to_system.run(username, password, GOOD_IP_ADDRESS)
     assert result.has_failed
     assert not result.must_change_password
     assert result.message == message
@@ -61,7 +67,8 @@ def test_login_fails_on_wrong_password(services, good_user):
 def test_password_fail_count_increments_on_wrong_password(services):
     user_before = create_user_with_two_password_failures(services)
     login_to_system = LoginToSystem(services)
-    login_to_system.run(user_before.username, 'wrong_password')
+    login_to_system.run(user_before.username, 'wrong_password',
+                        GOOD_IP_ADDRESS)
     db = services.storage_provider
     user_after = db.get_app_user_by_username(user_before.username)
     assert user_after.ongoing_password_failure_count == 3
@@ -80,7 +87,8 @@ def create_user_with_two_password_failures(services):
 def test_password_fail_time_set_on_wrong_password(services, good_user):
     login_to_system = LoginToSystem(services)
     time_before_attempt = datetime.now(timezone.utc)
-    login_to_system.run(GOOD_USER_USERNAME, 'wrong_password')
+    login_to_system.run(GOOD_USER_USERNAME, 'wrong_password',
+                        GOOD_IP_ADDRESS)
     time_after_attempt = datetime.now(timezone.utc)
     db = services.storage_provider
     user_after = db.get_app_user_by_username(GOOD_USER_USERNAME)
@@ -91,7 +99,8 @@ def test_password_fail_time_set_on_wrong_password(services, good_user):
 def test_user_record_changes_on_wrong_password(services):
     user_before = create_user_with_two_password_failures(services)
     login_to_system = LoginToSystem(services)
-    login_to_system.run(user_before.username, 'wrong_password')
+    login_to_system.run(user_before.username, 'wrong_password',
+                        GOOD_IP_ADDRESS)
     db = services.storage_provider
     db.rollback()
     user_after = db.get_app_user_by_username(user_before.username)
@@ -101,7 +110,8 @@ def test_user_record_changes_on_wrong_password(services):
 def test_user_locks_on_consecutive_password_failures(services, good_user):
     login_to_system = LoginToSystem(services)
     for _ in range(Constants.LOGIN_FAIL_THRESHOLD_COUNT + 1):
-        login_to_system.run(GOOD_USER_USERNAME, 'wrong_password')
+        login_to_system.run(GOOD_USER_USERNAME, 'wrong_password',
+                            GOOD_IP_ADDRESS)
 
     db = services.storage_provider
     user = db.get_app_user_by_username(GOOD_USER_USERNAME)
@@ -110,7 +120,8 @@ def test_user_locks_on_consecutive_password_failures(services, good_user):
 
 def test_login_succeeds_for_good_credentials(services, good_user):
     login_to_system = LoginToSystem(services)
-    result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                                 GOOD_IP_ADDRESS)
     validate_successful_result(good_user, result, 'Login successful.')
 
 
@@ -124,7 +135,8 @@ def validate_successful_result(user, login_result, expected_login_message):
 def test_password_fail_count_reset_on_successful_login(services):
     user_before = create_user_with_two_password_failures(services)
     login_to_system = LoginToSystem(services)
-    login_to_system.run(user_before.username, GOOD_USER_PASSWORD)
+    login_to_system.run(user_before.username, GOOD_USER_PASSWORD,
+                        GOOD_IP_ADDRESS)
     db = services.storage_provider
     db.rollback()
     user_after = db.get_app_user_by_username(user_before.username)
@@ -134,7 +146,8 @@ def test_password_fail_count_reset_on_successful_login(services):
 def test_login_fails_when_password_marked_for_reset(services):
     create_needs_password_change_user(services)
     login_to_system = LoginToSystem(services)
-    result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                                 GOOD_IP_ADDRESS)
     assert result.has_failed
     assert result.must_change_password
     assert result.message == ('Password marked for reset. Must supply a '
@@ -154,7 +167,7 @@ def test_login_succeeds_when_password_marked_for_reset_and_new_provided(
     login_to_system = LoginToSystem(services)
     new_password = reverse_string(GOOD_USER_PASSWORD)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                                 new_password)
+                                 GOOD_IP_ADDRESS, new_password)
     validate_successful_password_change_result(user, result)
 
 
@@ -175,7 +188,7 @@ def test_login_with_new_password_returns_successful_result(services,
     login_to_system = LoginToSystem(services)
     new_password = reverse_string(GOOD_USER_PASSWORD)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                                 new_password)
+                                 GOOD_IP_ADDRESS, new_password)
     validate_successful_password_change_result(good_user, result)
 
 
@@ -187,7 +200,7 @@ def test_login_with_new_password_changes_the_password(services, good_user):
     login_to_system = LoginToSystem(services)
     new_password = reverse_string(GOOD_USER_PASSWORD)
     login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                        new_password)
+                        GOOD_IP_ADDRESS, new_password)
     services.storage_provider.rollback()
     user = services.storage_provider.get_app_user_by_oid(good_user.oid)
     assert services.crypto_provider.hash_matches_string(user.password_hash,
