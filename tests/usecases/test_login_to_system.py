@@ -32,7 +32,12 @@ def services():
 
 @pytest.fixture
 def good_user(services):
-    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    return create_and_store_user(services, GOOD_USER_USERNAME,
+                                 GOOD_USER_PASSWORD)
+
+
+def create_and_store_user(services, username, password):
+    user = create_user(services, username, password)
     services.storage_provider.add_app_user(user)
     services.storage_provider.commit()
     return user
@@ -63,14 +68,19 @@ def validate_login_fails(services, username, password,
 def test_unknown_username_occurrence_logged(services, caplog):
     login_to_system = LoginToSystem(services)
     login_to_system.run('mrunknown', None, '10.11.12.13')
+    validate_log_entry(
+        caplog,
+        'Unknown app user (username=mrunknown) from 10.11.12.13 attempted '
+        'to login.'
+    )
+
+
+def validate_log_entry(caplog, message):
     assert len(caplog.records) == 1
     log_record = caplog.records[0]
     assert log_record.levelname == 'INFO'
     assert log_record.name == MODULE_UNDER_TEST
-    assert log_record.message == (
-        'Unknown app user (username=mrunknown) from 10.11.12.13 attempted '
-        'to login.'
-    )
+    assert log_record.message == message
 
 
 def test_login_fails_on_wrong_password(services, good_user):
