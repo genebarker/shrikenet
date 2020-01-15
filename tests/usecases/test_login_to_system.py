@@ -60,6 +60,19 @@ def validate_login_fails(services, username, password,
     assert result.message == message
 
 
+def test_unknown_username_occurrence_logged(services, caplog):
+    login_to_system = LoginToSystem(services)
+    login_to_system.run('mrunknown', None, '10.11.12.13')
+    assert len(caplog.records) == 1
+    log_record = caplog.records[0]
+    assert log_record.levelname == 'INFO'
+    assert log_record.name == MODULE_UNDER_TEST
+    assert log_record.message == (
+        'Unknown app user (username=mrunknown) from 10.11.12.13 attempted '
+        'to login.'
+    )
+
+
 def test_login_fails_on_wrong_password(services, good_user):
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
 

@@ -14,7 +14,7 @@ class LoginToSystem:
 
     def run(self, username, password, ip_address, new_password=None):
         try:
-            self._verify_user_exists(username)
+            self._verify_user_exists(username, ip_address)
             user = self.db.get_app_user_by_username(username)
             self._verify_user_active(user)
             self._verify_user_unlocked(user)
@@ -43,8 +43,10 @@ class LoginToSystem:
                                    must_change_password=False,
                                    user_oid=user.oid)
 
-    def _verify_user_exists(self, username):
+    def _verify_user_exists(self, username, ip_address):
         if self.db.exists_app_username(username) is False:
+            self.logger.info('Unknown app user (username=%s) from %s '
+                             'attempted to login.', username, ip_address)
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_password_correct(self, user, password):
