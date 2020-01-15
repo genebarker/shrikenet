@@ -18,7 +18,7 @@ class LoginToSystem:
             user = self.db.get_app_user_by_username(username)
             self._verify_user_active(user)
             self._verify_user_unlocked(user)
-            self._verify_user_password_correct(user, password)
+            self._verify_user_password_correct(user, password, ip_address)
             self._verify_user_password_reset_satisfied(user, new_password)
         except LoginToSystemError as e:
             return LoginToSystemResult(
@@ -49,7 +49,7 @@ class LoginToSystem:
                              'attempted to login.', username, ip_address)
             raise LoginToSystemError('Login attempt failed.')
 
-    def _verify_user_password_correct(self, user, password):
+    def _verify_user_password_correct(self, user, password, ip_address):
         if not self.crypto.hash_matches_string(user.password_hash, password):
             user.ongoing_password_failure_count += 1
             if (user.ongoing_password_failure_count >
@@ -58,6 +58,9 @@ class LoginToSystem:
             user.last_password_failure_time = datetime.now(timezone.utc)
             self.db.update_app_user(user)
             self.db.commit()
+            self.logger.info('App user (username=%s) from %s attempted to '
+                             'login with the wrong password.',
+                             user.username, ip_address)
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_active(self, user):
