@@ -108,9 +108,11 @@ def test_password_fail_count_increments_on_wrong_password(services):
     assert user_after.ongoing_password_failure_count == 3
 
 
-def create_user_with_two_password_failures(services):
+def create_user_with_two_password_failures(services,
+                                           username=GOOD_USER_USERNAME,
+                                           password=GOOD_USER_PASSWORD):
     db = services.storage_provider
-    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    user = create_user(services, username, password)
     user.ongoing_password_failure_count = 2
     two_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=2)
     user.last_password_failure_time = two_minutes_ago
