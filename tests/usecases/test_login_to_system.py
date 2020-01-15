@@ -94,7 +94,8 @@ def test_wrong_password_occurrence_logs(services, good_user, caplog):
     validate_log_entry(
         caplog,
         'App user (username=mrunhappy) from 1.2.3.4 attempted '
-        'to login with the wrong password.'
+        'to login with the wrong password '
+        '(ongoing_password_failure_count=1).'
     )
 
 
@@ -118,6 +119,19 @@ def create_user_with_two_password_failures(services,
     user.last_password_failure_time = two_minutes_ago
     db.add_app_user(user)
     return user
+
+
+def test_third_wrong_password_occurrence_logs(services, good_user, caplog):
+    create_user_with_two_password_failures(services, 'mrunhappy',
+                                           GOOD_USER_PASSWORD)
+    login_to_system = LoginToSystem(services)
+    login_to_system.run('mrunhappy', 'wrong_password', '1.2.3.4')
+    validate_log_entry(
+        caplog,
+        'App user (username=mrunhappy) from 1.2.3.4 attempted '
+        'to login with the wrong password '
+        '(ongoing_password_failure_count=3).'
+    )
 
 
 def test_password_fail_time_set_on_wrong_password(services, good_user):

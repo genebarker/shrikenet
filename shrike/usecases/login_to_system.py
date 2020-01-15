@@ -59,8 +59,10 @@ class LoginToSystem:
             self.db.update_app_user(user)
             self.db.commit()
             self.logger.info('App user (username=%s) from %s attempted to '
-                             'login with the wrong password.',
-                             user.username, ip_address)
+                             'login with the wrong password '
+                             '(ongoing_password_failure_count=%s).',
+                             user.username, ip_address,
+                             user.ongoing_password_failure_count)
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_active(self, user):
