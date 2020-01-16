@@ -38,8 +38,8 @@ class LoginToSystem:
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
         self.db.commit()
-        self.logger.info('App user (username=%s) successfully logged in.',
-                         user.username)
+        self.logger.info('App user (username=%s) from %s successfully '
+                         'logged in.', user.username, ip_address)
         return LoginToSystemResult(message=message, has_failed=False,
                                    must_change_password=False,
                                    user_oid=user.oid)

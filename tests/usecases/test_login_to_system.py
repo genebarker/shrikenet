@@ -87,7 +87,7 @@ def test_login_fails_on_wrong_password(services, good_user):
     validate_login_fails(services, GOOD_USER_USERNAME, 'wrong_password')
 
 
-def test_wrong_password_occurrence_logs(services, good_user, caplog):
+def test_wrong_password_occurrence_logs(services, caplog):
     create_and_store_user(services, 'mrunhappy', GOOD_USER_PASSWORD)
     login_to_system = LoginToSystem(services)
     login_to_system.run('mrunhappy', 'wrong_password', '1.2.3.4')
@@ -180,6 +180,16 @@ def validate_successful_result(user, login_result, expected_login_message):
     assert not login_result.has_failed
     assert not login_result.must_change_password
     assert login_result.message.startswith(expected_login_message)
+
+
+def test_successful_login_logs(services, caplog):
+    create_and_store_user(services, 'joe', 'some_password')
+    login_to_system = LoginToSystem(services)
+    login_to_system.run('joe', 'some_password', '4.3.2.1')
+    validate_log_entry(
+        caplog,
+        'App user (username=joe) from 4.3.2.1 successfully logged in.'
+    )
 
 
 def test_can_login_after_lock_length_met(services):
