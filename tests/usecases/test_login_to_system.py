@@ -182,6 +182,38 @@ def validate_successful_result(user, login_result, expected_login_message):
     assert login_result.message.startswith(expected_login_message)
 
 
+def test_lock_skipped_after_lock_length_met(services):
+    create_user_with_expired_lock(services)
+    login_to_system = LoginToSystem(services)
+    result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                                 GOOD_IP_ADDRESS)
+    assert not result.has_failed
+
+
+def create_user_with_expired_lock(services):
+    lock_time = (datetime.now(timezone.utc)
+                 - timedelta(minutes=Constants.LOGIN_FAIL_LOCK_MINUTES))
+    return create_locked_user(services, lock_time)
+
+
+def create_locked_user(services, lock_time=datetime.now(timezone.utc)):
+    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    user.is_locked = True
+    user.last_password_failure_time = lock_time
+    services.storage_provider.add_app_user(user)
+    return user
+
+
+def test_unlocks_on_good_password_after_lock_length_met(services):
+    create_user_with_expired_lock(services)
+    login_to_system = LoginToSystem(services)
+    login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                        GOOD_IP_ADDRESS)
+    user = services.storage_provider.get_app_user_by_username(
+        GOOD_USER_USERNAME)  
+    assert not user.is_locked
+
+
 def test_password_fail_count_reset_on_successful_login(services):
     user_before = create_user_with_two_password_failures(services)
     login_to_system = LoginToSystem(services)
@@ -262,13 +294,6 @@ def test_login_fails_when_user_locked(services):
     validate_login_fails(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
                          message='Login attempt failed. Your account is '
                                  'locked.')
-
-
-def create_locked_user(services):
-    user = create_user(services, GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
-    user.is_locked = True
-    services.storage_provider.add_app_user(user)
-    return user
 
 
 def test_lock_checked_before_password(services):

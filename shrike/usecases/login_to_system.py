@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import logging
 
 from shrike.entities.constants import Constants
@@ -34,6 +34,7 @@ class LoginToSystem:
                 new_password)
             message = message + ' Password successfully changed.'
 
+        user.is_locked = False
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
         self.db.commit()
@@ -71,9 +72,16 @@ class LoginToSystem:
                                      'credentials are invalid.')
 
     def _verify_user_unlocked(self, user):
-        if user.is_locked:
+        if self._lock_is_active(user):
             raise LoginToSystemError('Login attempt failed. Your account '
                                      'is locked.')
+
+    def _lock_is_active(self, user):
+        if not user.is_locked:
+            return False
+        lock_length = timedelta(minutes=Constants.LOGIN_FAIL_LOCK_MINUTES)
+        lock_expire_time = user.last_password_failure_time + lock_length
+        return datetime.now(timezone.utc) < lock_expire_time
 
     def _verify_user_password_reset_satisfied(self, user, new_password):
         if user.needs_password_change and new_password is None:
