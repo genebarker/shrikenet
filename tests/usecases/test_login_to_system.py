@@ -182,12 +182,12 @@ def validate_successful_result(user, login_result, expected_login_message):
     assert login_result.message.startswith(expected_login_message)
 
 
-def test_lock_skipped_after_lock_length_met(services):
-    create_user_with_expired_lock(services)
+def test_can_login_after_lock_length_met(services):
+    user = create_user_with_expired_lock(services)
     login_to_system = LoginToSystem(services)
     result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
                                  GOOD_IP_ADDRESS)
-    assert not result.has_failed
+    validate_successful_result(user, result, 'Login successful.')
 
 
 def create_user_with_expired_lock(services):
@@ -210,7 +210,7 @@ def test_unlocks_on_good_password_after_lock_length_met(services):
     login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
                         GOOD_IP_ADDRESS)
     user = services.storage_provider.get_app_user_by_username(
-        GOOD_USER_USERNAME)  
+        GOOD_USER_USERNAME)
     assert not user.is_locked
 
 
