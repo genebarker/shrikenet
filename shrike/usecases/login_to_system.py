@@ -17,7 +17,7 @@ class LoginToSystem:
             self._verify_user_exists(username, ip_address)
             user = self.db.get_app_user_by_username(username)
             self._verify_user_active(user, ip_address)
-            self._verify_user_unlocked(user)
+            self._verify_user_unlocked(user, ip_address)
             self._verify_user_password_correct(user, password, ip_address)
             self._verify_user_password_reset_satisfied(user, new_password)
         except LoginToSystemError as e:
@@ -58,8 +58,11 @@ class LoginToSystem:
             raise LoginToSystemError('Login attempt failed. Your '
                                      'credentials are invalid.')
 
-    def _verify_user_unlocked(self, user):
+    def _verify_user_unlocked(self, user, ip_address):
         if self._lock_is_active(user):
+            self.logger.info('Locked app user (username=%s) from %s '
+                             'attempted to login.',
+                             user.username, ip_address)
             raise LoginToSystemError('Login attempt failed. Your account '
                                      'is locked.')
 

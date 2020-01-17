@@ -21,8 +21,10 @@ class TestLockedUserPaths(SetupClass):
             message='Login attempt failed. Your account is locked.'
         )
 
-    def create_locked_user(self, lock_time=datetime.now(timezone.utc)):
-        user = self.create_user(GOOD_USER_USERNAME, GOOD_USER_PASSWORD)
+    def create_locked_user(self, lock_time=datetime.now(timezone.utc),
+                           username=GOOD_USER_USERNAME,
+                           password=GOOD_USER_PASSWORD):
+        user = self.create_user(username, password)
         user.is_locked = True
         user.last_password_failure_time = lock_time
         self.db.add_app_user(user)
@@ -33,6 +35,16 @@ class TestLockedUserPaths(SetupClass):
         self.validate_login_fails(
             GOOD_USER_USERNAME, 'wrong_password',
             message='Login attempt failed. Your account is locked.'
+        )
+
+    def test_locked_user_login_attempt_logs(self, caplog):
+        self.create_locked_user(username='fred', password='some_password')
+        login_to_system = LoginToSystem(self.services)
+        login_to_system.run('fred', 'some_password', '8.7.6.5')
+        self.validate_log_entry(
+            caplog,
+            'Locked app user (username=fred) from 8.7.6.5 attempted to '
+            'login.'
         )
 
     def test_can_login_after_lock_length_met(self):
