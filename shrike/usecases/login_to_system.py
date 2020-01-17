@@ -50,22 +50,6 @@ class LoginToSystem:
                              'attempted to login.', username, ip_address)
             raise LoginToSystemError('Login attempt failed.')
 
-    def _verify_user_password_correct(self, user, password, ip_address):
-        if not self.crypto.hash_matches_string(user.password_hash, password):
-            user.ongoing_password_failure_count += 1
-            if (user.ongoing_password_failure_count >
-                    Constants.LOGIN_FAIL_THRESHOLD_COUNT):
-                user.is_locked = True
-            user.last_password_failure_time = datetime.now(timezone.utc)
-            self.db.update_app_user(user)
-            self.db.commit()
-            self.logger.info('App user (username=%s) from %s attempted to '
-                             'login with the wrong password '
-                             '(ongoing_password_failure_count=%s).',
-                             user.username, ip_address,
-                             user.ongoing_password_failure_count)
-            raise LoginToSystemError('Login attempt failed.')
-
     def _verify_user_active(self, user, ip_address):
         if user.is_dormant:
             self.logger.info('Dormant app user (username=%s) from %s '
@@ -85,6 +69,22 @@ class LoginToSystem:
         lock_length = timedelta(minutes=Constants.LOGIN_FAIL_LOCK_MINUTES)
         lock_expire_time = user.last_password_failure_time + lock_length
         return datetime.now(timezone.utc) < lock_expire_time
+
+    def _verify_user_password_correct(self, user, password, ip_address):
+        if not self.crypto.hash_matches_string(user.password_hash, password):
+            user.ongoing_password_failure_count += 1
+            if (user.ongoing_password_failure_count >
+                    Constants.LOGIN_FAIL_THRESHOLD_COUNT):
+                user.is_locked = True
+            user.last_password_failure_time = datetime.now(timezone.utc)
+            self.db.update_app_user(user)
+            self.db.commit()
+            self.logger.info('App user (username=%s) from %s attempted to '
+                             'login with the wrong password '
+                             '(ongoing_password_failure_count=%s).',
+                             user.username, ip_address,
+                             user.ongoing_password_failure_count)
+            raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_password_reset_satisfied(self, user, new_password):
         if user.needs_password_change and new_password is None:
