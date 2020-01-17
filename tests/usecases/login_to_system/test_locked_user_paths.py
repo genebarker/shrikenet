@@ -48,11 +48,14 @@ class TestLockedUserPaths(SetupClass):
         )
 
     def test_can_login_after_lock_length_met(self):
+        result = self.perform_login_after_lock_expires()
+        assert not result.has_failed
+
+    def perform_login_after_lock_expires(self):
         self.create_user_with_expired_lock()
         login_to_system = LoginToSystem(self.services)
-        result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                                     GOOD_IP_ADDRESS)
-        assert not result.has_failed
+        return login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
+                                   GOOD_IP_ADDRESS)
 
     def create_user_with_expired_lock(self):
         lock_time = (datetime.now(timezone.utc)
@@ -60,9 +63,6 @@ class TestLockedUserPaths(SetupClass):
         return self.create_locked_user(lock_time)
 
     def test_unlocks_on_good_password_after_lock_length_met(self):
-        self.create_user_with_expired_lock()
-        login_to_system = LoginToSystem(self.services)
-        login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                            GOOD_IP_ADDRESS)
+        self.perform_login_after_lock_expires()
         user = self.db.get_app_user_by_username(GOOD_USER_USERNAME)
         assert not user.is_locked
