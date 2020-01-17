@@ -16,7 +16,7 @@ class LoginToSystem:
         try:
             self._verify_user_exists(username, ip_address)
             user = self.db.get_app_user_by_username(username)
-            self._verify_user_active(user)
+            self._verify_user_active(user, ip_address)
             self._verify_user_unlocked(user)
             self._verify_user_password_correct(user, password, ip_address)
             self._verify_user_password_reset_satisfied(user, new_password)
@@ -66,8 +66,11 @@ class LoginToSystem:
                              user.ongoing_password_failure_count)
             raise LoginToSystemError('Login attempt failed.')
 
-    def _verify_user_active(self, user):
+    def _verify_user_active(self, user, ip_address):
         if user.is_dormant:
+            self.logger.info('Dormant app user (username=%s) from %s '
+                             'attempted to login.',
+                             user.username, ip_address)
             raise LoginToSystemError('Login attempt failed. Your '
                                      'credentials are invalid.')
 
