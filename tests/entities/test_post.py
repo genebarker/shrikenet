@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -11,6 +12,7 @@ GOOD_CREATED_TIME = datetime(2018, 12, 31, 23, 58, tzinfo=timezone.utc)
 GOOD_TITLE = 'The World is Doomed'
 GOOD_BODY = 'No hot sauce was found in the house.'
 
+
 def create_good_post():
     return Post(
             oid=GOOD_OID,
@@ -19,7 +21,8 @@ def create_good_post():
             author_oid=GOOD_AUTHOR_OID,
             created_time=GOOD_CREATED_TIME,
         )
-    
+
+
 class TestGeneralProperties:
 
     def test_minimal_init(self):
@@ -44,6 +47,7 @@ class TestGeneralProperties:
         assert post.author_oid == GOOD_AUTHOR_OID
         assert post.created_time == GOOD_CREATED_TIME
 
+
 class TestEquals:
 
     def test_equals(self):
@@ -56,29 +60,27 @@ class TestEquals:
             def __init__(self, title, body):
                 self.title = title
                 self.body = body
-        
+
         post_one = Post(GOOD_TITLE, GOOD_BODY)
         post_two = FakePost(GOOD_TITLE, GOOD_BODY)
         assert post_one != post_two
 
-    @pytest.mark.parametrize(('oid', 'title', 'body', 'author_oid', 'created_time'), (
-        (999, GOOD_TITLE, GOOD_BODY, GOOD_AUTHOR_OID, GOOD_CREATED_TIME),
-        (GOOD_OID, 'Different', GOOD_BODY, GOOD_AUTHOR_OID, GOOD_CREATED_TIME),
-        (GOOD_OID, GOOD_TITLE, 'Different', GOOD_AUTHOR_OID, GOOD_CREATED_TIME),
-        (GOOD_OID, GOOD_TITLE, GOOD_BODY, 999, GOOD_CREATED_TIME),
-        (GOOD_OID, GOOD_TITLE, GOOD_BODY, GOOD_AUTHOR_OID, GOOD_CREATED_TIME + timedelta(seconds=1)),
-    ))
-    def test_unequal_when_attribute_different(
-            self, oid, title, body, author_oid, created_time):
-        post_one = create_good_post()
-        post_two = Post(
-            oid=oid,
-            title=title,
-            body=body,
-            author_oid=author_oid,
-            created_time=created_time,
+    @pytest.mark.parametrize(
+        ('attr_name', 'attr_value'),
+        (
+            ('oid', 999),
+            ('title', 'Different'),
+            ('body', 'Different'),
+            ('author_oid', 999),
+            ('created_time', GOOD_CREATED_TIME + timedelta(seconds=1)),
         )
+    )
+    def test_unequal_when_attribute_different(self, attr_name, attr_value):
+        post_one = create_good_post()
+        post_two = copy.deepcopy(post_one)
+        setattr(post_two, attr_name, attr_value)
         assert post_one != post_two
+
 
 class TestDeepPost:
 
