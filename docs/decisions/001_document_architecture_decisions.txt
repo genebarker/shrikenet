@@ -23,7 +23,7 @@ use the template from Michael Nygard:
 
 Each decision will be saved as its own file in: `docs/decsions`
 
-Decision filenames will use same format as use cases. See `docs/usecases`
+Decision filenames will use same format as usecases. See `docs/usecases`
 and this decision's filename.
 
 ## Consequences

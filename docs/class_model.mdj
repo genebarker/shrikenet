@@ -8048,7 +8048,7 @@
 									"top": 365,
 									"width": 68.55078125,
 									"height": 13,
-									"text": "use_case"
+									"text": "usecase"
 								},
 								{
 									"_type": "ERDColumnCompartmentView",
@@ -8666,7 +8666,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFtGLsiUBJeP/w="
 					},
-					"name": "use_case",
+					"name": "usecase",
 					"ownedElements": [
 						{
 							"_type": "ERDRelationship",
