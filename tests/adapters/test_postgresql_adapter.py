@@ -1,9 +1,15 @@
 from configparser import ConfigParser
+import logging
 
 import pytest
 
 from shrike.adapters.postgresql_adapter import PostgreSQLAdapter
 from tests.adapters.test_memory_adapter import TestMemoryAdapter
+
+MODULE_UNDER_TEST = 'shrike.adapters.postgresql_adapter'
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class TestPostgreSQLAdapter(TestMemoryAdapter):
@@ -36,23 +42,36 @@ class TestPostgreSQLAdapter(TestMemoryAdapter):
         assert storage_provider.get_version().startswith(
             storage_provider.VERSION_PREFIX)
 
+    BAD_SQL = """
+        SELECT count(*)
+        FROM non_existant_table t
+        WHERE t.color = 'red'
+        """
+    BAD_ERROR = "can not get red count, reason: "
+    BAD_MESSAGE = (
+        "can not get red count, reason: relation \"non_existant_table\""
+        " does not exist\n"
+        "LINE 2: FROM non_existant_table t\n"
+        "             ^\n"
+        "SELECT count(*)\n"
+        "FROM non_existant_table t\n"
+        "WHERE t.color = 'red'"
+    )
+
     def test_sql_exception_message_format(self, storage_provider):
         db = storage_provider
-        sql = """
-            SELECT count(*)
-            FROM non_existant_table t
-            WHERE t.color = 'red'
-            """
-        error = "can not get red count, reason: "
         with pytest.raises(Exception) as excinfo:
-            db._execute_select_value(sql, error)
+            db._execute_select_value(self.BAD_SQL, self.BAD_ERROR)
 
-        assert str(excinfo.value) == (
-            "can not get red count, reason: relation \"non_existant_table\""
-            " does not exist\n"
-            "LINE 2: FROM non_existant_table t\n"
-            "             ^\n"
-            "SELECT count(*)\n"
-            "FROM non_existant_table t\n"
-            "WHERE t.color = 'red'"
-        )
+        assert str(excinfo.value) == self.BAD_MESSAGE
+
+    def test_sql_exception_logs_as_warning(self, storage_provider, caplog):
+        db = storage_provider
+        with pytest.raises(Exception):
+            db._execute_select_value(self.BAD_SQL, self.BAD_ERROR)
+
+        assert len(caplog.records) == 1
+        log_record = caplog.records[0]
+        assert log_record.levelname == 'WARNING'
+        assert log_record.name == MODULE_UNDER_TEST
+        assert log_record.message == self.BAD_MESSAGE

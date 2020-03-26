@@ -1,6 +1,7 @@
+import inspect
+import logging
 import os
 
-import inspect
 import psycopg2 as driver
 
 from shrike.entities.app_user import AppUser
@@ -19,6 +20,7 @@ class PostgreSQLAdapter(StorageProvider):
         self.__db_name = db_config['db_name']
         self.__db_user = db_config['db_user']
         self.__db_password = db_config['db_password']
+        self.logger = logging.getLogger(__name__)
 
     def open(self):
         if self.connection is not None:
@@ -71,6 +73,7 @@ class PostgreSQLAdapter(StorageProvider):
         except Exception as e:
             reason = str(e)
             message = error + reason + clean_sql
+            self.logger.warning(message)
             raise type(e)(message)
 
     def _select_value(self, sql, parms):
