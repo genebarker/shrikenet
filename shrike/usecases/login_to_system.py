@@ -19,7 +19,8 @@ class LoginToSystem:
             self._verify_user_active(user, ip_address)
             self._verify_user_unlocked(user, ip_address)
             self._verify_user_password_correct(user, password, ip_address)
-            self._verify_user_password_reset_satisfied(user, new_password)
+            self._verify_user_password_reset_satisfied(user, new_password,
+                                                       ip_address)
         except LoginToSystemError as e:
             return LoginToSystemResult(
                 message=e.message,
@@ -28,18 +29,21 @@ class LoginToSystem:
                 )
 
         message = 'Login successful.'
+        log_message = ('App user (username=%s) from %s successfully '
+                       'logged in.' % (user.username, ip_address))
 
         if new_password is not None:
             user.password_hash = self.crypto.generate_hash_from_string(
                 new_password)
-            message = message + ' Password successfully changed.'
+            suffix = ' Password successfully changed.'
+            message += suffix
+            log_message += suffix
 
         user.is_locked = False
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
         self.db.commit()
-        self.logger.info('App user (username=%s) from %s successfully '
-                         'logged in.', user.username, ip_address)
+        self.logger.info(log_message)
         return LoginToSystemResult(message=message, has_failed=False,
                                    must_change_password=False,
                                    user_oid=user.oid)
@@ -89,8 +93,13 @@ class LoginToSystem:
                              user.ongoing_password_failure_count)
             raise LoginToSystemError('Login attempt failed.')
 
-    def _verify_user_password_reset_satisfied(self, user, new_password):
+    def _verify_user_password_reset_satisfied(self, user, new_password,
+                                              ip_address):
         if user.needs_password_change and new_password is None:
+            self.logger.info('App user (username=%s) with password marked '
+                             'for reset from %s attempted to login without '
+                             'providing a new password.',
+                             user.username, ip_address)
             raise LoginToSystemError('Password marked for reset. Must '
                                      'supply a new password.',
                                      must_change_password=True)
