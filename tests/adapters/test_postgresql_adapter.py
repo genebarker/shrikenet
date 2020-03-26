@@ -35,3 +35,24 @@ class TestPostgreSQLAdapter(TestMemoryAdapter):
     def test_get_version_returns_provider_info(self, storage_provider):
         assert storage_provider.get_version().startswith(
             storage_provider.VERSION_PREFIX)
+
+    def test_sql_exception_message_format(self, storage_provider):
+        db = storage_provider
+        sql = """
+            SELECT count(*)
+            FROM non_existant_table t
+            WHERE t.color = 'red'
+            """
+        error = "can not get red count, reason: "
+        with pytest.raises(Exception) as excinfo:
+            db._execute_select_value(sql, error)
+
+        assert str(excinfo.value) == (
+            "can not get red count, reason: relation \"non_existant_table\""
+            " does not exist\n"
+            "LINE 2: FROM non_existant_table t\n"
+            "             ^\n"
+            "SELECT count(*)\n"
+            "FROM non_existant_table t\n"
+            "WHERE t.color = 'red'"
+        )

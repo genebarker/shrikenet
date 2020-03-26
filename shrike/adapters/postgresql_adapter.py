@@ -1,5 +1,6 @@
 import os
 
+import inspect
 import psycopg2 as driver
 
 from shrike.entities.app_user import AppUser
@@ -63,12 +64,14 @@ class PostgreSQLAdapter(StorageProvider):
         return self._execute_select('_select_value', sql, parms, error)
 
     def _execute_select(self, function_name, sql, parms, error):
+        clean_sql = inspect.cleandoc(sql)
+        func = getattr(self, function_name)
         try:
-            func = getattr(self, function_name)
-            return func(sql, parms)
+            return func(clean_sql, parms)
         except Exception as e:
             reason = str(e)
-            raise type(e)(error + reason)
+            message = error + reason + clean_sql
+            raise type(e)(message)
 
     def _select_value(self, sql, parms):
         with self.connection.cursor() as cursor:
