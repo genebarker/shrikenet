@@ -35,6 +35,7 @@ class LoginToSystem:
         if new_password is not None:
             user.password_hash = self.crypto.generate_hash_from_string(
                 new_password)
+            user.needs_password_change = False
             suffix = ' Password successfully changed.'
             message += suffix
             log_message += suffix

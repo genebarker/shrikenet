@@ -44,7 +44,8 @@ class TestNeedsPasswordChangePaths(SetupClass):
                                                          GOOD_USER_PASSWORD)
         self.validate_successful_password_change_result(user, result)
 
-    def perform_good_password_change_login(self, user, current_password,
+    def perform_good_password_change_login(self, user,
+                                           current_password,
                                            ip_address=GOOD_IP_ADDRESS):
         login_to_system = LoginToSystem(self.services)
         new_password = self.reverse_string(current_password)
@@ -70,6 +71,12 @@ class TestNeedsPasswordChangePaths(SetupClass):
             'App user (username=jane) from 2.1.1.2 successfully '
             'logged in. Password successfully changed.'
         )
+
+    def test_password_marked_for_reset_clears_after_new_provided(self):
+        user = self.create_needs_password_change_user()
+        self.perform_good_password_change_login(user, GOOD_USER_PASSWORD)
+        user = self.db.get_app_user_by_oid(user.oid)
+        assert not user.needs_password_change
 
     def test_credentials_checked_before_password_reset(self):
         self.create_needs_password_change_user()
