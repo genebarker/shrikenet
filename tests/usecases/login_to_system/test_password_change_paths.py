@@ -9,7 +9,7 @@ from tests.usecases.login_to_system.setup_class import (
 )
 
 
-class TestNeedsPasswordChangePaths(SetupClass):
+class TestPasswordChangePaths(SetupClass):
 
     def test_login_fails_when_password_marked_for_reset(self):
         self.create_needs_password_change_user()
