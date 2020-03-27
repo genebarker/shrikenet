@@ -3,19 +3,19 @@ import logging
 
 import pytest
 
-from shrike.adapters.postgresql_adapter import PostgreSQLAdapter
+from shrike.adapters.postgresql import PostgreSQL
 from tests.adapters.test_memory import TestMemory
 
-MODULE_UNDER_TEST = 'shrike.adapters.postgresql_adapter'
+MODULE_UNDER_TEST = 'shrike.adapters.postgresql'
 
 
 logging.basicConfig(level=logging.DEBUG)
 
 
-class TestPostgreSQLAdapter(TestMemory):
+class TestPostgreSQL(TestMemory):
 
     @pytest.fixture(scope='class')
-    def postgresql_adapter(self):
+    def postgresql(self):
         config = ConfigParser()
         config.read('database.cfg')
         db_config = {
@@ -23,16 +23,16 @@ class TestPostgreSQLAdapter(TestMemory):
             'db_user': config['development']['db_user'],
             'db_password': config['development']['db_password'],
         }
-        postgresql_adapter = PostgreSQLAdapter(db_config)
-        postgresql_adapter.open()
-        postgresql_adapter.build_database_schema()
-        postgresql_adapter.commit()
-        yield postgresql_adapter
-        postgresql_adapter.close()
+        postgresql = PostgreSQL(db_config)
+        postgresql.open()
+        postgresql.build_database_schema()
+        postgresql.commit()
+        yield postgresql
+        postgresql.close()
 
     @pytest.fixture
-    def storage_provider(self, postgresql_adapter):
-        storage_provider = postgresql_adapter
+    def storage_provider(self, postgresql):
+        storage_provider = postgresql
         storage_provider.reset_database_objects()
         storage_provider.commit()
         yield storage_provider

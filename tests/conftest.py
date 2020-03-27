@@ -12,8 +12,8 @@ def app():
     config.read('database.cfg')
     app = create_app({
         'TESTING': True,
-        'STORAGE_PROVIDER_MODULE': 'shrike.adapters.postgresql_adapter',
-        'STORAGE_PROVIDER_CLASS': 'PostgreSQLAdapter',
+        'STORAGE_PROVIDER_MODULE': 'shrike.adapters.postgresql',
+        'STORAGE_PROVIDER_CLASS': 'PostgreSQL',
         'DB_NAME': config['development']['db_name'],
         'DB_USER': config['development']['db_user'],
         'DB_PASSWORD': config['development']['db_password'],
@@ -25,9 +25,9 @@ def app():
 
     with app.app_context():
         init_db()
-        postgresql_adapter = get_services().storage_provider
-        postgresql_adapter._execute_sql_file('pg_load_test_data.sql')
-        postgresql_adapter.commit()
+        postgresql = get_services().storage_provider
+        postgresql._execute_sql_file('pg_load_test_data.sql')
+        postgresql.commit()
 
     yield app
 

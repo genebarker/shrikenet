@@ -9,7 +9,7 @@ from shrike.entities.post import DeepPost, Post
 from shrike.entities.storage_provider import StorageProvider
 
 
-class PostgreSQLAdapter(StorageProvider):
+class PostgreSQL(StorageProvider):
 
     SCHEMA_FILENAME = 'pg_build_schema.sql'
     RESET_FILENAME = 'pg_reset_objects.sql'
