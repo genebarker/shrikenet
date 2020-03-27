@@ -38,8 +38,14 @@ class Memory(StorageProvider):
 
     # restrict access to attributes when closed
     def __getattribute__(self, name):
-        if (name not in ('open', 'is_open', '_build_schema') and not self.is_open):
-            error = '{} is not available since the connection is closed'.format(name)
+        if (
+            name not in ('open', 'is_open', '_build_schema')
+            and not self.is_open
+        ):
+            error = (
+                '{} is not available since the connection is closed'
+                .format(name)
+            )
             raise Exception(error)
         return object.__getattribute__(self, name)
 
@@ -66,9 +72,11 @@ class Memory(StorageProvider):
         self._build_schema()
 
     def get_version(self):
-        return ('{0} {1} - a lightweight in-memory database for unit testing'
-                .format(self.VERSION_PREFIX, self.VERSION_NUMBER))
-        
+        return (
+            '{0} {1} - a lightweight in-memory database for unit testing'
+            .format(self.VERSION_PREFIX, self.VERSION_NUMBER)
+        )
+
     def get_next_app_user_oid(self):
         next_oid = self.app_user_next_oid
         self.app_user_next_oid += 1
@@ -82,24 +90,36 @@ class Memory(StorageProvider):
     def get_app_user_by_username(self, username):
         oid = self._get_app_user_oid_for_username(username)
         if oid is None:
-            message = 'can not get app_user (username={}), reason: record does not exist'.format(username)
+            message = (
+                'can not get app_user (username={}), reason: record does '
+                'not exist'
+                .format(username)
+            )
             raise KeyError(message)
         return self.get_app_user_by_oid(oid)
 
     def get_app_user_by_oid(self, oid):
         if oid not in self.app_user:
-            message = 'can not get app_user (oid={}), reason: record does not exist'.format(oid)
+            message = (
+                'can not get app_user (oid={}), reason: record does not '
+                'exist'
+                .format(oid)
+            )
             raise KeyError(message)
         app_user = self.app_user[oid]
         return copy.copy(app_user)
 
     def _get_app_user_oid_for_username(self, username):
         for oid, app_user in self.app_user.items():
-            if app_user.username == username: return oid
+            if app_user.username == username:
+                return oid
         return None
 
     def add_app_user(self, app_user):
-        error = 'can not add app_user (oid={}, username={}), reason: '.format(app_user.oid, app_user.username)
+        error = (
+            'can not add app_user (oid={}, username={}), reason: '
+            .format(app_user.oid, app_user.username)
+        )
         if self.exists_app_username(app_user.username):
             reason = 'record with this username already exists'
             raise ValueError(error + reason)
@@ -119,7 +139,10 @@ class Memory(StorageProvider):
 
     def get_post_by_oid(self, oid):
         if oid not in self.post:
-            message = 'can not get post (oid={}), reason: record does not exist'.format(oid)
+            message = (
+                'can not get post (oid={}), reason: record does not exist'
+                .format(oid)
+            )
             raise KeyError(message)
         post = self.post[oid]
         author = self.app_user[post.author_oid]
@@ -127,7 +150,11 @@ class Memory(StorageProvider):
 
     def add_post(self, post):
         if post.oid in self.post:
-            message = 'can not add post (oid={}, title={}), reason: record with this oid already exists'.format(post.oid, post.title)
+            message = (
+                'can not add post (oid={}, title={}), reason: record with '
+                'this oid already exists'
+                .format(post.oid, post.title)
+            )
             raise ValueError(message)
         self.post[post.oid] = copy.copy(post)
 
@@ -143,7 +170,11 @@ class Memory(StorageProvider):
     def get_posts(self):
         posts = []
         for post in self.post.values():
-            author_username = self.app_user[post.author_oid].username if post.author_oid in self.app_user else None
+            author_username = (
+                self.app_user[post.author_oid].username
+                if post.author_oid in self.app_user
+                else None
+            )
             posts.append(DeepPost(post, author_username))
         posts.sort(key=attrgetter('created_time'), reverse=True)
         return posts
