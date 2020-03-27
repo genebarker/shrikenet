@@ -1,10 +1,10 @@
 import pytest
 
-from shrike.adapters.swapcase_adapter import SwapcaseAdapter
+from shrike.adapters.swapcase import Swapcase
 from shrike.entities.crypto_provider import CryptoProvider
 
 
-class TestSwapcaseAdapter:
+class TestSwapcase:
 
     TEST_STRING = 'scully'
     HASH_OF_TEST_STRING = 'SCULLY'
@@ -12,7 +12,7 @@ class TestSwapcaseAdapter:
 
     @staticmethod
     def get_crypto_provider():
-        return SwapcaseAdapter()
+        return Swapcase()
 
     @pytest.fixture
     def crypto_provider(self):
@@ -38,5 +38,7 @@ class TestSwapcaseAdapter:
     ))
     def test_when_hash_does_not_match_string(self, crypto_provider,
                                              my_hash, my_string):
-        assert (crypto_provider.hash_matches_string(my_hash, my_string)
-                is False)
+        assert (
+            crypto_provider.hash_matches_string(my_hash, my_string)
+            is False
+        )

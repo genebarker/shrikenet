@@ -1,7 +1,7 @@
 from shrike.entities.crypto_provider import CryptoProvider
 
 
-class SwapcaseAdapter(CryptoProvider):
+class Swapcase(CryptoProvider):
 
     def __init__(self):
         pass

@@ -1,10 +1,10 @@
 import pytest
 
 from shrike.adapters.werkzeug_adapter import WerkzeugAdapter
-from tests.adapters.test_swapcase_adapter import TestSwapcaseAdapter
+from tests.adapters.test_swapcase import TestSwapcase
 
 
-class TestWerkzeugAdapter(TestSwapcaseAdapter):
+class TestWerkzeugAdapter(TestSwapcase):
 
     TEST_STRING = 'scully'
     HASH_OF_TEST_STRING = 'pbkdf2:sha256:150000$zS5INwXP$' \

@@ -4,7 +4,7 @@ import logging
 import pytest
 
 from shrike.adapters.memory import Memory
-from shrike.adapters.swapcase_adapter import SwapcaseAdapter
+from shrike.adapters.swapcase import Swapcase
 from shrike.entities.app_user import AppUser
 from shrike.entities.services import Services
 from shrike.usecases.login_to_system import LoginToSystem
@@ -24,7 +24,7 @@ class SetupClass:
         self.db = Memory()
         self.db.open()
         text_transformer = None
-        self.crypto = SwapcaseAdapter()
+        self.crypto = Swapcase()
         self.services = Services(self.db, text_transformer, self.crypto)
 
     def teardown_method(self, method):

@@ -19,8 +19,8 @@ def app():
         'DB_PASSWORD': config['development']['db_password'],
         'TEXT_TRANSFORMER_MODULE': 'shrike.adapters.markdown',
         'TEST_TRANSFORMER_CLASS': 'Markdown',
-        'CRYPTO_PROVIDER_MODULE': 'shrike.adapters.swapcase_adapter',
-        'CRYPTO_PROVIDER_CLASS': 'SwapcaseAdapter',
+        'CRYPTO_PROVIDER_MODULE': 'shrike.adapters.swapcase',
+        'CRYPTO_PROVIDER_CLASS': 'Swapcase',
     })
 
     with app.app_context():
