@@ -23,4 +23,7 @@ class TestMarkdown:
         )
 
     def test_raw_html_escaped(self, text_transformer):
-        assert text_transformer.transform_to_html('<b>foo bar</b>') == '<p>&lt;b&gt;foo bar&lt;/b&gt;</p>\n'
+        assert (
+            text_transformer.transform_to_html('<b>foo bar</b>')
+            == '<p>&lt;b&gt;foo bar&lt;/b&gt;</p>\n'
+        )
