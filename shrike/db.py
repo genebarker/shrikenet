@@ -4,7 +4,7 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
-from shrike.adapters.markdown_adapter import MarkdownAdapter
+from shrike.adapters.markdown import Markdown
 from shrike.entities.services import Services
 
 

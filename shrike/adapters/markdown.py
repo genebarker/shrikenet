@@ -3,7 +3,7 @@ import pypandoc
 from shrike.entities.text_transformer import TextTransformer
 
 
-class MarkdownAdapter(TextTransformer):
+class Markdown(TextTransformer):
 
     def __init__(self):
         pass
