@@ -59,10 +59,11 @@ class PostgreSQL(StorageProvider):
 
     def get_version(self):
         sql = "SELECT version()"
+        parms = None
         error = 'can not get version information, reason: '
-        return self._execute_select_value(sql, error)
+        return self._execute_select_value(sql, parms, error)
 
-    def _execute_select_value(self, sql, error, parms=None):
+    def _execute_select_value(self, sql, parms, error):
         return self._execute_select('_select_value', sql, parms, error)
 
     def _execute_select(self, function_name, sql, parms, error):
@@ -84,13 +85,15 @@ class PostgreSQL(StorageProvider):
 
     def get_next_app_user_oid(self):
         sql = "SELECT nextval('app_user_seq')"
+        parms = None
         error = 'can not get next app_user oid, reason: '
-        return self._execute_select_value(sql, error)
+        return self._execute_select_value(sql, parms, error)
 
     def get_next_post_oid(self):
         sql = "SELECT nextval('post_seq')"
+        parms = None
         error = 'can not get next post oid, reason: '
-        return self._execute_select_value(sql, error)
+        return self._execute_select_value(sql, parms, error)
 
     def get_app_user_by_username(self, username):
         sql = "SELECT * FROM app_user WHERE username = %s"
@@ -202,15 +205,16 @@ class PostgreSQL(StorageProvider):
 
     def get_app_user_count(self):
         sql = "SELECT count(*) FROM app_user"
+        parms = None
         error = 'can not get count of app_user records, reason: '
-        return self._execute_select_value(sql, error)
+        return self._execute_select_value(sql, parms, error)
 
     def exists_app_username(self, username):
         sql = "SELECT count(*) FROM app_user WHERE username = %s"
         parms = (username,)
         error = ('can not check if app_user exists (username={}), reason: '
                  .format(username))
-        return self._execute_select_value(sql, error, parms) == 1
+        return self._execute_select_value(sql, parms, error) == 1
 
     def get_post_by_oid(self, oid):
         sql = """
@@ -273,8 +277,9 @@ class PostgreSQL(StorageProvider):
 
     def get_post_count(self):
         sql = "SELECT count(*) FROM post"
+        parms = None
         error = "can not get count of post records, reason: "
-        return self._execute_select_value(sql, error)
+        return self._execute_select_value(sql, parms, error)
 
     def get_posts(self):
         sql = """

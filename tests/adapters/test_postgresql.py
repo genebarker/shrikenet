@@ -58,17 +58,29 @@ class TestPostgreSQL(TestMemory):
         "WHERE t.color = 'red'"
     )
 
-    def test_sql_exception_message_format(self, storage_provider):
+    @pytest.mark.parametrize(('method_name',), (
+        ('_execute_select_value',),
+    ))
+    def test_sql_exception_message_format(self, storage_provider,
+                                          method_name):
         db = storage_provider
+        sql_method = getattr(db, method_name)
         with pytest.raises(Exception) as excinfo:
-            db._execute_select_value(self.BAD_SQL, self.BAD_ERROR)
+            parms = None
+            sql_method(self.BAD_SQL, parms, self.BAD_ERROR)
 
         assert str(excinfo.value) == self.BAD_MESSAGE
 
-    def test_sql_exception_logs_as_warning(self, storage_provider, caplog):
+    @pytest.mark.parametrize(('method_name',), (
+        ('_execute_select_value',),
+    ))
+    def test_sql_exception_logs_as_warning(self, storage_provider, caplog,
+                                           method_name):
         db = storage_provider
+        sql_method = getattr(db, method_name)
         with pytest.raises(Exception):
-            db._execute_select_value(self.BAD_SQL, self.BAD_ERROR)
+            parms = None
+            sql_method(self.BAD_SQL, parms, self.BAD_ERROR)
 
         assert len(caplog.records) == 1
         log_record = caplog.records[0]
