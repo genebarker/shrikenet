@@ -4,7 +4,7 @@ import logging
 import pytest
 
 from shrike.adapters.postgresql_adapter import PostgreSQLAdapter
-from tests.adapters.test_memory_adapter import TestMemoryAdapter
+from tests.adapters.test_memory import TestMemory
 
 MODULE_UNDER_TEST = 'shrike.adapters.postgresql_adapter'
 
@@ -12,7 +12,7 @@ MODULE_UNDER_TEST = 'shrike.adapters.postgresql_adapter'
 logging.basicConfig(level=logging.DEBUG)
 
 
-class TestPostgreSQLAdapter(TestMemoryAdapter):
+class TestPostgreSQLAdapter(TestMemory):
 
     @pytest.fixture(scope='class')
     def postgresql_adapter(self):

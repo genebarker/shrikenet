@@ -3,7 +3,7 @@ import logging
 
 import pytest
 
-from shrike.adapters.memory_adapter import MemoryAdapter
+from shrike.adapters.memory import Memory
 from shrike.adapters.swapcase_adapter import SwapcaseAdapter
 from shrike.entities.app_user import AppUser
 from shrike.entities.services import Services
@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.DEBUG)
 class SetupClass:
 
     def setup_method(self, method):
-        self.db = MemoryAdapter()
+        self.db = Memory()
         self.db.open()
         text_transformer = None
         self.crypto = SwapcaseAdapter()

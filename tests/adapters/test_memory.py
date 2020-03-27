@@ -4,17 +4,17 @@ from operator import attrgetter
 
 import pytest
 
-from shrike.adapters.memory_adapter import MemoryAdapter
+from shrike.adapters.memory import Memory
 from shrike.entities.app_user import AppUser
 from shrike.entities.post import DeepPost, Post
 from shrike.entities.storage_provider import StorageProvider
 
 
-class TestMemoryAdapter:
+class TestMemory:
 
     @staticmethod
     def get_storage_provider():
-        return MemoryAdapter()
+        return Memory()
 
     @pytest.fixture
     def storage_provider(self):

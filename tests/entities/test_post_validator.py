@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.adapters.memory_adapter import MemoryAdapter
+from shrike.adapters.memory import Memory
 from shrike.entities.post_validator import PostValidator
 from shrike.entities.record_validator import RecordValidator
 
@@ -104,18 +104,22 @@ class TestFieldValidation:
             PostValidator.validate_fields(post)
         assert str(excinfo.value).startswith('created_time')
 
+
 class TestReferenceValidation:
 
     @pytest.fixture
     def storage_provider(self):
-        provider = MemoryAdapter()
+        provider = Memory()
         provider.open()
         yield provider
         provider.close()
 
     def test_successful_validation_returns_none(self, storage_provider):
         post = self.create_good_post_with_references(storage_provider)
-        assert PostValidator.validate_references(post, storage_provider) is None
+        assert (
+            PostValidator.validate_references(post, storage_provider)
+            is None
+        )
 
     @staticmethod
     def create_good_post_with_references(storage_provider):
@@ -129,5 +133,8 @@ class TestReferenceValidation:
         post = create_good_post()
         with pytest.raises(Exception) as excinfo:
             PostValidator.validate_references(post, storage_provider)
-        expected_message = 'can not get app_user (oid={}), reason: '.format(post.author_oid)
+        expected_message = (
+            'can not get app_user (oid={}), reason: '
+            .format(post.author_oid)
+        )
         assert expected_message in str(excinfo.value)

@@ -5,7 +5,7 @@ from shrike.entities.post import DeepPost
 from shrike.entities.storage_provider import StorageProvider
 
 
-class MemoryAdapter(StorageProvider):
+class Memory(StorageProvider):
 
     VERSION_PREFIX = 'MemoryStore'
     VERSION_NUMBER = '1.0'

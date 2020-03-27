@@ -10,8 +10,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        STORAGE_PROVIDER_MODULE='shrike.adapters.memory_adapter',
-        STORAGE_PROVIDER_CLASS='MemoryAdapter',
+        STORAGE_PROVIDER_MODULE='shrike.adapters.memory',
+        STORAGE_PROVIDER_CLASS='Memory',
         DB_NAME='unused',
         DB_USER='unused',
         DB_PASSWORD='unused',
