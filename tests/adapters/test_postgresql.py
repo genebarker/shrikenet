@@ -60,6 +60,7 @@ class TestPostgreSQL(TestMemory):
 
     @pytest.mark.parametrize(('method_name',), (
         ('_execute_select_value',),
+        ('_execute_process_sql',),
     ))
     def test_sql_exception_message_format(self, storage_provider,
                                           method_name):
@@ -73,6 +74,7 @@ class TestPostgreSQL(TestMemory):
 
     @pytest.mark.parametrize(('method_name',), (
         ('_execute_select_value',),
+        ('_execute_process_sql',),
     ))
     def test_sql_exception_logs_as_warning(self, storage_provider, caplog,
                                            method_name):

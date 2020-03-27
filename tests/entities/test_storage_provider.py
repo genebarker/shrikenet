@@ -2,6 +2,7 @@ import pytest
 
 from shrike.entities.storage_provider import StorageProvider
 
+
 class TestStorageProvider:
 
     def test_interface_cant_be_instantiated(self):
@@ -41,6 +42,8 @@ class TestStorageProvider:
     def test_method_is_uncallable(self, storage_provider, method_name, args):
         method = getattr(storage_provider, method_name)
         with pytest.raises(NotImplementedError):
-            if args == 0: method()
-            if args == 1: method(None)
+            if args == 0:
+                method()
+            if args == 1:
+                method(None)
             pass

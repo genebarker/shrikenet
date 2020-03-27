@@ -165,11 +165,14 @@ class PostgreSQL(StorageProvider):
         self._execute_process_sql(sql, parms, error)
 
     def _execute_process_sql(self, sql, parms, error):
+        clean_sql = inspect.cleandoc(sql)
         try:
-            return self._process_sql(sql, parms)
+            return self._process_sql(clean_sql, parms)
         except Exception as e:
             reason = str(e)
-            raise type(e)(error + reason)
+            message = error + reason + clean_sql
+            self.logger.warning(message)
+            raise type(e)(message)
 
     def _process_sql(self, sql, parms):
         with self.connection.cursor() as cursor:
