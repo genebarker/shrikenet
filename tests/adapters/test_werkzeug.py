@@ -1,10 +1,10 @@
 import pytest
 
-from shrike.adapters.werkzeug_adapter import WerkzeugAdapter
+from shrike.adapters.werkzeug import Werkzeug
 from tests.adapters.test_swapcase import TestSwapcase
 
 
-class TestWerkzeugAdapter(TestSwapcase):
+class TestWerkzeug(TestSwapcase):
 
     TEST_STRING = 'scully'
     HASH_OF_TEST_STRING = 'pbkdf2:sha256:150000$zS5INwXP$' \
@@ -14,4 +14,4 @@ class TestWerkzeugAdapter(TestSwapcase):
 
     @staticmethod
     def get_crypto_provider():
-        return WerkzeugAdapter()
+        return Werkzeug()
