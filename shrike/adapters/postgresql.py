@@ -59,7 +59,7 @@ class PostgreSQL(StorageProvider):
 
     def get_version(self):
         sql = "SELECT version()"
-        error = "can not get version information, reason: "
+        error = 'can not get version information, reason: '
         return self._execute_select_value(sql, error)
 
     def _execute_select_value(self, sql, error, parms=None):
@@ -84,12 +84,12 @@ class PostgreSQL(StorageProvider):
 
     def get_next_app_user_oid(self):
         sql = "SELECT nextval('app_user_seq')"
-        error = "can not get next app_user oid, reason: "
+        error = 'can not get next app_user oid, reason: '
         return self._execute_select_value(sql, error)
 
     def get_next_post_oid(self):
         sql = "SELECT nextval('post_seq')"
-        error = "can not get next post oid, reason: "
+        error = 'can not get next post oid, reason: '
         return self._execute_select_value(sql, error)
 
     def get_app_user_by_username(self, username):
@@ -132,15 +132,31 @@ class PostgreSQL(StorageProvider):
         return self._create_app_user_from_row(row)
 
     def add_app_user(self, app_user):
-        sql = ("INSERT INTO app_user (oid, username, name, password_hash, "
-               "needs_password_change, is_locked, is_dormant, "
-               "ongoing_password_failure_count, last_password_failure_time) "
-               "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)")
-        parms = (app_user.oid, app_user.username, app_user.name,
-                 app_user.password_hash, app_user.needs_password_change,
-                 app_user.is_locked, app_user.is_dormant,
-                 app_user.ongoing_password_failure_count,
-                 app_user.last_password_failure_time)
+        sql = """
+            INSERT INTO app_user (
+                oid,
+                username,
+                name,
+                password_hash,
+                needs_password_change,
+                is_locked,
+                is_dormant,
+                ongoing_password_failure_count,
+                last_password_failure_time
+            )
+            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        parms = (
+            app_user.oid,
+            app_user.username,
+            app_user.name,
+            app_user.password_hash,
+            app_user.needs_password_change,
+            app_user.is_locked,
+            app_user.is_dormant,
+            app_user.ongoing_password_failure_count,
+            app_user.last_password_failure_time,
+        )
         error = ('can not add app_user (oid={}, username={}), reason: '
                  .format(app_user.oid, app_user.username))
         self._execute_process_sql(sql, parms, error)
@@ -157,25 +173,36 @@ class PostgreSQL(StorageProvider):
             cursor.execute(sql, parms)
 
     def update_app_user(self, app_user):
-        sql = ("UPDATE app_user SET username = %s, name = %s, "
-               "password_hash = %s , needs_password_change = %s, "
-               "is_locked = %s, is_dormant = %s, "
-               "ongoing_password_failure_count = %s, "
-               "last_password_failure_time = %s "
-               "WHERE oid = %s")
-        parms = (app_user.username, app_user.name,
-                 app_user.password_hash, app_user.needs_password_change,
-                 app_user.is_locked, app_user.is_dormant,
-                 app_user.ongoing_password_failure_count,
-                 app_user.last_password_failure_time,
-                 app_user.oid)
+        sql = """
+            UPDATE app_user
+            SET username = %s,
+                name = %s,
+                password_hash = %s,
+                needs_password_change = %s,
+                is_locked = %s,
+                is_dormant = %s,
+                ongoing_password_failure_count = %s,
+                last_password_failure_time = %s
+            WHERE oid = %s
+        """
+        parms = (
+            app_user.username,
+            app_user.name,
+            app_user.password_hash,
+            app_user.needs_password_change,
+            app_user.is_locked,
+            app_user.is_dormant,
+            app_user.ongoing_password_failure_count,
+            app_user.last_password_failure_time,
+            app_user.oid,
+        )
         error = ('can not update app_user (oid={}), reason: '
                  .format(app_user.oid))
         self._execute_process_sql(sql, parms, error)
 
     def get_app_user_count(self):
         sql = "SELECT count(*) FROM app_user"
-        error = "can not get count of app_user records, reason: "
+        error = 'can not get count of app_user records, reason: '
         return self._execute_select_value(sql, error)
 
     def exists_app_username(self, username):
@@ -186,12 +213,18 @@ class PostgreSQL(StorageProvider):
         return self._execute_select_value(sql, error, parms) == 1
 
     def get_post_by_oid(self, oid):
-        sql = ("SELECT p.oid, p.title, p.body, p.author_oid, "
-               "p.created_time, u.username AS author_username "
-               "FROM post p "
-               "LEFT OUTER JOIN app_user u "
-               "ON p.author_oid = u.oid "
-               "WHERE p.oid = %s")
+        sql = """
+            SELECT p.oid,
+                p.title,
+                p.body,
+                p.author_oid,
+                p.created_time,
+                u.username AS author_username
+            FROM post p
+            LEFT OUTER JOIN app_user u
+            ON p.author_oid = u.oid
+            WHERE p.oid = %s
+        """
         parms = (oid,)
         error = 'can not get post (oid={}), reason: '.format(oid)
         row = self._execute_select_row(sql, parms, error)
@@ -208,8 +241,10 @@ class PostgreSQL(StorageProvider):
         return DeepPost(post, row[5])
 
     def add_post(self, post):
-        sql = ("INSERT INTO post (oid, title, body, author_oid, "
-               "created_time) VALUES(%s, %s, %s, %s, %s)")
+        sql = """
+            INSERT INTO post (oid, title, body, author_oid, created_time)
+            VALUES(%s, %s, %s, %s, %s)
+        """
         parms = (post.oid, post.title, post.body, post.author_oid,
                  post.created_time)
         error = ('can not add post (oid={}, title={}), reason: '
@@ -217,8 +252,14 @@ class PostgreSQL(StorageProvider):
         self._execute_process_sql(sql, parms, error)
 
     def update_post(self, post):
-        sql = ("UPDATE post SET title = %s, body = %s, author_oid = %s, "
-               "created_time = %s WHERE oid = %s")
+        sql = """
+            UPDATE post
+            SET title = %s,
+                body = %s,
+                author_oid = %s,
+                created_time = %s
+            WHERE oid = %s
+        """
         parms = (post.title, post.body, post.author_oid, post.created_time,
                  post.oid)
         error = 'can not update post (oid={}), reason: '.format(post.oid)
@@ -236,11 +277,17 @@ class PostgreSQL(StorageProvider):
         return self._execute_select_value(sql, error)
 
     def get_posts(self):
-        sql = ("SELECT p.oid, p.title, p.body, p.author_oid, "
-               "p.created_time, u.username AS author_username "
-               "FROM post p "
-               "LEFT OUTER JOIN app_user u ON p.author_oid = u.oid "
-               "ORDER BY p.created_time DESC")
+        sql = """
+            SELECT p.oid,
+                p.title,
+                p.body,
+                p.author_oid,
+                p.created_time,
+                u.username AS author_username
+            FROM post p
+            LEFT OUTER JOIN app_user u ON p.author_oid = u.oid
+            ORDER BY p.created_time DESC
+        """
         parms = None
         error = 'can not get posts, reason: '
         rows = self._execute_select_all_rows(sql, parms, error)
