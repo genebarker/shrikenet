@@ -28,8 +28,8 @@ class PostgreSQL(StorageProvider):
         self.connection = driver.connect(
             dbname=self.__db_name,
             user=self.__db_user,
-            password=self.__db_password
-            )
+            password=self.__db_password,
+        )
 
     def close(self):
         self.connection.close()
@@ -124,7 +124,7 @@ class PostgreSQL(StorageProvider):
             is_dormant=row[6],
             ongoing_password_failure_count=row[7],
             last_password_failure_time=row[8],
-            )
+        )
         return app_user
 
     def get_app_user_by_oid(self, oid):
@@ -160,8 +160,10 @@ class PostgreSQL(StorageProvider):
             app_user.ongoing_password_failure_count,
             app_user.last_password_failure_time,
         )
-        error = ('can not add app_user (oid={}, username={}), reason: '
-                 .format(app_user.oid, app_user.username))
+        error = (
+            'can not add app_user (oid={}, username={}), reason: '
+            .format(app_user.oid, app_user.username)
+        )
         self._execute_process_sql(sql, parms, error)
 
     def _execute_process_sql(self, sql, parms, error):
@@ -202,8 +204,10 @@ class PostgreSQL(StorageProvider):
             app_user.last_password_failure_time,
             app_user.oid,
         )
-        error = ('can not update app_user (oid={}), reason: '
-                 .format(app_user.oid))
+        error = (
+            'can not update app_user (oid={}), reason: '
+            .format(app_user.oid)
+        )
         self._execute_process_sql(sql, parms, error)
 
     def get_app_user_count(self):
@@ -215,8 +219,10 @@ class PostgreSQL(StorageProvider):
     def exists_app_username(self, username):
         sql = "SELECT count(*) FROM app_user WHERE username = %s"
         parms = (username,)
-        error = ('can not check if app_user exists (username={}), reason: '
-                 .format(username))
+        error = (
+            'can not check if app_user exists (username={}), reason: '
+            .format(username)
+        )
         return self._execute_select_value(sql, parms, error) == 1
 
     def get_post_by_oid(self, oid):
@@ -252,10 +258,17 @@ class PostgreSQL(StorageProvider):
             INSERT INTO post (oid, title, body, author_oid, created_time)
             VALUES(%s, %s, %s, %s, %s)
         """
-        parms = (post.oid, post.title, post.body, post.author_oid,
-                 post.created_time)
-        error = ('can not add post (oid={}, title={}), reason: '
-                 .format(post.oid, post.title))
+        parms = (
+            post.oid,
+            post.title,
+            post.body,
+            post.author_oid,
+            post.created_time,
+        )
+        error = (
+            'can not add post (oid={}, title={}), reason: '
+            .format(post.oid, post.title)
+        )
         self._execute_process_sql(sql, parms, error)
 
     def update_post(self, post):
@@ -267,8 +280,13 @@ class PostgreSQL(StorageProvider):
                 created_time = %s
             WHERE oid = %s
         """
-        parms = (post.title, post.body, post.author_oid, post.created_time,
-                 post.oid)
+        parms = (
+            post.title,
+            post.body,
+            post.author_oid,
+            post.created_time,
+            post.oid,
+        )
         error = 'can not update post (oid={}), reason: '.format(post.oid)
         self._execute_process_sql(sql, parms, error)
 
