@@ -65,3 +65,6 @@ class StorageProvider:
 
     def get_posts(self):
         raise NotImplementedError
+
+    def get_parameters(self):
+        raise NotImplementedError

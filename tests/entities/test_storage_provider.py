@@ -38,6 +38,7 @@ class TestStorageProvider:
         ('delete_post_by_oid', 1),
         ('get_post_count', 0),
         ('get_posts', 0),
+        ('get_parameters', 0),
     ))
     def test_method_is_uncallable(self, storage_provider, method_name, args):
         method = getattr(storage_provider, method_name)
