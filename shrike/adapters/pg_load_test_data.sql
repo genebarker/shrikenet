@@ -17,3 +17,8 @@ INSERT INTO post (oid, title, body, author_oid, created_time)
 VALUES
     (nextval('post_seq'), 'test title', 'test' || E'\n' || 'body', 1,
      '2018-01-01 00:00:00+0');
+
+INSERT INTO parameter (tag, tag_value, tag_type)
+VALUES
+    ('login_fail_threshold_count', '3', 'int'),
+    ('login_fail_lock_minutes', '15', 'int');

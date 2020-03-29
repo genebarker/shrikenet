@@ -329,3 +329,36 @@ class PostgreSQL(StorageProvider):
         with self.connection.cursor() as cursor:
             cursor.execute(sql, parms)
             return cursor.fetchall()
+
+    def get_parameters(self):
+        sql = "SELECT tag, tag_value, tag_type FROM parameter"
+        parms = None
+        error = 'can not get parameters, reason: '
+        rows = self._execute_select_all_rows(sql, parms, error)
+        parameter = {}
+        for row in rows:
+            tag = row[0]
+            tag_type = row[2]
+            tag_value = int(row[1]) if tag_type == 'int' else row[1]
+            parameter[tag] = tag_value
+        return parameter
+
+    def save_parameters(self, parameter):
+        sql = "DELETE FROM parameter"
+        parms = None
+        error = 'can not save parameters, reason: '
+        self._execute_process_sql(sql, parms, error)
+        for key, value in parameter.items():
+            sql = """
+                INSERT INTO parameter (tag, tag_value, tag_type)
+                VALUES (%s, %s, %s)
+            """
+            tag = key
+            if isinstance(value, int):
+                tag_value = str(value)
+                tag_type = 'int'
+            else:
+                tag_value = value
+                tag_type = 'str'
+            parms = (tag, tag_value, tag_type)
+            self._execute_process_sql(sql, parms, error)

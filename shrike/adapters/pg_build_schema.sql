@@ -27,3 +27,10 @@ CREATE TABLE post (
     author_oid integer,
     created_time timestamp with time zone
 );
+
+DROP TABLE IF EXISTS parameter;
+CREATE TABLE parameter (
+    tag varchar(50) PRIMARY KEY,
+    tag_value text,
+    tag_type varchar(20)
+);
