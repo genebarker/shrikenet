@@ -353,3 +353,48 @@ class TestMemory:
         assert len(posts) == 0
 
     # endregion
+
+    # region - test get parameters
+
+    def test_get_parameters_returns_dictionary(self, storage_provider):
+        parameter = storage_provider.get_parameters()
+        assert isinstance(parameter, dict)
+
+    def test_save_parameters_saves_them(self, storage_provider):
+        parm_a = self.create_and_store_sample_parms(storage_provider)
+        parm_b = storage_provider.get_parameters()
+        assert parm_a == parm_b
+
+    def create_and_store_sample_parms(self, storage_provider):
+        parms = self.create_sample_parms()
+        storage_provider.save_parameters(parms)
+        return parms
+
+    def create_sample_parms(self):
+        return {'apple_count': 12, 'apple_type': 'Granny Smith'}
+
+    def test_get_parameters_returns_a_copy(self, storage_provider):
+        parms = self.create_and_store_sample_parms(storage_provider)
+        parms['apple_count'] = 6
+        assert (
+            self.create_sample_parms()
+            == storage_provider.get_parameters()
+        )
+
+    def test_parameters_exist_after_commit(self, storage_provider):
+        parms = self.create_and_store_sample_parms(storage_provider)
+        storage_provider.commit()
+        assert parms == storage_provider.get_parameters()
+
+    def test_parameters_gone_after_rollback(self, storage_provider):
+        parms = self.create_and_store_sample_parms(storage_provider)
+        storage_provider.commit()
+        parms['orange_count'] = 99
+        storage_provider.save_parameters(parms)
+        storage_provider.rollback()
+        assert (
+            self.create_sample_parms()
+            == storage_provider.get_parameters()
+        )
+
+    # endregion

@@ -19,6 +19,7 @@ class Memory(StorageProvider):
         self.app_user_next_oid = 1
         self.post = {}
         self.post_next_oid = 1
+        self.parameters = {}
 
     def save_tables(self):
         self.saved_app_user = {}
@@ -27,6 +28,7 @@ class Memory(StorageProvider):
             self.saved_app_user[key] = copy.copy(value)
         for key, value in self.post.items():
             self.saved_post[key] = copy.copy(value)
+        self.saved_parameters = self.parameters.copy()
 
     def restore_tables(self):
         self.app_user = {}
@@ -35,6 +37,7 @@ class Memory(StorageProvider):
             self.app_user[key] = copy.copy(value)
         for key, value in self.saved_post.items():
             self.post[key] = copy.copy(value)
+        self.parameters = self.saved_parameters.copy()
 
     # restrict access to attributes when closed
     def __getattribute__(self, name):
@@ -178,3 +181,9 @@ class Memory(StorageProvider):
             posts.append(DeepPost(post, author_username))
         posts.sort(key=attrgetter('created_time'), reverse=True)
         return posts
+
+    def get_parameters(self):
+        return self.parameters.copy()
+
+    def save_parameters(self, parameters):
+        self.parameters = parameters.copy()
