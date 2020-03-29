@@ -68,3 +68,6 @@ class StorageProvider:
 
     def get_parameters(self):
         raise NotImplementedError
+
+    def save_parameters(self, parameters):
+        raise NotImplementedError
