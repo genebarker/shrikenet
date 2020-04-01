@@ -17,11 +17,16 @@ class FieldValidator:
 
     @staticmethod
     def validate_oid(oid, field_name='oid'):
-        if oid is None:
+        return FieldValidator.validate_int(oid, field_name)
+
+    @staticmethod
+    def validate_int(value, field_name='value', lower_limit=0):
+        if value is None:
             raise ValueError('{} must be provided'.format(field_name))
-        if not isinstance(oid, int) or oid < 0:
-            raise ValueError('{} must be a positive integer'.format(field_name))
-        return oid
+        if not isinstance(value, int) or value < lower_limit:
+            raise ValueError('{0} must be an integer greater than or equal '
+                             'to {1}'.format(field_name, lower_limit))
+        return value
 
     @staticmethod
     def validate_username(username, field_name='username'):

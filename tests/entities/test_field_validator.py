@@ -12,46 +12,65 @@ def confirm_call_raises(function_call, field_name, field_value,
     assert str(excinfo.value) == expected_message
 
 
-class TestOIDValidation:
+class TestIntValidation:
 
-    missing_message = 'oid must be provided'
-    bad_value_message = 'oid must be a positive integer'
+    missing_message = 'value must be provided'
+    bad_value_message = 'value must be an integer greater than or equal to 0'
 
     def test_good_returns_its_value(self):
-        oid = 100
-        assert FieldValidator.validate_oid(oid) == oid
+        value = 100
+        assert FieldValidator.validate_int(value) == value
 
     def test_none_raises(self):
-        oid = None
+        value = None
         expected_message = self.missing_message
-        self.confirm_raises(expected_message, oid)
+        self.confirm_raises(expected_message, value)
 
-    @staticmethod
-    def confirm_raises(expected_message, given_oid, field_name='oid'):
-        confirm_call_raises(function_call=FieldValidator.validate_oid,
-                            field_name=field_name,
-                            field_value=given_oid,
-                            expected_message=expected_message)
+    def confirm_raises(self, expected_message, given_value,
+                       field_name='value', lower_limit=0):
+        with pytest.raises(ValueError) as excinfo:
+            FieldValidator.validate_int(given_value, field_name, lower_limit)
+        assert str(excinfo.value) == expected_message
 
     def test_none_with_alternate_name_raises(self):
-        oid = None
+        value = None
         alternate_field_name = 'seqnum'
         expected_message = self.missing_message.replace(
-            'oid', alternate_field_name, 1
+            'value', alternate_field_name, 1
         )
-        self.confirm_raises(expected_message, oid, alternate_field_name)
+        self.confirm_raises(expected_message, value, alternate_field_name)
 
-    @pytest.mark.parametrize(('oid'), (
+    @pytest.mark.parametrize(('value'), (
         ('not a number'),
         (100.1),
     ))
-    def test_non_integer_raises(self, oid):
+    def test_non_integer_raises(self, value):
         expected_message = self.bad_value_message
-        self.confirm_raises(expected_message, oid)
+        self.confirm_raises(expected_message, value)
 
-    def test_negative_integer_raises(self):
+    def test_non_integer_with_alternate_name_raises(self):
+        value = .001
+        alternate_field_name = 'age'
+        expected_message = self.bad_value_message.replace(
+            'value', alternate_field_name, 1
+        )
+        self.confirm_raises(expected_message, value, alternate_field_name)
+
+    def test_at_default_limit_works(self):
+        assert FieldValidator.validate_int(0) == 0
+
+    def test_below_default_limit_raises(self):
         expected_message = self.bad_value_message
-        self.confirm_raises(expected_message, -100)
+        self.confirm_raises(expected_message, -1)
+
+    def test_at_alternate_limit_works(self):
+        lower_limit = -1
+        assert FieldValidator.validate_int(-1, 'value', lower_limit) == -1
+
+    def test_below_alternate_limit_raises(self):
+        lower_limit = 5
+        expected_message = self.bad_value_message.replace('0', '5')
+        self.confirm_raises(expected_message, 4, 'value', lower_limit)
 
 
 class TestUsernameValidation:
