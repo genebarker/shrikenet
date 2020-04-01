@@ -91,7 +91,8 @@ class FieldValidator:
             min_length=FieldValidator.title_min_length,
             max_length=FieldValidator.title_max_length,
             regex_pattern=FieldValidator.title_regex_pattern,
-            pattern_hint=(field_name + ' must begin with an alphanumeric character'),
+            pattern_hint=('{} must begin with an alphanumeric character'
+                          .format(field_name)),
         )
 
     @staticmethod
@@ -99,5 +100,6 @@ class FieldValidator:
         if instant is None:
             raise ValueError('{} must be provided'.format(field_name))
         if not isinstance(instant, datetime) or instant.tzinfo is None:
-            raise ValueError('{} must be datetime object with timezone'.format(field_name))
+            raise ValueError('{} must be datetime object with timezone'
+                             .format(field_name))
         return instant
