@@ -17,7 +17,8 @@ class FieldValidator:
 
     @staticmethod
     def validate_oid(oid, field_name='oid'):
-        return FieldValidator.validate_int(oid, field_name)
+        lower_limit = 1
+        return FieldValidator.validate_int(oid, field_name, lower_limit)
 
     @staticmethod
     def validate_int(value, field_name='value', lower_limit=0):

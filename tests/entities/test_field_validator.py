@@ -72,6 +72,13 @@ class TestIntValidation:
         expected_message = self.bad_value_message.replace('0', '5')
         self.confirm_raises(expected_message, 4, 'value', lower_limit)
 
+    def test_validate_oid_helper_works(self):
+        assert FieldValidator.validate_oid(10)
+
+    def test_validate_oid_helper_raises_when_not_positive_int(self):
+        with pytest.raises(ValueError):
+            FieldValidator.validate_oid(0)
+
 
 class TestUsernameValidation:
 
