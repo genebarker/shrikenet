@@ -9398,7 +9398,7 @@
 									"top": 149,
 									"width": 53.341796875,
 									"height": 13,
-									"text": "rules"
+									"text": "rule"
 								},
 								{
 									"_type": "ERDColumnCompartmentView",
@@ -9699,7 +9699,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFtGLsiUBJeP/w="
 					},
-					"name": "rules"
+					"name": "rule"
 				}
 			]
 		}
