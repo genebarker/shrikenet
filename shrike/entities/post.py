@@ -1,6 +1,7 @@
 class Post:
 
-    def __init__(self, title, body, oid=None, author_oid=None, created_time=None):
+    def __init__(self, title, body, oid=None, author_oid=None,
+                 created_time=None):
         self.oid = oid
         self.title = title
         self.body = body
@@ -15,8 +16,10 @@ class Post:
                 self.author_oid == other.author_oid and
                 self.created_time == other.created_time)
 
+
 class DeepPost(Post):
 
     def __init__(self, post, author_username=None):
-        super().__init__(post.title, post.body, post.oid, post.author_oid, post.created_time)
+        super().__init__(post.title, post.body, post.oid, post.author_oid,
+                         post.created_time)
         self.author_username = author_username
