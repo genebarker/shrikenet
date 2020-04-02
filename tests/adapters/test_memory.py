@@ -7,6 +7,7 @@ import pytest
 from shrike.adapters.memory import Memory
 from shrike.entities.app_user import AppUser
 from shrike.entities.post import DeepPost, Post
+from shrike.entities.rules import Rules
 from shrike.entities.storage_provider import StorageProvider
 
 
@@ -354,47 +355,54 @@ class TestMemory:
 
     # endregion
 
-    # region - test get parameters
+    # region - test get / save rules
 
-    def test_get_parameters_returns_dictionary(self, storage_provider):
-        parameter = storage_provider.get_parameters()
-        assert isinstance(parameter, dict)
+    def test_get_rules_returns_rules_object(self, storage_provider):
+        rules = storage_provider.get_rules()
+        assert isinstance(rules, Rules)
 
-    def test_save_parameters_saves_them(self, storage_provider):
-        parm_a = self.create_and_store_sample_parms(storage_provider)
-        parm_b = storage_provider.get_parameters()
-        assert parm_a == parm_b
+    def test_initial_rules_are_set_to_defaults(self, storage_provider):
+        rules = storage_provider.get_rules()
+        default_rules = Rules()
+        assert rules == default_rules
 
-    def create_and_store_sample_parms(self, storage_provider):
-        parms = self.create_sample_parms()
-        storage_provider.save_parameters(parms)
-        return parms
+    def test_save_rules_saves_them(self, storage_provider):
+        rules_a = self.create_and_store_sample_rules(storage_provider)
+        rules_b = storage_provider.get_rules()
+        assert rules_a == rules_b
 
-    def create_sample_parms(self):
-        return {'apple_count': 12, 'apple_type': 'Granny Smith'}
+    def create_and_store_sample_rules(self, storage_provider):
+        rules = self.create_sample_rules()
+        storage_provider.save_rules(rules)
+        return rules
 
-    def test_get_parameters_returns_a_copy(self, storage_provider):
-        parms = self.create_and_store_sample_parms(storage_provider)
-        parms['apple_count'] = 6
+    def create_sample_rules(self):
+        rules = Rules()
+        rules.login_fail_threshold_count = 42
+        return rules
+
+    def test_get_rules_returns_a_copy(self, storage_provider):
+        rules = self.create_and_store_sample_rules(storage_provider)
+        rules.login_fail_threshold_count += 1
         assert (
-            self.create_sample_parms()
-            == storage_provider.get_parameters()
+            self.create_sample_rules()
+            == storage_provider.get_rules()
         )
 
-    def test_parameters_exist_after_commit(self, storage_provider):
-        parms = self.create_and_store_sample_parms(storage_provider)
+    def test_rules_exist_after_commit(self, storage_provider):
+        rules = self.create_and_store_sample_rules(storage_provider)
         storage_provider.commit()
-        assert parms == storage_provider.get_parameters()
+        assert rules == storage_provider.get_rules()
 
-    def test_parameters_gone_after_rollback(self, storage_provider):
-        parms = self.create_and_store_sample_parms(storage_provider)
+    def test_rules_gone_after_rollback(self, storage_provider):
+        rules = self.create_and_store_sample_rules(storage_provider)
         storage_provider.commit()
-        parms['orange_count'] = 99
-        storage_provider.save_parameters(parms)
+        rules.login_fail_threshold_count = 99
+        storage_provider.save_rules(rules)
         storage_provider.rollback()
         assert (
-            self.create_sample_parms()
-            == storage_provider.get_parameters()
+            self.create_sample_rules()
+            == storage_provider.get_rules()
         )
 
     # endregion

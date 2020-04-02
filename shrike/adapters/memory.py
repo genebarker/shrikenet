@@ -2,6 +2,7 @@ import copy
 from operator import attrgetter
 
 from shrike.entities.post import DeepPost
+from shrike.entities.rules import Rules
 from shrike.entities.storage_provider import StorageProvider
 
 
@@ -19,7 +20,7 @@ class Memory(StorageProvider):
         self.app_user_next_oid = 1
         self.post = {}
         self.post_next_oid = 1
-        self.parameters = {}
+        self.rules = Rules()
 
     def save_tables(self):
         self.saved_app_user = {}
@@ -28,7 +29,7 @@ class Memory(StorageProvider):
             self.saved_app_user[key] = copy.copy(value)
         for key, value in self.post.items():
             self.saved_post[key] = copy.copy(value)
-        self.saved_parameters = self.parameters.copy()
+        self.saved_rules = copy.copy(self.rules)
 
     def restore_tables(self):
         self.app_user = {}
@@ -37,7 +38,7 @@ class Memory(StorageProvider):
             self.app_user[key] = copy.copy(value)
         for key, value in self.saved_post.items():
             self.post[key] = copy.copy(value)
-        self.parameters = self.saved_parameters.copy()
+        self.rules = copy.copy(self.saved_rules)
 
     # restrict access to attributes when closed
     def __getattribute__(self, name):
@@ -182,8 +183,10 @@ class Memory(StorageProvider):
         posts.sort(key=attrgetter('created_time'), reverse=True)
         return posts
 
-    def get_parameters(self):
-        return self.parameters.copy()
+    def get_rules(self):
+        if self.rules is None:
+            return None
+        return copy.copy(self.rules)
 
-    def save_parameters(self, parameters):
-        self.parameters = parameters.copy()
+    def save_rules(self, rules):
+        self.rules = None if rules is None else copy.copy(rules)
