@@ -6,6 +6,7 @@ import psycopg2 as driver
 
 from shrike.entities.app_user import AppUser
 from shrike.entities.post import DeepPost, Post
+from shrike.entities.rules import Rules
 from shrike.entities.storage_provider import StorageProvider
 
 
@@ -330,35 +331,39 @@ class PostgreSQL(StorageProvider):
             cursor.execute(sql, parms)
             return cursor.fetchall()
 
-    def get_parameters(self):
-        sql = "SELECT tag, tag_value, tag_type FROM parameter"
+    def get_rules(self):
+        sql = "SELECT tag, tag_value, tag_type FROM rule"
         parms = None
-        error = 'can not get parameters, reason: '
+        error = 'can not get rules, reason: '
         rows = self._execute_select_all_rows(sql, parms, error)
-        parameter = {}
+        rules = Rules()
         for row in rows:
             tag = row[0]
             tag_type = row[2]
             tag_value = int(row[1]) if tag_type == 'int' else row[1]
-            parameter[tag] = tag_value
-        return parameter
+            setattr(rules, tag, tag_value)
+        return rules
 
-    def save_parameters(self, parameter):
-        sql = "DELETE FROM parameter"
+    def save_rules(self, rules):
+        sql = "DELETE FROM rule"
         parms = None
-        error = 'can not save parameters, reason: '
+        error = 'can not save rules, reason: '
         self._execute_process_sql(sql, parms, error)
-        for key, value in parameter.items():
+
+        attribute = {
+            'login_fail_threshold_count': 'int',
+            'login_fail_lock_minutes': 'int',
+        }
+        for key, value in attribute.items():
             sql = """
-                INSERT INTO parameter (tag, tag_value, tag_type)
+                INSERT INTO rule (tag, tag_value, tag_type)
                 VALUES (%s, %s, %s)
             """
             tag = key
-            if isinstance(value, int):
-                tag_value = str(value)
-                tag_type = 'int'
+            tag_type = value
+            if tag_type == 'int':
+                tag_value = str(getattr(rules, tag))
             else:
-                tag_value = value
-                tag_type = 'str'
+                tag_value = getattr(rules, tag)
             parms = (tag, tag_value, tag_type)
             self._execute_process_sql(sql, parms, error)

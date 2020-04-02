@@ -28,9 +28,15 @@ CREATE TABLE post (
     created_time timestamp with time zone
 );
 
-DROP TABLE IF EXISTS parameter;
-CREATE TABLE parameter (
+DROP TABLE IF EXISTS rule;
+CREATE TABLE rule (
     tag varchar(50) PRIMARY KEY,
     tag_value text,
     tag_type varchar(20)
 );
+
+-- load default data
+INSERT INTO rule (tag, tag_value, tag_type)
+VALUES
+    ('login_fail_threshold_count', '3', 'int'),
+    ('login_fail_lock_minutes', '15', 'int');
