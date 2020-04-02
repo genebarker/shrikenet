@@ -1,3 +1,0 @@
-class Constants:
-    LOGIN_FAIL_THRESHOLD_COUNT = 3
-    LOGIN_FAIL_LOCK_MINUTES = 15
