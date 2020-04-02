@@ -69,5 +69,5 @@ class StorageProvider:
     def get_rules(self):
         raise NotImplementedError
 
-    def save_rules(self, parameters):
+    def save_rules(self, rules):
         raise NotImplementedError
