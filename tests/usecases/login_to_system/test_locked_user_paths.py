@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrike.entities.constants import Constants
+from shrike.entities.rules import Rules
 from shrike.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
@@ -58,8 +58,9 @@ class TestLockedUserPaths(SetupClass):
                                    GOOD_IP_ADDRESS)
 
     def create_user_with_expired_lock(self):
+        rules = self.db.get_rules()
         lock_time = (datetime.now(timezone.utc)
-                     - timedelta(minutes=Constants.LOGIN_FAIL_LOCK_MINUTES))
+                     - timedelta(minutes=rules.login_fail_lock_minutes))
         return self.create_locked_user(lock_time)
 
     def test_unlocks_on_good_password_after_lock_length_met(self):

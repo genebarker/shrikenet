@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrike.entities.constants import Constants
+from shrike.entities.rules import Rules
 from shrike.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
@@ -81,8 +81,9 @@ class TestWrongPasswordPaths(SetupClass):
 
     def test_user_locks_on_consecutive_password_failures(self):
         self.create_good_user()
+        rules = self.db.get_rules()
         login_to_system = LoginToSystem(self.services)
-        for _ in range(Constants.LOGIN_FAIL_THRESHOLD_COUNT + 1):
+        for _ in range(rules.login_fail_threshold_count + 1):
             login_to_system.run(GOOD_USER_USERNAME, 'wrong_password',
                                 GOOD_IP_ADDRESS)
 

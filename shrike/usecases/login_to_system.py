@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import logging
 
-from shrike.entities.constants import Constants
+from shrike.entities.rules import Rules
 from shrike.usecases.login_to_system_result import LoginToSystemResult
 
 
@@ -74,15 +74,17 @@ class LoginToSystem:
     def _lock_is_active(self, user):
         if not user.is_locked:
             return False
-        lock_length = timedelta(minutes=Constants.LOGIN_FAIL_LOCK_MINUTES)
+        rules = self.db.get_rules()
+        lock_length = timedelta(minutes=rules.login_fail_lock_minutes)
         lock_expire_time = user.last_password_failure_time + lock_length
         return datetime.now(timezone.utc) < lock_expire_time
 
     def _verify_user_password_correct(self, user, password, ip_address):
         if not self.crypto.hash_matches_string(user.password_hash, password):
             user.ongoing_password_failure_count += 1
+            rules = self.db.get_rules()
             if (user.ongoing_password_failure_count >
-                    Constants.LOGIN_FAIL_THRESHOLD_COUNT):
+                    rules.login_fail_threshold_count):
                 user.is_locked = True
             user.last_password_failure_time = datetime.now(timezone.utc)
             self.db.update_app_user(user)
