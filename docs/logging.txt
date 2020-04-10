@@ -22,10 +22,6 @@ Level       Guideline
             by business users.
 `DEBUG`     Application event that's significant[^2].
 
-*Note:* If an `INFO` level event is also a higher level event
-(i.e. `WARNING`), then two separate log entries must be performed to ensure
-it's handled properly.
-
 ## Logging Tips
 
 - [10 Tips for Proper Application Logging][a] post on Java Code Geeks
