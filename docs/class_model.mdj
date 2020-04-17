@@ -8780,6 +8780,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFv80uoUYXXCJQ="
 									},
+									"fillColor": "#aaaaaa",
 									"font": "Arial;13;1",
 									"left": 264,
 									"top": 365,
@@ -8796,6 +8797,7 @@
 									"model": {
 										"$ref": "AAAAAAFv80uoUIXVOjc="
 									},
+									"fillColor": "#aaaaaa",
 									"font": "Arial;13;0",
 									"left": 264,
 									"top": 383,
@@ -8803,6 +8805,7 @@
 									"height": 10
 								}
 							],
+							"fillColor": "#aaaaaa",
 							"font": "Arial;13;0",
 							"left": 264,
 							"top": 360,
@@ -8912,6 +8915,7 @@
 									"_parent": {
 										"$ref": "AAAAAAFv80yQD4X5Z4Q="
 									},
+									"fillColor": "#aaaaaa",
 									"font": "Arial;13;1",
 									"left": 96,
 									"top": 365,
@@ -8928,6 +8932,7 @@
 									"model": {
 										"$ref": "AAAAAAFv80yQD4X3+Vw="
 									},
+									"fillColor": "#aaaaaa",
 									"font": "Arial;13;0",
 									"left": 96,
 									"top": 383,
@@ -8935,6 +8940,7 @@
 									"height": 10
 								}
 							],
+							"fillColor": "#aaaaaa",
 							"font": "Arial;13;0",
 							"left": 96,
 							"top": 360,
@@ -9427,6 +9433,19 @@
 							"columnCompartment": {
 								"$ref": "AAAAAAFxMuw4922SukU="
 							}
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAFximYnbB73OaU=",
+							"_parent": {
+								"$ref": "AAAAAAFtGLtfIBJh//4="
+							},
+							"font": "Arial;13;0",
+							"left": 160,
+							"top": 416,
+							"width": 137,
+							"height": 77,
+							"text": "Shaded tables are reference tables. They are defined by and located in the code."
 						}
 					]
 				},
