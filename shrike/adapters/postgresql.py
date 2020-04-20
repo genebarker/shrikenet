@@ -74,9 +74,12 @@ class PostgreSQL(StorageProvider):
             return func(clean_sql, parms)
         except Exception as e:
             reason = str(e)
-            message = error + reason + clean_sql
+            message = self._compose_error_message(error, reason, clean_sql)
             self.logger.warning(message)
             raise type(e)(message)
+
+    def _compose_error_message(self, error, reason, sql):
+        return (error + reason).strip() + "\n" + sql
 
     def _select_value(self, sql, parms):
         with self.connection.cursor() as cursor:
@@ -173,7 +176,7 @@ class PostgreSQL(StorageProvider):
             return self._process_sql(clean_sql, parms)
         except Exception as e:
             reason = str(e)
-            message = error + reason + clean_sql
+            message = self._compose_error_message(error, reason, clean_sql)
             self.logger.warning(message)
             raise type(e)(message)
 
