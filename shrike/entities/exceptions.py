@@ -1,0 +1,7 @@
+class ShrikeException(Exception):
+
+    def __init__(self, message=None):
+        if message is None:
+            message = 'an unexpected error occurred'
+        super().__init__(message)
+        self.message = message
