@@ -2,7 +2,7 @@ import importlib
 
 import pytest
 
-from shrike.entities.exceptions import ShrikeException
+from shrike.entities.exceptions import ShrikeException, DatastoreKeyError
 
 
 class TestShrikeException:
@@ -22,6 +22,7 @@ class TestShrikeException:
     @pytest.mark.parametrize(('exception_name',), (
         ('DatastoreClosed',),
         ('DatastoreAlreadyOpen',),
+        ('DatastoreKeyError',),
     ))
     def test_exception_is_shrike_exception(self, exception_name):
         module = importlib.import_module('shrike.entities.exceptions')
@@ -30,3 +31,9 @@ class TestShrikeException:
             raise exception_class()
 
         assert isinstance(excinfo.value, ShrikeException)
+
+    def test_datastore_key_error_is_a_key_error(self):
+        with pytest.raises(DatastoreKeyError) as excinfo:
+            raise DatastoreKeyError()
+
+        assert isinstance(excinfo.value, KeyError)
