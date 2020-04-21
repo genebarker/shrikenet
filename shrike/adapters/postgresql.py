@@ -7,6 +7,8 @@ import psycopg2 as driver
 from shrike.entities.app_user import AppUser
 from shrike.entities.exceptions import (
     DatastoreAlreadyOpen,
+    DatastoreError,
+    DatastoreKeyError,
 )
 from shrike.entities.post import DeepPost, Post
 from shrike.entities.rules import Rules
@@ -79,7 +81,9 @@ class PostgreSQL(StorageProvider):
             reason = str(e)
             message = self._compose_error_message(error, reason, clean_sql)
             self.logger.warning(message)
-            raise type(e)(message)
+            if isinstance(e, KeyError):
+                raise DatastoreKeyError(message) from e
+            raise DatastoreError(message) from e
 
     def _compose_error_message(self, error, reason, sql):
         return (error + reason).strip() + "\n" + sql
@@ -181,7 +185,9 @@ class PostgreSQL(StorageProvider):
             reason = str(e)
             message = self._compose_error_message(error, reason, clean_sql)
             self.logger.warning(message)
-            raise type(e)(message)
+            if isinstance(e, KeyError):
+                raise DatastoreKeyError(message) from e
+            raise DatastoreError(message) from e
 
     def _process_sql(self, sql, parms):
         with self.connection.cursor() as cursor:

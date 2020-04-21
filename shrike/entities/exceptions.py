@@ -12,3 +12,11 @@ class DatastoreClosed(ShrikeException):
 
 class DatastoreAlreadyOpen(ShrikeException):
     pass
+
+
+class DatastoreError(ShrikeException):
+    pass
+
+
+class DatastoreKeyError(ShrikeException, KeyError):
+    pass

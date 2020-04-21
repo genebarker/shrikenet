@@ -4,6 +4,7 @@ import logging
 import pytest
 
 from shrike.adapters.postgresql import PostgreSQL
+from shrike.entities.exceptions import DatastoreError
 from tests.adapters.test_memory import TestMemory
 
 MODULE_UNDER_TEST = 'shrike.adapters.postgresql'
@@ -66,7 +67,7 @@ class TestPostgreSQL(TestMemory):
                                           method_name):
         db = storage_provider
         sql_method = getattr(db, method_name)
-        with pytest.raises(Exception) as excinfo:
+        with pytest.raises(DatastoreError) as excinfo:
             parms = None
             sql_method(self.BAD_SQL, parms, self.BAD_ERROR)
 
@@ -80,7 +81,7 @@ class TestPostgreSQL(TestMemory):
                                            method_name):
         db = storage_provider
         sql_method = getattr(db, method_name)
-        with pytest.raises(Exception):
+        with pytest.raises(DatastoreError):
             parms = None
             sql_method(self.BAD_SQL, parms, self.BAD_ERROR)
 
