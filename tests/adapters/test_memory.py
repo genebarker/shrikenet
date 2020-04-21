@@ -6,6 +6,10 @@ import pytest
 
 from shrike.adapters.memory import Memory
 from shrike.entities.app_user import AppUser
+from shrike.entities.exceptions import (
+    DatastoreClosed,
+    DatastoreAlreadyOpen,
+)
 from shrike.entities.post import DeepPost, Post
 from shrike.entities.rules import Rules
 from shrike.entities.storage_provider import StorageProvider
@@ -35,11 +39,14 @@ class TestMemory:
 
     def test_raises_when_not_opened_first(self):
         storage_provider = self.get_storage_provider()
-        with pytest.raises(Exception):
+        with pytest.raises(DatastoreClosed) as excinfo:
             storage_provider.get_version()
+        assert str(excinfo.value) == (
+            'get_version is not available since the connection is closed'
+        )
 
     def test_raises_when_already_opened(self, storage_provider):
-        with pytest.raises(Exception) as excinfo:
+        with pytest.raises(DatastoreAlreadyOpen) as excinfo:
             storage_provider.open()
         assert str(excinfo.value) == 'connection already open'
 
@@ -47,7 +54,7 @@ class TestMemory:
         storage_provider = self.get_storage_provider()
         storage_provider.open()
         storage_provider.close()
-        with pytest.raises(Exception):
+        with pytest.raises(DatastoreClosed):
             storage_provider.get_version()
 
     # endregion

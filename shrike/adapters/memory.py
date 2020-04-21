@@ -1,6 +1,10 @@
 import copy
 from operator import attrgetter
 
+from shrike.entities.exceptions import (
+    DatastoreClosed,
+    DatastoreAlreadyOpen,
+)
 from shrike.entities.post import DeepPost
 from shrike.entities.rules import Rules
 from shrike.entities.storage_provider import StorageProvider
@@ -50,12 +54,12 @@ class Memory(StorageProvider):
                 '{} is not available since the connection is closed'
                 .format(name)
             )
-            raise Exception(error)
+            raise DatastoreClosed(error)
         return object.__getattribute__(self, name)
 
     def open(self):
         if self.is_open:
-            raise Exception('connection already open')
+            raise DatastoreAlreadyOpen('connection already open')
         self.is_open = True
         self.save_tables()
 

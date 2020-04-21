@@ -5,6 +5,9 @@ import os
 import psycopg2 as driver
 
 from shrike.entities.app_user import AppUser
+from shrike.entities.exceptions import (
+    DatastoreAlreadyOpen,
+)
 from shrike.entities.post import DeepPost, Post
 from shrike.entities.rules import Rules
 from shrike.entities.storage_provider import StorageProvider
@@ -25,7 +28,7 @@ class PostgreSQL(StorageProvider):
 
     def open(self):
         if self.connection is not None:
-            raise Exception('connection already open')
+            raise DatastoreAlreadyOpen('connection already open')
         self.connection = driver.connect(
             dbname=self.__db_name,
             user=self.__db_user,
