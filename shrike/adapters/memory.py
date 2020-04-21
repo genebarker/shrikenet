@@ -4,6 +4,7 @@ from operator import attrgetter
 from shrike.entities.exceptions import (
     DatastoreClosed,
     DatastoreAlreadyOpen,
+    DatastoreKeyError,
 )
 from shrike.entities.post import DeepPost
 from shrike.entities.rules import Rules
@@ -103,7 +104,7 @@ class Memory(StorageProvider):
                 'not exist'
                 .format(username)
             )
-            raise KeyError(message)
+            raise DatastoreKeyError(message)
         return self.get_app_user_by_oid(oid)
 
     def get_app_user_by_oid(self, oid):
@@ -113,7 +114,7 @@ class Memory(StorageProvider):
                 'exist'
                 .format(oid)
             )
-            raise KeyError(message)
+            raise DatastoreKeyError(message)
         app_user = self.app_user[oid]
         return copy.copy(app_user)
 
@@ -151,7 +152,7 @@ class Memory(StorageProvider):
                 'can not get post (oid={}), reason: record does not exist'
                 .format(oid)
             )
-            raise KeyError(message)
+            raise DatastoreKeyError(message)
         post = self.post[oid]
         author = self.app_user[post.author_oid]
         return DeepPost(post, author.username)

@@ -9,6 +9,7 @@ from shrike.entities.app_user import AppUser
 from shrike.entities.exceptions import (
     DatastoreClosed,
     DatastoreAlreadyOpen,
+    DatastoreKeyError,
 )
 from shrike.entities.post import DeepPost, Post
 from shrike.entities.rules import Rules
@@ -138,7 +139,7 @@ class TestMemory:
 
     def test_get_app_user_by_username_unknown_raises(self, storage_provider):
         regex = 'can not get app_user .username=xyz., reason: '
-        with pytest.raises(Exception, match=regex):
+        with pytest.raises(DatastoreKeyError, match=regex):
             storage_provider.get_app_user_by_username('xyz')
 
     def test_get_app_user_by_username_gets_record(self, app_user,
@@ -150,7 +151,7 @@ class TestMemory:
 
     def test_get_app_user_by_oid_unknown_raises(self, storage_provider):
         regex = 'can not get app_user .oid=12345., reason: '
-        with pytest.raises(Exception, match=regex):
+        with pytest.raises(DatastoreKeyError, match=regex):
             storage_provider.get_app_user_by_oid('12345')
 
     def test_get_app_user_by_oid_gets_record(self, app_user,
@@ -273,7 +274,7 @@ class TestMemory:
 
     def test_get_post_by_oid_unknown_raises(self, storage_provider):
         regex = 'can not get post .oid=12345., reason: '
-        with pytest.raises(Exception, match=regex):
+        with pytest.raises(DatastoreKeyError, match=regex):
             storage_provider.get_post_by_oid('12345')
 
     def test_get_post_by_oid_gets_record(self, post, storage_provider):
@@ -322,7 +323,7 @@ class TestMemory:
 
     def test_delete_post_deletes(self, post, storage_provider):
         storage_provider.delete_post_by_oid(post.oid)
-        with pytest.raises(KeyError):
+        with pytest.raises(DatastoreKeyError):
             storage_provider.get_post_by_oid(post.oid)
 
     def test_add_post_record_exists_after_commit(self, post,
@@ -334,7 +335,7 @@ class TestMemory:
     def test_add_post_record_gone_after_rollback(self, post,
                                                  storage_provider):
         storage_provider.rollback()
-        with pytest.raises(KeyError):
+        with pytest.raises(DatastoreKeyError):
             storage_provider.get_post_by_oid(post.oid)
 
     def test_get_post_count_zero_when_empty(self, storage_provider):
