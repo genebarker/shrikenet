@@ -4,4 +4,3 @@ class ShrikeException(Exception):
         if message is None:
             message = 'an unexpected error occurred'
         super().__init__(message)
-        self.message = message
