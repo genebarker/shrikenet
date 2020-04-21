@@ -78,12 +78,15 @@ class PostgreSQL(StorageProvider):
         try:
             return func(clean_sql, parms)
         except Exception as e:
-            reason = str(e)
-            message = self._compose_error_message(error, reason, clean_sql)
-            self.logger.warning(message)
-            if isinstance(e, KeyError):
-                raise DatastoreKeyError(message) from e
-            raise DatastoreError(message) from e
+            self._process_exception(e, error, clean_sql)
+
+    def _process_exception(self, exception, error, sql):
+        reason = str(exception)
+        message = self._compose_error_message(error, reason, sql)
+        self.logger.warning(message)
+        if isinstance(exception, KeyError):
+            raise DatastoreKeyError(message) from exception
+        raise DatastoreError(message) from exception
 
     def _compose_error_message(self, error, reason, sql):
         return (error + reason).strip() + "\n" + sql
@@ -182,12 +185,7 @@ class PostgreSQL(StorageProvider):
         try:
             return self._process_sql(clean_sql, parms)
         except Exception as e:
-            reason = str(e)
-            message = self._compose_error_message(error, reason, clean_sql)
-            self.logger.warning(message)
-            if isinstance(e, KeyError):
-                raise DatastoreKeyError(message) from e
-            raise DatastoreError(message) from e
+            self._process_exception(e, error, clean_sql)
 
     def _process_sql(self, sql, parms):
         with self.connection.cursor() as cursor:
