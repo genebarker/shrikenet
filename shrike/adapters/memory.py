@@ -4,6 +4,7 @@ from operator import attrgetter
 from shrike.entities.exceptions import (
     DatastoreClosed,
     DatastoreAlreadyOpen,
+    DatastoreError,
     DatastoreKeyError,
 )
 from shrike.entities.post import DeepPost
@@ -131,10 +132,10 @@ class Memory(StorageProvider):
         )
         if self.exists_app_username(app_user.username):
             reason = 'record with this username already exists'
-            raise ValueError(error + reason)
+            raise DatastoreError(error + reason)
         if app_user.oid in self.app_user:
             reason = 'record with this oid already exists'
-            raise ValueError(error + reason)
+            raise DatastoreError(error + reason)
         self.app_user[app_user.oid] = copy.copy(app_user)
 
     def update_app_user(self, app_user):
@@ -164,7 +165,7 @@ class Memory(StorageProvider):
                 'this oid already exists'
                 .format(post.oid, post.title)
             )
-            raise ValueError(message)
+            raise DatastoreError(message)
         self.post[post.oid] = copy.copy(post)
 
     def update_post(self, post):

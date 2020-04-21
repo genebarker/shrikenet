@@ -9,6 +9,7 @@ from shrike.entities.app_user import AppUser
 from shrike.entities.exceptions import (
     DatastoreClosed,
     DatastoreAlreadyOpen,
+    DatastoreError,
     DatastoreKeyError,
 )
 from shrike.entities.post import DeepPost, Post
@@ -180,7 +181,7 @@ class TestMemory:
         new_user.oid = 100
         regex = ('can not add app_user .oid={}, username={}., reason: '
                  .format(new_user.oid, app_user.username))
-        with pytest.raises(Exception, match=regex):
+        with pytest.raises(DatastoreError, match=regex):
             storage_provider.add_app_user(new_user)
 
     def test_add_app_user_with_duplicate_oid_raises(self, app_user,
@@ -189,7 +190,7 @@ class TestMemory:
         new_user.username = 'Different'
         regex = ('can not add app_user .oid={}, username={}., reason: '
                  .format(app_user.oid, new_user.username))
-        with pytest.raises(Exception, match=regex):
+        with pytest.raises(DatastoreError, match=regex):
             storage_provider.add_app_user(new_user)
 
     def test_update_app_user_updates_record(self, app_user,
@@ -305,7 +306,7 @@ class TestMemory:
         new_post = copy.copy(post)
         regex = ('can not add post .oid={}, title={}., reason: '
                  .format(new_post.oid, new_post.title))
-        with pytest.raises(Exception, match=regex):
+        with pytest.raises(DatastoreError, match=regex):
             storage_provider.add_post(new_post)
 
     def test_update_post_updates_record(self, post, storage_provider):
