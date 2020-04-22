@@ -22,6 +22,7 @@ class TestShrikeException:
     @pytest.mark.parametrize(('exception_name',), (
         ('DatastoreClosed',),
         ('DatastoreAlreadyOpen',),
+        ('DatastoreError',),
         ('DatastoreKeyError',),
     ))
     def test_exception_is_shrike_exception(self, exception_name):
