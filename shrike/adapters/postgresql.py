@@ -124,7 +124,7 @@ class PostgreSQL(StorageProvider):
             cursor.execute(sql, parms)
             row = cursor.fetchone()
             if row is None:
-                raise KeyError('record does not exist')
+                raise DatastoreKeyError('record does not exist')
             return row
 
     def _create_app_user_from_row(self, row):
