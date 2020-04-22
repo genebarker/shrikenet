@@ -190,8 +190,6 @@ class Memory(StorageProvider):
         return posts
 
     def get_rules(self):
-        if self.rules is None:
-            return None
         return copy.copy(self.rules)
 
     def save_rules(self, rules):
