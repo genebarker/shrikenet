@@ -46,3 +46,10 @@ class TestFieldValidation:
         rules = Rules()
         rules.login_fail_lock_minutes = minutes
         self.verify_validation_raises(rules)
+
+
+class TestReferenceValidation:
+
+    def test_successful_validation_returns_none(self):
+        rules = Rules()
+        assert RulesValidator.validate_references(rules, None) is None
