@@ -371,9 +371,6 @@ class PostgreSQL(StorageProvider):
             """
             tag = key
             tag_type = value
-            if tag_type == 'int':
-                tag_value = str(getattr(rules, tag))
-            else:
-                tag_value = getattr(rules, tag)
+            tag_value = str(getattr(rules, tag))
             parms = (tag, tag_value, tag_type)
             self._execute_process_sql(sql, parms, error)
