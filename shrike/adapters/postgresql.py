@@ -52,9 +52,9 @@ class PostgreSQL(StorageProvider):
 
     def _execute_sql_file(self, filename):
         file_path = self._get_sql_file_path(filename)
-        with self.connection.cursor() as cursor:
-            sql_file = open(file_path, 'r')
-            cursor.execute(sql_file.read())
+        with open(file_path) as sql_file:
+            with self.connection.cursor() as cursor:
+                cursor.execute(sql_file.read())
 
     def _get_sql_file_path(self, filename):
         dir_path = os.path.dirname(__file__)
