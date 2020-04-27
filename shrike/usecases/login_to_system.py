@@ -21,11 +21,11 @@ class LoginToSystem:
             self._verify_user_password_correct(user, password, ip_address)
             self._verify_user_password_reset_satisfied(user, new_password,
                                                        ip_address)
-        except LoginToSystemError as e:
+        except LoginToSystemError as error:
             return LoginToSystemResult(
-                message=e.message,
+                message=str(error),
                 has_failed=True,
-                must_change_password=e.must_change_password,
+                must_change_password=error.must_change_password,
                 )
 
         message = 'Login successful.'
@@ -110,5 +110,5 @@ class LoginToSystem:
 
 class LoginToSystemError(Exception):
     def __init__(self, message, must_change_password=False):
-        self.message = message
+        super().__init__(message)
         self.must_change_password = must_change_password
