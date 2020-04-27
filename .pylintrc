@@ -1,2 +1,3 @@
 [MESSAGES CONTROL]
 disable=missing-docstring
+good-names=db
