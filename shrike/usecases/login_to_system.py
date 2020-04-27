@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import logging
 
-from shrike.entities.rules import Rules
 from shrike.usecases.login_to_system_result import LoginToSystemResult
 
 
