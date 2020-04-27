@@ -5,8 +5,9 @@ and its predefined logging levels.
 
 The guidelines for these logging levels are defined below.
 
-Of special note, business events are also stored in the database.[^1] This
-strategy provides easy access to business object history.
+Of special note, business events are also stored in the database. See
+[Perform Structured Logging][a]. This strategy provides easy access to
+business object history.
 
 ## Logging Levels
 
@@ -20,18 +21,18 @@ Level       Guideline
 `WARNING`   Application event that's a potential problem / needs review.
 `INFO`      Business event that is understood, tracked, and / or measured
             by business users.
-`DEBUG`     Application event that's significant[^2].
+`DEBUG`     Application event that's significant[^1].
 
 ## Logging Tips
 
-- [10 Tips for Proper Application Logging][a] post on Java Code Geeks
-- [Best practices for logging user actions][b] answer on StackExchange
+- [10 Tips for Proper Application Logging][b] post on Java Code Geeks
+- [Best practices for logging user actions][c] answer on StackExchange
 
 
-[^1]: See `decisions/002_perform_structured_logging.md`
-[^2]: Events that mark significant points in processing - a trail of
+[^1]: Events that mark significant points in processing - a trail of
 breadcrumbs that assists in debugging. Some examples: environment settings,
 database calls, user actions, processing times, etc..  
 
-[a]:https://www.javacodegeeks.com/2011/01/10-tips-proper-application-logging.html
-[b]:http://softwareengineering.stackexchange.com/questions/168059/best-practices-for-logging-user-actions-in-production/168075#168075
+[a]:decisions/002_perform_structured_logging.txt
+[b]:https://www.javacodegeeks.com/2011/01/10-tips-proper-application-logging.html
+[c]:http://softwareengineering.stackexchange.com/questions/168059/best-practices-for-logging-user-actions-in-production/168075#168075

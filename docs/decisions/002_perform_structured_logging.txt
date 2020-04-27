@@ -33,13 +33,13 @@ database with key fields to support business reporting.
 
 ## Consequences
 
-- A Logging design document[^1] that requires ongoing attention is now part
+- A [Logging design document][1] that requires ongoing attention is now part
   of the code repository.
 - When business events occur, they must be logged both to the logs and to
-  database.
+  the database.
 - Business events, their types, and their relationships must be considered
   in the database design.
 - Developers must know the *logging levels* and log events accordingly.
 
 
-[^1]: See `docs/logging.md`
+[1]:../logging.txt
