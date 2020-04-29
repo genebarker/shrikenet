@@ -9,11 +9,11 @@ Accepted
 A usecase is typically spelled as 'use case'. This project places usecases
 at the center of its requirements and consequently its code base. The
 widespread usage of this two word term results in unwieldy references in
-documentation, classpaths, and attribute names. Some examples:
+documentation, class paths, and attribute names. Some examples:
 
 - Please see use case #4.
-- /usecases/base_use_case.py
-- event.source_use_case_oid
+- `/usecases/base_use_case.py`
+- `event.source_use_case_oid`
 
 ## Decision
 
