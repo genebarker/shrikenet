@@ -21,7 +21,7 @@ use the template from Michael Nygard:
 - Status: proposed, accepted, deprecated or superseded
 - Consequences: describe the resulting context, after applying the decision
 
-Each decision will be saved as its own file in: `docs/decsions`
+Each decision will be saved as its own file in: `docs/decisions`
 
 Decision filenames will use same format as usecases. See `docs/usecases`
 and this decision's filename.

@@ -14,7 +14,7 @@ of issues, for example:
 
 - code breaks when a product changes
 - product peculiarities are woven throughout the business logic
-- tests can be SLOW (like persitant storage)
+- tests can be SLOW (like persistent storage)
 - code becomes *locked* to product choices
 
 We don't want these issues.

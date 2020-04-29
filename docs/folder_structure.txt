@@ -16,5 +16,5 @@ dependencies on flask. See the [Hexagonal Architecture][2] document for
 further detail on the content of these folders.
 
 
-[1]:https://flask.palletsprojects.com
-[2]:hexagonal_architecture.txt
+[1]: https://flask.palletsprojects.com
+[2]: hexagonal_architecture.txt

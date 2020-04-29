@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Logging is a well-known / well-used discipline in software developement.
+Logging is a well-known / well-used discipline in software development.
 There are great libraries available that make logging non-invasive (nobody
 wants old debug print statements in the code base). We should adopt some
 proven guidelines for logging to avoid cluttering-up our code.
@@ -42,4 +42,4 @@ database with key fields to support business reporting.
 - Developers must know the *logging levels* and log events accordingly.
 
 
-[1]:../logging.txt
+[1]: ../logging.txt
