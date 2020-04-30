@@ -28,5 +28,5 @@ Shrike is cool.
 [1]: LICENSE.txt
 [2]: AGPLv3.png
 [3]: https://www.gnu.org/licenses/licenses.html
-[4]: docs/README.txt
+[4]: docs
 [5]: https://en.wikipedia.org/wiki/Hyperion_Cantos
