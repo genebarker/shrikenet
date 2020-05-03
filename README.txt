@@ -1,7 +1,32 @@
 # Shrike Project
 
-The goal of this project is to provide server software that allows
-organizations to safely network with their members.
+We're building social network software designed for small organizations
+like schools, churches, clubs, and sports teams. It's designed to allow
+organizations to **interact directly with their members** and to do so
+safely.
+
+    organization <--> member
+
+We describe this as an *Organization Owned Social Network*. And yes, it's
+designed to be a capable alternative to *Vendor Owned Social Networks*
+like Facebook and Twitter. By definition, vendor owned networks force
+organizations and their members to interact with one another via a middle
+man, the vendor.
+
+    member <--> vendor <--> organization
+
+This vendor owned model has several problems:
+
+- total dependence on vendor;
+- unsafe discourse (bullying, scams, predators, etc.);
+- invasive advertising with inappropriate content;
+- poor organization support;
+- vendor muddles flow of information;
+- vendor keeps and has rights to all content; and
+- vendor collects and sells personal data.
+
+Organizations endure these problems and more because they have no
+reasonable alternative. This project aims to be a great alternative.
 
 ## License
 
@@ -9,8 +34,9 @@ This project is licensed using the [GNU Affero General Public License][1].
 
 ![AGPL Logo][2]
 
-This license was chosen since we wanted the proven benefits of [GNU's
-Licenses][3] and this is their recommended version for server software.
+This license was chosen since we wanted the benefits of [GNU's Licenses][3]
+and this is their recommended version for software which will commonly be
+run over a network.
 
 ## Documentation
 
