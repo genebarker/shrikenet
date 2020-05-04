@@ -35,8 +35,7 @@ This project is licensed using the [GNU Affero General Public License][1].
 ![AGPL Logo][2]
 
 This license was chosen since we wanted the benefits of [GNU's Licenses][3]
-and this is their recommended version for software which will commonly be
-run over a network.
+and this is their recommended version for software that runs over a network.
 
 ## Documentation
 
