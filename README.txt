@@ -1,7 +1,7 @@
 # Shrike Project
 
-We're building social network software designed for small organizations
-like schools, churches, clubs, and sports teams. It's designed to allow
+We're building social network software for small organizations like
+schools, churches, clubs, and sports teams. It's designed to allow
 organizations to **interact directly with their members** and to do so
 safely.
 
@@ -18,12 +18,13 @@ man, the vendor.
 This vendor owned model has several problems:
 
 - total dependence on vendor;
-- unsafe discourse (bullying, scams, predators, etc.);
-- invasive advertising with inappropriate content;
 - poor organization support;
-- vendor muddles flow of information;
-- vendor keeps and has rights to all content; and
-- vendor collects and sells personal data.
+- unsafe discourse (bullying, scams, predators, etc.);
+- muddled flow of information (vendor optimized);
+- invasive advertising with inappropriate content;
+- vendor has full access to your content;
+- limited rights to your own content; and
+- collection and sales of your data.
 
 Organizations endure these problems and more because they have no
 reasonable alternative. This project aims to be a great alternative.
