@@ -1,32 +1,33 @@
-# Shrike Project
+# shrikenet
 
-We're building social network software for small organizations like
-schools, churches, clubs, and sports teams. It's designed to allow
-organizations to **interact directly with their members** and to do so
-safely.
+**shrikenet** is social network software for small organizations like schools,
+churches, clubs, and sports teams. It's designed to allow organizations to
+**interact directly with their members** and to do so safely.
 
     organization <--> member
 
 We describe this as an *Organization Owned Social Network*. And yes, it's
-designed to be a capable alternative to *Vendor Owned Social Networks*
-like Facebook and Twitter. By definition, vendor owned networks force
+designed to be an alternative to *Vendor Owned Social Networks* like
+Facebook and Twitter. By definition, vendor owned networks force
 organizations and their members to interact with one another via a middle
 man, the vendor.
 
-    member <--> vendor <--> organization
+    organization <--> vendor <--> member
 
-This vendor owned model has several problems:
+This vendor owned / vendor centric model has several problems:
 
-- total dependence on vendor;
+- dependence on vendor;
 - poor organization support;
 - unsafe discourse (bullying, scams, predators, etc.);
 - muddled flow of information (vendor optimized);
 - invasive advertising with inappropriate content;
-- vendor's extensive rights to *your* content; and
-- collection and sales of *your* data.
+- vendor's rights to *organization* content; and
+- collection and sales of *organization* data.
 
-Organizations endure these problems and more because they have no
-reasonable alternative. This project aims to be a great alternative.
+**shrikenet** doesn't have these problems.
+
+Organizations use **shrikenet** to run their own social networks using their
+own rules.
 
 ## License
 
@@ -44,10 +45,10 @@ repository.
 
 ## Project Name
 
-The *Shrike* name is inspired from a prominent character in Dan Simmons
-[Hyperion Cantos][5] series of science fiction novels. The name was
-chosen because it's fairly unique, it's short, and Eugene thinks the
-Shrike is cool.
+The **shrikenet** name is inspired from a prominent character in Dan Simmons
+[Hyperion Cantos][5] series of science fiction novels. The name was chosen
+because it's fairly unique, it's short, and Eugene thinks the Shrike is
+cool.
 
 
 [1]: LICENSE.txt
