@@ -1,8 +1,9 @@
 # shrikenet
 
-**shrikenet** is social network software for small organizations like schools,
-churches, clubs, and sports teams. It's designed to allow organizations to
-**interact directly with their members** and to do so safely.
+**shrikenet** is social network software for small organizations like
+schools, churches, clubs, and sports teams. It's designed to allow
+organizations to **interact directly with their members** and to do so
+safely.
 
     organization <--> member
 
