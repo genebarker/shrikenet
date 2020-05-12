@@ -18,4 +18,6 @@ build/
 *.egg-info/
 
 database.cfg
+playground.py
+tags
 TODO.txt
