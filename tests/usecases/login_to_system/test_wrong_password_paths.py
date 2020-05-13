@@ -2,8 +2,8 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrike.entities.rules import Rules
-from shrike.usecases.login_to_system import LoginToSystem
+from shrikenet.entities.rules import Rules
+from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
     GOOD_USER_USERNAME,

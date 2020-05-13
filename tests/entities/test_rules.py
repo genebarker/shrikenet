@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.entities.rules import Rules
+from shrikenet.entities.rules import Rules
 
 
 class TestRules:

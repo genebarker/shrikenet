@@ -1,8 +1,8 @@
 import pytest
 
-from shrike.entities.record_validator import RecordValidator
-from shrike.entities.rules import Rules
-from shrike.entities.rules_validator import RulesValidator
+from shrikenet.entities.record_validator import RecordValidator
+from shrikenet.entities.rules import Rules
+from shrikenet.entities.rules_validator import RulesValidator
 
 
 class TestGeneralProperties:

@@ -1,6 +1,6 @@
-from werkzeug import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from shrike.entities.crypto_provider import CryptoProvider
+from shrikenet.entities.crypto_provider import CryptoProvider
 
 
 class Werkzeug(CryptoProvider):

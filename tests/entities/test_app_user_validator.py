@@ -1,8 +1,8 @@
 import pytest
 
-from shrike.entities.app_user import AppUser
-from shrike.entities.app_user_validator import AppUserValidator
-from shrike.entities.record_validator import RecordValidator
+from shrikenet.entities.app_user import AppUser
+from shrikenet.entities.app_user_validator import AppUserValidator
+from shrikenet.entities.record_validator import RecordValidator
 
 from tests.entities.test_app_user import create_good_app_user
 

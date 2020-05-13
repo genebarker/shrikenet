@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.entities.storage_provider import StorageProvider
+from shrikenet.entities.storage_provider import StorageProvider
 
 
 class TestStorageProvider:

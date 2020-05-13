@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import logging
 
-from shrike.usecases.login_to_system_result import LoginToSystemResult
+from shrikenet.usecases.login_to_system_result import LoginToSystemResult
 
 
 class LoginToSystem:

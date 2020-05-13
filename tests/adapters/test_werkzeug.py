@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.adapters.werkzeug import Werkzeug
+from shrikenet.adapters.werkzeug import Werkzeug
 from tests.adapters.test_swapcase import TestSwapcase
 
 

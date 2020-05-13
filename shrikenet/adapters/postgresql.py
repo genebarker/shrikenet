@@ -4,15 +4,15 @@ import os
 
 import psycopg2 as driver
 
-from shrike.entities.app_user import AppUser
-from shrike.entities.exceptions import (
+from shrikenet.entities.app_user import AppUser
+from shrikenet.entities.exceptions import (
     DatastoreAlreadyOpen,
     DatastoreError,
     DatastoreKeyError,
 )
-from shrike.entities.post import DeepPost, Post
-from shrike.entities.rules import Rules
-from shrike.entities.storage_provider import StorageProvider
+from shrikenet.entities.post import DeepPost, Post
+from shrikenet.entities.rules import Rules
+from shrikenet.entities.storage_provider import StorageProvider
 
 
 class PostgreSQL(StorageProvider):

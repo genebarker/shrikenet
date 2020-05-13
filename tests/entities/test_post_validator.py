@@ -1,8 +1,8 @@
 import pytest
 
-from shrike.adapters.memory import Memory
-from shrike.entities.post_validator import PostValidator
-from shrike.entities.record_validator import RecordValidator
+from shrikenet.adapters.memory import Memory
+from shrikenet.entities.post_validator import PostValidator
+from shrikenet.entities.record_validator import RecordValidator
 
 from tests.entities.test_app_user import create_good_app_user
 from tests.entities.test_post import create_good_post

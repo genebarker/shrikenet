@@ -1,7 +1,7 @@
 import pytest
 
-from shrike.adapters.markdown import Markdown
-from shrike.entities.text_transformer import TextTransformer
+from shrikenet.adapters.markdown import Markdown
+from shrikenet.entities.text_transformer import TextTransformer
 
 
 class TestMarkdown:

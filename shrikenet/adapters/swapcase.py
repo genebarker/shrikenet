@@ -1,4 +1,4 @@
-from shrike.entities.crypto_provider import CryptoProvider
+from shrikenet.entities.crypto_provider import CryptoProvider
 
 
 class Swapcase(CryptoProvider):

@@ -3,16 +3,16 @@ import logging
 
 import pytest
 
-from shrike.adapters.memory import Memory
-from shrike.adapters.swapcase import Swapcase
-from shrike.entities.app_user import AppUser
-from shrike.entities.services import Services
-from shrike.usecases.login_to_system import LoginToSystem
+from shrikenet.adapters.memory import Memory
+from shrikenet.adapters.swapcase import Swapcase
+from shrikenet.entities.app_user import AppUser
+from shrikenet.entities.services import Services
+from shrikenet.usecases.login_to_system import LoginToSystem
 
 GOOD_USER_USERNAME = 'fmulder'
 GOOD_USER_PASSWORD = 'scully'
 GOOD_IP_ADDRESS = '1.2.3.4'
-MODULE_UNDER_TEST = 'shrike.usecases.login_to_system'
+MODULE_UNDER_TEST = 'shrikenet.usecases.login_to_system'
 
 
 logging.basicConfig(level=logging.DEBUG)

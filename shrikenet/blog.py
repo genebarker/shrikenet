@@ -5,9 +5,9 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from shrike.auth import login_required
-from shrike.db import get_services
-from shrike.entities.post import Post
+from shrikenet.auth import login_required
+from shrikenet.db import get_services
+from shrikenet.entities.post import Post
 
 bp = Blueprint('blog', __name__)
 

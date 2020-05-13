@@ -3,11 +3,11 @@ import logging
 
 import pytest
 
-from shrike.adapters.postgresql import PostgreSQL
-from shrike.entities.exceptions import DatastoreError
+from shrikenet.adapters.postgresql import PostgreSQL
+from shrikenet.entities.exceptions import DatastoreError
 from tests.adapters.test_memory import TestMemory
 
-MODULE_UNDER_TEST = 'shrike.adapters.postgresql'
+MODULE_UNDER_TEST = 'shrikenet.adapters.postgresql'
 
 
 logging.basicConfig(level=logging.DEBUG)

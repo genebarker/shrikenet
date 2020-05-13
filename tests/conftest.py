@@ -2,8 +2,8 @@ from configparser import ConfigParser
 
 import pytest
 
-from shrike import create_app
-from shrike.db import get_services, init_db
+from shrikenet import create_app
+from shrikenet.db import get_services, init_db
 
 
 @pytest.fixture
@@ -12,14 +12,14 @@ def app():
     config.read('database.cfg')
     app = create_app({
         'TESTING': True,
-        'STORAGE_PROVIDER_MODULE': 'shrike.adapters.postgresql',
+        'STORAGE_PROVIDER_MODULE': 'shrikenet.adapters.postgresql',
         'STORAGE_PROVIDER_CLASS': 'PostgreSQL',
         'DB_NAME': config['development']['db_name'],
         'DB_USER': config['development']['db_user'],
         'DB_PASSWORD': config['development']['db_password'],
-        'TEXT_TRANSFORMER_MODULE': 'shrike.adapters.markdown',
+        'TEXT_TRANSFORMER_MODULE': 'shrikenet.adapters.markdown',
         'TEST_TRANSFORMER_CLASS': 'Markdown',
-        'CRYPTO_PROVIDER_MODULE': 'shrike.adapters.swapcase',
+        'CRYPTO_PROVIDER_MODULE': 'shrikenet.adapters.swapcase',
         'CRYPTO_PROVIDER_CLASS': 'Swapcase',
     })
 

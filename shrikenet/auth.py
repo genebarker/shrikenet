@@ -4,9 +4,9 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
-from shrike.db import get_services
-from shrike.entities.app_user import AppUser
-from shrike.usecases.login_to_system import LoginToSystem
+from shrikenet.db import get_services
+from shrikenet.entities.app_user import AppUser
+from shrikenet.usecases.login_to_system import LoginToSystem
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 

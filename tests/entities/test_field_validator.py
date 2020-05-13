@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrike.entities.field_validator import FieldValidator
+from shrikenet.entities.field_validator import FieldValidator
 
 
 def confirm_call_raises(function_call, field_name, field_value,

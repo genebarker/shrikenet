@@ -1,15 +1,15 @@
 import copy
 from operator import attrgetter
 
-from shrike.entities.exceptions import (
+from shrikenet.entities.exceptions import (
     DatastoreClosed,
     DatastoreAlreadyOpen,
     DatastoreError,
     DatastoreKeyError,
 )
-from shrike.entities.post import DeepPost
-from shrike.entities.rules import Rules
-from shrike.entities.storage_provider import StorageProvider
+from shrikenet.entities.post import DeepPost
+from shrikenet.entities.rules import Rules
+from shrikenet.entities.storage_provider import StorageProvider
 
 
 class Memory(StorageProvider):

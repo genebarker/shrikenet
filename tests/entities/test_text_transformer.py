@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.entities.text_transformer import TextTransformer
+from shrikenet.entities.text_transformer import TextTransformer
 
 class TestTextTransformer:
 

@@ -4,17 +4,17 @@ from operator import attrgetter
 
 import pytest
 
-from shrike.adapters.memory import Memory
-from shrike.entities.app_user import AppUser
-from shrike.entities.exceptions import (
+from shrikenet.adapters.memory import Memory
+from shrikenet.entities.app_user import AppUser
+from shrikenet.entities.exceptions import (
     DatastoreClosed,
     DatastoreAlreadyOpen,
     DatastoreError,
     DatastoreKeyError,
 )
-from shrike.entities.post import DeepPost, Post
-from shrike.entities.rules import Rules
-from shrike.entities.storage_provider import StorageProvider
+from shrikenet.entities.post import DeepPost, Post
+from shrikenet.entities.rules import Rules
+from shrikenet.entities.storage_provider import StorageProvider
 
 
 class TestMemory:

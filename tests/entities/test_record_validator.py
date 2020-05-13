@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.entities.record_validator import RecordValidator
+from shrikenet.entities.record_validator import RecordValidator
 
 
 def test_validate_fields_uncallable():

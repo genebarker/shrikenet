@@ -1,6 +1,6 @@
 import pytest
 from flask import g, session
-from shrike.db import get_services
+from shrikenet.db import get_services
 
 
 def test_register(client, app):

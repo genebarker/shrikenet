@@ -1,7 +1,7 @@
 import pytest
 
-from shrike.adapters.swapcase import Swapcase
-from shrike.entities.crypto_provider import CryptoProvider
+from shrikenet.adapters.swapcase import Swapcase
+from shrikenet.entities.crypto_provider import CryptoProvider
 
 
 class TestSwapcase:

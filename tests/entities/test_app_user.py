@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from shrike.entities.app_user import AppUser
+from shrikenet.entities.app_user import AppUser
 
 
 GOOD_OID = 100

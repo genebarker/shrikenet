@@ -2,7 +2,7 @@ import importlib
 
 import pytest
 
-from shrike.entities.exceptions import ShrikeException, DatastoreKeyError
+from shrikenet.entities.exceptions import ShrikeException, DatastoreKeyError
 
 
 class TestShrikeException:
@@ -26,7 +26,7 @@ class TestShrikeException:
         ('DatastoreKeyError',),
     ))
     def test_exception_is_shrike_exception(self, exception_name):
-        module = importlib.import_module('shrike.entities.exceptions')
+        module = importlib.import_module('shrikenet.entities.exceptions')
         exception_class = getattr(module, exception_name)
         with pytest.raises(exception_class) as excinfo:
             raise exception_class()

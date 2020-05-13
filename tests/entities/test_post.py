@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrike.entities.post import DeepPost, Post
+from shrikenet.entities.post import DeepPost, Post
 
 
 GOOD_OID = 100

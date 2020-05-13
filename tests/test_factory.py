@@ -1,4 +1,4 @@
-from shrike import create_app
+from shrikenet import create_app
 
 
 def test_config():

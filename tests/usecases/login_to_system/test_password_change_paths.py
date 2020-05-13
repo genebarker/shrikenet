@@ -1,6 +1,6 @@
 import pytest
 
-from shrike.usecases.login_to_system import LoginToSystem
+from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
     GOOD_USER_USERNAME,

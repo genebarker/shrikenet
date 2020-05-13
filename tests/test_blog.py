@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from shrike.db import get_services
+from shrikenet.db import get_services
 
 
 def test_index(client, auth):

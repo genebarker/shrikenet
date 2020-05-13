@@ -10,14 +10,14 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        STORAGE_PROVIDER_MODULE='shrike.adapters.memory',
+        STORAGE_PROVIDER_MODULE='shrikenet.adapters.memory',
         STORAGE_PROVIDER_CLASS='Memory',
         DB_NAME='unused',
         DB_USER='unused',
         DB_PASSWORD='unused',
-        TEXT_TRANSFORMER_MODULE='shrike.adapters.markdown',
+        TEXT_TRANSFORMER_MODULE='shrikenet.adapters.markdown',
         TEXT_TRANSFORMER_CLASS='Markdown',
-        CRYPTO_PROVIDER_MODULE='shrike.adapters.swapcase',
+        CRYPTO_PROVIDER_MODULE='shrikenet.adapters.swapcase',
         CRYPTO_PROVIDER_CLASS='Swapcase',
         LOGGING_FORMAT='%(asctime)s %(levelname)s %(name)s -> %(message)s',
         LOGGING_DATE_FORMAT='%Y-%m-%d %H:%M:%S',
