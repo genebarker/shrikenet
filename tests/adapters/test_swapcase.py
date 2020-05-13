@@ -24,7 +24,7 @@ class TestSwapcase:
     def test_generates_hash_for_string(self, crypto_provider):
         hash_ = crypto_provider.generate_hash_from_string(self.TEST_STRING)
         assert len(hash_) > 0
-        assert hash != self.TEST_STRING
+        assert hash_ != self.TEST_STRING
 
     def test_when_hash_matches_string(self, crypto_provider):
         assert crypto_provider.hash_matches_string(self.HASH_OF_TEST_STRING,
