@@ -26,6 +26,7 @@ class PostgreSQL(StorageProvider):
         self.__db_name = db_config['db_name']
         self.__db_user = db_config['db_user']
         self.__db_password = db_config['db_password']
+        self.__db_port = db_config['db_port']
         self.logger = logging.getLogger(__name__)
 
     def open(self):
@@ -35,6 +36,7 @@ class PostgreSQL(StorageProvider):
             dbname=self.__db_name,
             user=self.__db_user,
             password=self.__db_password,
+            port=self.__db_port,
         )
 
     def close(self):

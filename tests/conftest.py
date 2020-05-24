@@ -17,6 +17,7 @@ def app():
         'DB_NAME': config['development']['db_name'],
         'DB_USER': config['development']['db_user'],
         'DB_PASSWORD': config['development']['db_password'],
+        'DB_PORT': config['development']['db_port'],
         'TEXT_TRANSFORMER_MODULE': 'shrikenet.adapters.markdown',
         'TEST_TRANSFORMER_CLASS': 'Markdown',
         'CRYPTO_PROVIDER_MODULE': 'shrikenet.adapters.swapcase',

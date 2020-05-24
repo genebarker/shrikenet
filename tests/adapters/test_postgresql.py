@@ -23,6 +23,7 @@ class TestPostgreSQL(TestMemory):
             'db_name': config['development']['db_name'],
             'db_user': config['development']['db_user'],
             'db_password': config['development']['db_password'],
+            'db_port': config['development']['db_port'],
         }
         postgresql = PostgreSQL(db_config)
         postgresql.open()
