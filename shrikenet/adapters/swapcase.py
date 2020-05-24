@@ -6,8 +6,8 @@ class Swapcase(CryptoProvider):
     def __init__(self):
         pass
 
-    def generate_hash_from_string(self, password):
-        return password.swapcase()
+    def generate_hash_from_string(self, string):
+        return string.swapcase()
 
     def hash_matches_string(self, hash_, string):
         if string is None:
