@@ -6,9 +6,9 @@ described in Uncle Bob's post [The Clean Architecture][2]. The core of
 this architecture is the *Dependency Rule* where source code dependencies
 can only point inwards.
 
-Products                Adapters       Business Logic
------------------------ -------------- ----------------------
-flask, PostgreSQL, etc  <- adapters -> usecases -> entities
+Products                Adapters         Business Logic
+----------------------- ---------------- ----------------------
+flask, PostgreSQL, etc  <-- adapters --> usecases --> entities
 
 Product dependencies are isolated from the business logic via adapters.
 The interfaces for the adapters are defined in the entities layer. The
