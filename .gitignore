@@ -1,11 +1,11 @@
 .DS_Store
 .vscode/
-shrike.code-workspace
 
 venv/
 
 *.pyc
 __pycache__/
+*.swp
 
 instance/
 
