@@ -1,0 +1,11 @@
+from dataclasses import dataclass
+from datetime import datetime
+
+
+@dataclass
+class Event:
+    time: datetime
+    app_user_oid: int
+    tag: str
+    text: str
+    usecase_tag: str
