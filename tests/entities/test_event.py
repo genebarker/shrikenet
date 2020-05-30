@@ -25,3 +25,15 @@ def test_minimal_initialization(sample_event):
     assert sample_event.tag == 'duck_found'
     assert sample_event.text == 'fmulder found a duck.'
     assert sample_event.usecase_tag == 'look_for_duck'
+    assert sample_event.app_user_name is None
+
+def test_full_initialization():
+    e = Event(
+        time=None,
+        app_user_oid=None,
+        tag=None,
+        text=None,
+        usecase_tag=None,
+        app_user_name='Fox Mulder'
+    )
+    assert e.app_user_name == 'Fox Mulder'

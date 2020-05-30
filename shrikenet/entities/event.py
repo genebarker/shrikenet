@@ -9,3 +9,4 @@ class Event:
     tag: str
     text: str
     usecase_tag: str
+    app_user_name: str = None
