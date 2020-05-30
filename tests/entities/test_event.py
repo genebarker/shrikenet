@@ -8,26 +8,22 @@ from shrikenet.entities.event import Event
 CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
 
 
-@pytest.fixture
-def sample_event():
-    return Event(
+def test_base_field_initialization():
+    e = Event(
         time=CHRISTMAS_2018,
         app_user_oid=123,
         tag='duck_found',
         text='fmulder found a duck.',
         usecase_tag='look_for_duck',
     )
+    assert e.time == CHRISTMAS_2018
+    assert e.app_user_oid == 123
+    assert e.tag == 'duck_found'
+    assert e.text == 'fmulder found a duck.'
+    assert e.usecase_tag == 'look_for_duck'
+    assert e.app_user_name is None
 
-
-def test_minimal_initialization(sample_event):
-    assert sample_event.time == CHRISTMAS_2018
-    assert sample_event.app_user_oid == 123
-    assert sample_event.tag == 'duck_found'
-    assert sample_event.text == 'fmulder found a duck.'
-    assert sample_event.usecase_tag == 'look_for_duck'
-    assert sample_event.app_user_name is None
-
-def test_full_initialization():
+def test_optional_field_initialization():
     e = Event(
         time=None,
         app_user_oid=None,
