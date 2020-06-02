@@ -2,6 +2,9 @@
 DROP SEQUENCE IF EXISTS app_user_seq;
 CREATE SEQUENCE app_user_seq;
 
+DROP SEQUENCE IF EXISTS event_seq;
+CREATE SEQUENCE event_seq;
+
 DROP SEQUENCE IF EXISTS post_seq;
 CREATE SEQUENCE post_seq;
 

@@ -105,6 +105,12 @@ class PostgreSQL(StorageProvider):
         error = 'can not get next app_user oid, reason: '
         return self._execute_select_value(sql, parms, error)
 
+    def get_next_event_oid(self):
+        sql = "SELECT nextval('event_seq')"
+        parms = None
+        error = 'can not get next event oid, reason: '
+        return self._execute_select_value(sql, parms, error)
+
     def get_next_post_oid(self):
         sql = "SELECT nextval('post_seq')"
         parms = None
