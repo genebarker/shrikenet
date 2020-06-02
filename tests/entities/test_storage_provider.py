@@ -25,6 +25,7 @@ class TestStorageProvider:
         ('reset_database_objects', 0),
         ('get_version', 0),
         ('get_next_app_user_oid', 0),
+        ('get_next_event_oid', 0),
         ('get_next_post_oid', 0),
         ('get_app_user_by_username', 1),
         ('get_app_user_by_oid', 1),

@@ -4,6 +4,7 @@ from datetime import datetime
 
 @dataclass
 class Event:
+    oid: int
     time: datetime
     app_user_oid: int
     tag: str

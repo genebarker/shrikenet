@@ -27,6 +27,9 @@ class StorageProvider:
     def get_next_app_user_oid(self):
         raise NotImplementedError
 
+    def get_next_event_oid(self):
+        raise NotImplementedError
+
     def get_next_post_oid(self):
         raise NotImplementedError
 
