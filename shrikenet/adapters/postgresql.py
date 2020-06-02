@@ -100,22 +100,19 @@ class PostgreSQL(StorageProvider):
             return value
 
     def get_next_app_user_oid(self):
-        sql = "SELECT nextval('app_user_seq')"
+        return self._get_next_oid('app_user')
+
+    def _get_next_oid(self, object_name):
+        sql = "SELECT nextval('{}_seq')".format(object_name)
         parms = None
-        error = 'can not get next app_user oid, reason: '
+        error = 'can not get next {} oid, reason: '.format(object_name)
         return self._execute_select_value(sql, parms, error)
 
     def get_next_event_oid(self):
-        sql = "SELECT nextval('event_seq')"
-        parms = None
-        error = 'can not get next event oid, reason: '
-        return self._execute_select_value(sql, parms, error)
+        return self._get_next_oid('event')
 
     def get_next_post_oid(self):
-        sql = "SELECT nextval('post_seq')"
-        parms = None
-        error = 'can not get next post oid, reason: '
-        return self._execute_select_value(sql, parms, error)
+        return self._get_next_oid('post')
 
     def get_app_user_by_username(self, username):
         sql = "SELECT * FROM app_user WHERE username = %s"
