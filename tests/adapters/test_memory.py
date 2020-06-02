@@ -93,7 +93,11 @@ class TestMemory:
 
     # region - test get next ID methods
 
-    GET_NEXT_OID_METHODS = ['get_next_app_user_oid', 'get_next_post_oid']
+    GET_NEXT_OID_METHODS = [
+        'get_next_app_user_oid',
+        'get_next_event_oid',
+        'get_next_post_oid',
+    ]
 
     @pytest.mark.parametrize('method_name,', GET_NEXT_OID_METHODS)
     def test_get_next_oid_positive(self, storage_provider, method_name):

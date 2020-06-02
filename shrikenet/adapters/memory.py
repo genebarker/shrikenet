@@ -24,6 +24,7 @@ class Memory(StorageProvider):
     def _build_schema(self):
         self.app_user = {}
         self.app_user_next_oid = 1
+        self.event_next_oid = 1
         self.post = {}
         self.post_next_oid = 1
         self.rules = Rules()
@@ -90,6 +91,11 @@ class Memory(StorageProvider):
     def get_next_app_user_oid(self):
         next_oid = self.app_user_next_oid
         self.app_user_next_oid += 1
+        return next_oid
+
+    def get_next_event_oid(self):
+        next_oid = self.event_next_oid
+        self.event_next_oid += 1
         return next_oid
 
     def get_next_post_oid(self):
