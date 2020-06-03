@@ -91,37 +91,6 @@ class TestMemory:
 
     # endregion
 
-    # region - test get next ID methods
-
-    GET_NEXT_OID_METHODS = [
-        'get_next_app_user_oid',
-        'get_next_event_oid',
-        'get_next_post_oid',
-    ]
-
-    @pytest.mark.parametrize('method_name,', GET_NEXT_OID_METHODS)
-    def test_get_next_oid_positive(self, storage_provider, method_name):
-        get_next_oid = getattr(storage_provider, method_name)
-        assert get_next_oid() > 0
-
-    @pytest.mark.parametrize('method_name,', GET_NEXT_OID_METHODS)
-    def test_get_next_oid_increments(self, storage_provider, method_name):
-        get_next_oid = getattr(storage_provider, method_name)
-        oid1 = get_next_oid()
-        oid2 = get_next_oid()
-        assert oid2 == oid1 + 1
-
-    @pytest.mark.parametrize('method_name,', GET_NEXT_OID_METHODS)
-    def test_get_next_oid_doesnt_rollback(self, storage_provider, method_name):
-        get_next_oid = getattr(storage_provider, method_name)
-        storage_provider.commit()
-        oid1 = get_next_oid()
-        storage_provider.rollback()
-        oid2 = get_next_oid()
-        assert oid2 > oid1
-
-    # endregion
-
     # region - test app_user methods
 
     GOOD_USERNAME = 'mawesome'
