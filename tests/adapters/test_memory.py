@@ -7,14 +7,11 @@ import pytest
 from shrikenet.adapters.memory import Memory
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.exceptions import (
-    DatastoreClosed,
-    DatastoreAlreadyOpen,
     DatastoreError,
     DatastoreKeyError,
 )
 from shrikenet.entities.post import DeepPost, Post
 from shrikenet.entities.rules import Rules
-from shrikenet.entities.storage_provider import StorageProvider
 
 
 class TestMemory:
@@ -29,37 +26,6 @@ class TestMemory:
         provider.open()
         yield provider
         provider.close()
-
-    # region - test general properties
-
-    def test_is_a_storage_provider(self, storage_provider):
-        assert isinstance(storage_provider, StorageProvider)
-
-    def test_get_version_returns_provider_info(self, storage_provider):
-        assert storage_provider.get_version().startswith(
-            storage_provider.VERSION_PREFIX)
-
-    def test_raises_when_not_opened_first(self):
-        storage_provider = self.get_storage_provider()
-        with pytest.raises(DatastoreClosed) as excinfo:
-            storage_provider.get_version()
-        assert str(excinfo.value) == (
-            'get_version is not available since the connection is closed'
-        )
-
-    def test_raises_when_already_opened(self, storage_provider):
-        with pytest.raises(DatastoreAlreadyOpen) as excinfo:
-            storage_provider.open()
-        assert str(excinfo.value) == 'connection already open'
-
-    def test_raises_when_already_closed(self):
-        storage_provider = self.get_storage_provider()
-        storage_provider.open()
-        storage_provider.close()
-        with pytest.raises(DatastoreClosed):
-            storage_provider.get_version()
-
-    # endregion
 
     # region - test transaction handling
 

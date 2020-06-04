@@ -38,3 +38,9 @@ def db(request):
     database.open()
     yield database
     database.close()
+
+@pytest.fixture(params=[memory_adapter, postgresql_adapter])
+def unopened_db(request):
+    module = importlib.import_module(request.param[0])
+    class_ = getattr(module, request.param[1])
+    return class_(request.param[2])

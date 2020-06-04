@@ -7,6 +7,7 @@ import psycopg2 as driver
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.exceptions import (
     DatastoreAlreadyOpen,
+    DatastoreClosed,
     DatastoreError,
     DatastoreKeyError,
 )
@@ -22,15 +23,31 @@ class PostgreSQL(StorageProvider):
     VERSION_PREFIX = 'PostgreSQL'
 
     def __init__(self, db_config):
+        self.is_open = False
         self.connection = None
+        self.logger = logging.getLogger(__name__)
         self.__db_name = db_config['db_name']
         self.__db_user = db_config['db_user']
         self.__db_password = db_config['db_password']
         self.__db_port = db_config['db_port']
-        self.logger = logging.getLogger(__name__)
+
+    # restrict access to attributes when closed
+    def __getattribute__(self, name):
+        if (
+                name in ('open', 'is_open')
+                or self.is_open
+                or name.endswith(('__db_name', '__db_user', '__db_password',
+                                  '__db_port'))
+        ):
+            return object.__getattribute__(self, name)
+        error = (
+            '{} is not available since the connection is closed'
+            .format(name)
+        )
+        raise DatastoreClosed(error)
 
     def open(self):
-        if self.connection is not None:
+        if self.is_open:
             raise DatastoreAlreadyOpen('connection already open')
         self.connection = driver.connect(
             dbname=self.__db_name,
@@ -38,10 +55,12 @@ class PostgreSQL(StorageProvider):
             password=self.__db_password,
             port=self.__db_port,
         )
+        self.is_open = True
 
     def close(self):
         self.connection.close()
         self.connection = None
+        self.is_open = False
 
     def commit(self):
         self.connection.commit()
