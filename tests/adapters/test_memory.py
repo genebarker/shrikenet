@@ -27,18 +27,6 @@ class TestMemory:
         yield provider
         provider.close()
 
-    # region - test transaction handling
-
-    def test_commit_can_be_called_after_no_action(self, storage_provider):
-        storage_provider.commit()
-        storage_provider.commit()
-
-    def test_rollback_can_be_called_after_no_action(self, storage_provider):
-        storage_provider.rollback()
-        storage_provider.rollback()
-
-    # endregion
-
     # region - test schema build / reset methods
 
     def test_schema_exists_after_build(self, storage_provider):
