@@ -31,13 +31,25 @@ postgresql_adapter = [
 
 
 @pytest.fixture(scope='module', params=[memory_adapter, postgresql_adapter])
-def db(request):
+def fresh_db(request):
     module = importlib.import_module(request.param[0])
     class_ = getattr(module, request.param[1])
     database = class_(request.param[2])
     database.open()
+    database.build_database_schema()
+    database.commit()
     yield database
     database.close()
+
+
+@pytest.fixture
+def db(fresh_db):
+    database = fresh_db
+    database.reset_database_objects()
+    database.commit()
+    yield database
+    database.rollback()
+
 
 @pytest.fixture(params=[memory_adapter, postgresql_adapter])
 def unopened_db(request):

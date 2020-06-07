@@ -1,5 +1,5 @@
 import copy
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from operator import attrgetter
 
 import pytest
@@ -27,8 +27,6 @@ class TestMemory:
         yield provider
         provider.close()
 
-    # region - test app_user methods
-
     GOOD_USERNAME = 'mawesome'
 
     @pytest.fixture
@@ -46,117 +44,6 @@ class TestMemory:
                            last_password_failure_time=time_now)
         storage_provider.add_app_user(app_user)
         return app_user
-
-    def test_get_app_user_by_username_unknown_raises(self, storage_provider):
-        regex = 'can not get app_user .username=xyz., reason: '
-        with pytest.raises(DatastoreKeyError, match=regex):
-            storage_provider.get_app_user_by_username('xyz')
-
-    def test_get_app_user_by_username_gets_record(self, app_user,
-                                                  storage_provider):
-        original_user = app_user
-        stored_user = storage_provider.get_app_user_by_username(
-            original_user.username)
-        assert stored_user == original_user
-
-    def test_get_app_user_by_oid_unknown_raises(self, storage_provider):
-        regex = 'can not get app_user .oid=12345., reason: '
-        with pytest.raises(DatastoreKeyError, match=regex):
-            storage_provider.get_app_user_by_oid('12345')
-
-    def test_get_app_user_by_oid_gets_record(self, app_user,
-                                             storage_provider):
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user == app_user
-
-    def test_get_app_user_returns_a_copy(self, app_user, storage_provider):
-        copied_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        copied_user.name = 'Different'
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user != copied_user
-
-    def test_add_app_user_adds_record(self, app_user, storage_provider):
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user == app_user
-
-    def test_add_app_user_adds_a_copy(self, app_user, storage_provider):
-        app_user.name = 'Different'
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user != app_user
-
-    def test_add_app_user_with_duplicate_username_raises(self, app_user,
-                                                         storage_provider):
-        new_user = copy.copy(app_user)
-        new_user.oid = 100
-        regex = ('can not add app_user .oid={}, username={}., reason: '
-                 .format(new_user.oid, app_user.username))
-        with pytest.raises(DatastoreError, match=regex):
-            storage_provider.add_app_user(new_user)
-
-    def test_add_app_user_with_duplicate_oid_raises(self, app_user,
-                                                    storage_provider):
-        new_user = copy.copy(app_user)
-        new_user.username = 'Different'
-        regex = ('can not add app_user .oid={}, username={}., reason: '
-                 .format(app_user.oid, new_user.username))
-        with pytest.raises(DatastoreError, match=regex):
-            storage_provider.add_app_user(new_user)
-
-    def test_update_app_user_updates_record(self, app_user,
-                                            storage_provider):
-        app_user.name = 'Different'
-        storage_provider.update_app_user(app_user)
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user == app_user
-
-    def test_update_app_user_updates_a_copy(self, app_user,
-                                            storage_provider):
-        app_user.name = 'Different'
-        storage_provider.update_app_user(app_user)
-        app_user.name = 'Very Different'
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user != app_user
-
-    def test_update_app_user_updates_every_field(self, app_user,
-                                                 storage_provider):
-        app_user.username += 'a'
-        app_user.name += 'b'
-        app_user.password_hash += 'c'
-        app_user.needs_password_change = not app_user.needs_password_change
-        app_user.is_locked = not app_user.is_locked
-        app_user.is_dormant = not app_user.is_dormant
-        app_user.ongoing_password_failure_count += 1
-        app_user.last_password_failure_time = (
-            app_user.last_password_failure_time - timedelta(hours=1))
-        storage_provider.update_app_user(app_user)
-        stored_user = storage_provider.get_app_user_by_oid(app_user.oid)
-        assert stored_user == app_user
-
-    def test_get_app_user_count_zero_when_empty(self, storage_provider):
-        assert storage_provider.get_app_user_count() == 0
-
-    def test_get_app_user_count_matches_that_stored(self, app_user,
-                                                    storage_provider):
-        assert storage_provider.get_app_user_count() == 1
-
-    def test_exists_app_user_true_for_known(self, app_user,
-                                            storage_provider):
-        assert storage_provider.exists_app_username(app_user.username)
-
-    def test_exists_app_user_false_for_unknown(self, storage_provider):
-        assert storage_provider.exists_app_username('UNKNOWN') is False
-
-    def test_add_app_user_record_exists_after_commit(self, app_user,
-                                                     storage_provider):
-        storage_provider.commit()
-        assert storage_provider.exists_app_username(app_user.username)
-
-    def test_add_app_user_record_gone_after_rollback(self, app_user,
-                                                     storage_provider):
-        storage_provider.rollback()
-        assert not storage_provider.exists_app_username(app_user.username)
-
-    # endregion
 
     # region - test post methods
 
