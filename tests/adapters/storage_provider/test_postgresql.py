@@ -24,9 +24,9 @@ BAD_MESSAGE = (
 
 @pytest.fixture
 def pg_db(db):
-    if not isinstance(db, PostgreSQL):
-        pytest.skip()
-    return db
+    if isinstance(db, PostgreSQL):
+        return db
+    pytest.skip()
 
 
 @pytest.mark.parametrize(('method_name',), (
