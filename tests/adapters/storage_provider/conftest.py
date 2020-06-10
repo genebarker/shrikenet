@@ -13,7 +13,7 @@ memory_adapter = [
 
 def get_postgresql_config():
     config = ConfigParser()
-    config.read('database.cfg')
+    config.read('tests/database.cfg')
     db_config = {
         'db_name': config['development']['db_name'],
         'db_user': config['development']['db_user'],
@@ -30,6 +30,7 @@ postgresql_adapter = [
 ]
 
 
+# pylint: disable=redefined-outer-name
 @pytest.fixture(scope='module', params=[memory_adapter, postgresql_adapter])
 def fresh_db(request):
     module = importlib.import_module(request.param[0])

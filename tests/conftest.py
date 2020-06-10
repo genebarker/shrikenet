@@ -9,7 +9,7 @@ from shrikenet.db import get_services, init_db
 @pytest.fixture
 def app():
     config = ConfigParser()
-    config.read('database.cfg')
+    config.read('tests/database.cfg')
     app = create_app({
         'TESTING': True,
         'STORAGE_PROVIDER_MODULE': 'shrikenet.adapters.postgresql',
