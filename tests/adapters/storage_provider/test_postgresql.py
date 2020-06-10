@@ -22,11 +22,12 @@ BAD_MESSAGE = (
 )
 
 
+# pylint: disable=redefined-outer-name
 @pytest.fixture
 def pg_db(db):
-    if isinstance(db, PostgreSQL):
-        return db
-    pytest.skip()
+    if not isinstance(db, PostgreSQL):
+        pytest.skip()
+    return db
 
 
 @pytest.mark.parametrize(('method_name',), (
