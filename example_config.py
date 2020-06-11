@@ -1,9 +1,13 @@
 # Flask
+# SECRET_KEY = 'dev'
 SECRET_KEY = 'poorSecret'
 
 # StorageProvider
+# STORAGE_PROVIDER_MODULE = 'shrikenet.adapters.memory'
+# STORAGE_PROVIDER_CLASS = 'Memory'
 STORAGE_PROVIDER_MODULE = 'shrikenet.adapters.postgresql'
 STORAGE_PROVIDER_CLASS = 'PostgreSQL'
+# (postgresql adapter config values)
 DB_NAME = 'shrike20'
 DB_USER = 'mrshrike'
 DB_PASSWORD = 'poorPassword'
@@ -14,6 +18,8 @@ TEXT_TRANSFORMER_MODULE = 'shrikenet.adapters.markdown'
 TEXT_TRANSFORMER_CLASS = 'Markdown'
 
 # CryptoProvider
+# CRYPTO_PROVIDER_MODULE = 'shrikenet.adapters.swapcase'
+# CRYPTO_PROVIDER_CLASS = 'Swapcase'
 CRYPTO_PROVIDER_MODULE = 'shrikenet.adapters.werkzeug'
 CRYPTO_PROVIDER_CLASS = 'Werkzeug'
 
