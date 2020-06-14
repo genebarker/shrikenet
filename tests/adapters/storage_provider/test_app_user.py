@@ -14,19 +14,7 @@ GOOD_USERNAME = 'mawesome'
 
 @pytest.fixture
 def app_user(db):
-    oid = db.get_next_app_user_oid()
-    username = GOOD_USERNAME
-    name = 'Mr. Awesome'
-    password_hash = 'xxYYYzzzz'
-    time_now = datetime.now(timezone.utc)
-    app_user = AppUser(oid, username, name, password_hash,
-                       needs_password_change=True,
-                       is_locked=True,
-                       is_dormant=True,
-                       ongoing_password_failure_count=2,
-                       last_password_failure_time=time_now)
-    db.add_app_user(app_user)
-    return app_user
+    return create_user(db)
 
 
 def create_user(db):
