@@ -51,13 +51,6 @@ def test_get_app_user_by_oid_unknown_raises(db):
         db.get_app_user_by_oid('12345')
 
 
-def test_get_app_user_returns_a_copy(app_user, db):
-    copied_user = db.get_app_user_by_oid(app_user.oid)
-    copied_user.name = 'Different'
-    stored_user = db.get_app_user_by_oid(app_user.oid)
-    assert stored_user != copied_user
-
-
 def test_add_app_user_adds_record(app_user, db):
     stored_user = db.get_app_user_by_oid(app_user.oid)
     assert stored_user == app_user
