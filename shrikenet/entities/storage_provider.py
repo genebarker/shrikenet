@@ -51,6 +51,12 @@ class StorageProvider:
     def exists_app_username(self, username):
         raise NotImplementedError
 
+    def get_event_by_oid(self, oid):
+        raise NotImplementedError
+
+    def add_event(self, event):
+        raise NotImplementedError
+
     def get_post_by_oid(self, oid):
         raise NotImplementedError
 
