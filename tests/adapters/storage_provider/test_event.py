@@ -50,3 +50,14 @@ def test_get_by_oid_unknown_raises(db):
     regex = 'can not get event .oid=12345., reason: '
     with pytest.raises(DatastoreKeyError, match=regex):
         db.get_event_by_oid(12345)
+
+
+def test_add_event_adds_record(db, existing_event):
+    stored_event = db.get_event_by_oid(existing_event.oid)
+    assert stored_event == existing_event
+
+
+def test_add_event_adds_a_copy(db, existing_event):
+    existing_event.text = 'Different'
+    stored_event = db.get_event_by_oid(existing_event.oid)
+    assert stored_event != existing_event
