@@ -12,6 +12,7 @@ from shrikenet.entities.exceptions import (
 GOOD_USERNAME = 'mawesome'
 
 
+# pylint: disable=redefined-outer-name
 @pytest.fixture
 def app_user(db):
     return create_user(db)
