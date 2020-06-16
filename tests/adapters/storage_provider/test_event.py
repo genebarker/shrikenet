@@ -4,6 +4,9 @@ import pytest
 
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.event import Event
+from shrikenet.entities.exceptions import (
+    DatastoreKeyError,
+)
 
 
 CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
@@ -41,3 +44,9 @@ def test_get_by_oid_gets_a_copy(db, existing_event):
     existing_event.text = 'Different'
     stored_event = db.get_event_by_oid(existing_event.oid)
     assert stored_event != existing_event
+
+
+def test_get_by_oid_unknown_raises(db):
+    regex = 'can not get event .oid=12345., reason: '
+    with pytest.raises(DatastoreKeyError, match=regex):
+        db.get_event_by_oid(12345)
