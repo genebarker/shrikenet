@@ -24,6 +24,7 @@ class Memory(StorageProvider):
     def _build_schema(self):
         self.app_user = {}
         self.app_user_next_oid = 1
+        self.event = {}
         self.event_next_oid = 1
         self.post = {}
         self.post_next_oid = 1
@@ -152,6 +153,27 @@ class Memory(StorageProvider):
 
     def exists_app_username(self, username):
         return self._get_app_user_oid_for_username(username) is not None
+
+    def get_event_by_oid(self, oid):
+        if oid not in self.event:
+            message = (
+                'can not get event (oid={}), reason: record does not '
+                'exist'
+                .format(oid)
+            )
+            raise DatastoreKeyError(message)
+        event = self.event[oid]
+        return copy.copy(event)
+
+    def add_event(self, event):
+        error = (
+            'can not add event (oid={}, tag={}), reason: '
+            .format(event.oid, event.tag)
+        )
+        if event.oid in self.event:
+            reason = 'record with this oid already exists'
+            raise DatastoreError(error + reason)
+        self.event[event.oid] = copy.copy(event)
 
     def get_post_by_oid(self, oid):
         if oid not in self.post:
