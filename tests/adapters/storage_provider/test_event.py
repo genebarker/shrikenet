@@ -3,9 +3,6 @@ from datetime import datetime, timezone
 import pytest
 
 from shrikenet.entities.app_user import AppUser
-from shrikenet.entities.exceptions import (
-    DatastoreKeyError,
-)
 from shrikenet.entities.event import Event
 
 
