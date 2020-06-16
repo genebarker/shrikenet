@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime, timezone
 
 import pytest
@@ -5,6 +6,7 @@ import pytest
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.event import Event
 from shrikenet.entities.exceptions import (
+    DatastoreError,
     DatastoreKeyError,
 )
 
@@ -61,3 +63,12 @@ def test_add_event_adds_a_copy(db, existing_event):
     existing_event.text = 'Different'
     stored_event = db.get_event_by_oid(existing_event.oid)
     assert stored_event != existing_event
+
+
+def test_add_event_with_duplicate_oid_raises(db, existing_event):
+    new_event = copy.copy(existing_event)
+    new_event.text = 'Different'
+    regex = ('can not add event .oid={}, tag={}., reason: '
+             .format(existing_event.oid, existing_event.tag))
+    with pytest.raises(DatastoreError, match=regex):
+        db.add_event(new_event)
