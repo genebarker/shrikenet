@@ -12,10 +12,6 @@ CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
 # pylint: disable=redefined-outer-name
 @pytest.fixture
 def existing_event(db):
-    from shrikenet.adapters.postgresql import PostgreSQL
-    if isinstance(db, PostgreSQL):
-        pytest.skip()
-
     user = AppUser(
         oid=88,
         username='fmulder',

@@ -11,6 +11,7 @@ from shrikenet.entities.exceptions import (
     DatastoreError,
     DatastoreKeyError,
 )
+from shrikenet.entities.event import Event
 from shrikenet.entities.post import DeepPost, Post
 from shrikenet.entities.rules import Rules
 from shrikenet.entities.storage_provider import StorageProvider
@@ -259,6 +260,56 @@ class PostgreSQL(StorageProvider):
             .format(username)
         )
         return self._execute_select_value(sql, parms, error) == 1
+
+    def get_event_by_oid(self, oid):
+        sql = """
+            SELECT e.oid,
+                e.time,
+                e.app_user_oid,
+                e.tag,
+                e.text,
+                e.usecase_tag,
+                u.name AS app_user_name
+            FROM event e
+            LEFT OUTER JOIN app_user u
+            ON e.app_user_oid = u.oid
+            WHERE e.oid = %s
+        """
+        parms = (oid,)
+        error = 'can not get event (oid={}), reason: '.format(oid)
+        row = self._execute_select_row(sql, parms, error)
+        return self._create_event_from_row(row)
+
+    def _create_event_from_row(self, row):
+        event = Event(
+            oid=row[0],
+            time=row[1],
+            app_user_oid=row[2],
+            tag=row[3],
+            text=row[4],
+            usecase_tag=row[5],
+            app_user_name=row[6],
+        )
+        return event
+
+    def add_event(self, event):
+        sql = """
+            INSERT INTO event (oid, time, app_user_oid, tag, text, usecase_tag)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        parms = (
+            event.oid,
+            event.time,
+            event.app_user_oid,
+            event.tag,
+            event.text,
+            event.usecase_tag,
+        )
+        error = (
+            'can not add event (oid={}, tag={}), reason: '
+            .format(event.oid, event.tag)
+        )
+        self._execute_process_sql(sql, parms, error)
 
     def get_post_by_oid(self, oid):
         sql = """

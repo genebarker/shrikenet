@@ -22,6 +22,16 @@ CREATE TABLE app_user (
     last_password_failure_time timestamp with time zone
 );
 
+DROP TABLE IF EXISTS event;
+CREATE TABLE event (
+    oid integer PRIMARY KEY,
+    time timestamp with time zone,
+    app_user_oid integer,
+    tag varchar(50),
+    text text,
+    usecase_tag varchar(50)
+);
+
 DROP TABLE IF EXISTS post;
 CREATE TABLE post (
     oid integer PRIMARY KEY,
