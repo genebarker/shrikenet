@@ -324,8 +324,8 @@ class TestTagValidation:
                 FieldValidator.tag_max_length)
     )
     bad_characters_message = (
-        'tag must be alphanumeric characters with optional underscore '
-        'seperators'
+        'tag must be alphanumeric characters in lowercase with optional '
+        'underscore seperators'
     )
 
     def test_good_returns_its_value(self):
@@ -343,6 +343,26 @@ class TestTagValidation:
                             field_name=field_name,
                             field_value=given_tag,
                             expected_message=expected_message)
+
+    def test_too_short_raises(self):
+        tag = 'a' * (FieldValidator.tag_min_length - 1)
+        expected_message = self.out_of_range_message
+        self.confirm_raises(expected_message, tag)
+
+    def test_too_long_raises(self):
+        tag = 'a' * (FieldValidator.tag_max_length + 1)
+        expected_message = self.out_of_range_message
+        self.confirm_raises(expected_message, tag)
+
+    @pytest.mark.parametrize(('tag'), (
+        ('_bad_leading_char'),
+        ('bad_trailing_char_'),
+        ('has spaces'),
+        ('has_UPPERCASE_letters'),
+        ('has_non_alpha!_char'),
+    ))
+    def test_bad_content_raises(self, tag):
+        self.confirm_raises(self.bad_characters_message, tag)
 
 
 class TestInstantValidation:
