@@ -315,6 +315,36 @@ class TestTitleValidation:
         self.confirm_raises(expected_message, title)
 
 
+class TestTagValidation:
+
+    missing_message = 'tag must be provided'
+    out_of_range_message = (
+        'tag must be between {0} and {1} characters long'
+        .format(FieldValidator.tag_min_length,
+                FieldValidator.tag_max_length)
+    )
+    bad_characters_message = (
+        'tag must be alphanumeric characters with optional underscore '
+        'seperators'
+    )
+
+    def test_good_returns_its_value(self):
+        tag = 'good_tag'
+        assert FieldValidator.validate_tag(tag) == tag
+
+    def test_none_raises(self):
+        tag = None
+        expected_message = self.missing_message
+        self.confirm_raises(expected_message, tag)
+
+    @staticmethod
+    def confirm_raises(expected_message, given_tag, field_name='tag'):
+        confirm_call_raises(function_call=FieldValidator.validate_tag,
+                            field_name=field_name,
+                            field_value=given_tag,
+                            expected_message=expected_message)
+
+
 class TestInstantValidation:
 
     missing_message = 'instant must be provided'

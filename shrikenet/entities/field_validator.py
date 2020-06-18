@@ -14,6 +14,8 @@ class FieldValidator:
     title_min_length = 1
     title_max_length = 50
     title_regex_pattern = '^[a-zA-Z0-9].*'
+    tag_min_length = 4
+    tag_max_length = 50
 
     @staticmethod
     def validate_oid(oid, field_name='oid'):
@@ -93,6 +95,15 @@ class FieldValidator:
             regex_pattern=FieldValidator.title_regex_pattern,
             pattern_hint=('{} must begin with an alphanumeric character'
                           .format(field_name)),
+        )
+
+    @staticmethod
+    def validate_tag(tag, field_name='tag'):
+        return FieldValidator.validate_string(
+            field_value=tag,
+            field_name=field_name,
+            min_length=FieldValidator.tag_min_length,
+            max_length=FieldValidator.tag_max_length
         )
 
     @staticmethod
