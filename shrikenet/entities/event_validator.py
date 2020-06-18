@@ -9,3 +9,4 @@ class EventValidator(RecordValidator):
     def validate_fields(the_object: Event):
         FieldValidator.validate_oid(the_object.oid)
         FieldValidator.validate_instant(the_object.time, 'time')
+        FieldValidator.validate_oid(the_object.app_user_oid)

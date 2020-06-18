@@ -43,3 +43,13 @@ def test_time_required(event):
 def test_time_validated(event):
     event.time = 123
     verify_validation_raises(event)
+
+
+def test_app_user_id_required(event):
+    event.app_user_oid = None
+    verify_validation_raises(event)
+
+
+def test_app_user_id_validated(event):
+    event.app_user_oid = 'bad'
+    verify_validation_raises(event)
