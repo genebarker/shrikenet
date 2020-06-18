@@ -10,3 +10,5 @@ class EventValidator(RecordValidator):
         FieldValidator.validate_oid(the_object.oid)
         FieldValidator.validate_instant(the_object.time, 'time')
         FieldValidator.validate_oid(the_object.app_user_oid)
+        FieldValidator.validate_tag(the_object.tag)
+        FieldValidator.validate_tag(the_object.usecase_tag, 'usecase_tag')

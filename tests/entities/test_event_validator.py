@@ -53,3 +53,23 @@ def test_app_user_id_required(event):
 def test_app_user_id_validated(event):
     event.app_user_oid = 'bad'
     verify_validation_raises(event)
+
+
+def test_tag_required(event):
+    event.tag = None
+    verify_validation_raises(event)
+
+
+def test_tag_validated(event):
+    event.tag = 'Bad tag'
+    verify_validation_raises(event)
+
+
+def test_usecase_tag_required(event):
+    event.usecase_tag = None
+    verify_validation_raises(event)
+
+
+def test_usecase_tag_validated(event):
+    event.usecase_tag = 'Bad tag'
+    verify_validation_raises(event)
