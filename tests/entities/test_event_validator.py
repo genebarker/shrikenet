@@ -24,3 +24,13 @@ def test_oid_required():
 def verify_validation_raises(event):
     with pytest.raises(ValueError):
         EventValidator.validate_fields(event)
+
+def test_time_required():
+    event = create_good_event()
+    event.time = None
+    verify_validation_raises(event)
+
+def test_time_validated():
+    event = create_good_event()
+    event.time = 123
+    verify_validation_raises(event)
