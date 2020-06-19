@@ -5,6 +5,9 @@ from shrikenet.entities.record_validator import RecordValidator
 
 class EventValidator(RecordValidator):
 
+    text_min_length = 1
+    text_max_length = 200
+
     @staticmethod
     def validate_fields(the_object: Event):
         FieldValidator.validate_oid(the_object.oid)
@@ -12,3 +15,6 @@ class EventValidator(RecordValidator):
         FieldValidator.validate_oid(the_object.app_user_oid)
         FieldValidator.validate_tag(the_object.tag)
         FieldValidator.validate_tag(the_object.usecase_tag, 'usecase_tag')
+        FieldValidator.validate_string(the_object.text, 'text',
+                                       EventValidator.text_min_length,
+                                       EventValidator.text_max_length)

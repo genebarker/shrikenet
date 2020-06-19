@@ -73,3 +73,13 @@ def test_usecase_tag_required(event):
 def test_usecase_tag_validated(event):
     event.usecase_tag = 'Bad tag'
     verify_validation_raises(event)
+
+
+def test_text_required(event):
+    event.text = None
+    verify_validation_raises(event)
+
+
+def test_text_validated(event):
+    event.text = 'a' * (EventValidator.text_max_length + 1)
+    verify_validation_raises(event)
