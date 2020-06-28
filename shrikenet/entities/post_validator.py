@@ -1,5 +1,7 @@
 from shrikenet.entities.field_validator import FieldValidator
+from shrikenet.entities.post import Post
 from shrikenet.entities.record_validator import RecordValidator
+from shrikenet.entities.storage_provider import StorageProvider
 
 
 class PostValidator(RecordValidator):
@@ -11,7 +13,7 @@ class PostValidator(RecordValidator):
     MAX_POST_CHARACTERS = round(MAX_WORDS * (AVG_CHARACTERS_PER_WORD + 1))
 
     @staticmethod
-    def validate_fields(the_object):
+    def validate_fields(the_object: Post):
         post = the_object
         FieldValidator.validate_oid(post.oid)
         FieldValidator.validate_title(post.title)
@@ -34,5 +36,7 @@ class PostValidator(RecordValidator):
         )
 
     @staticmethod
-    def validate_references(post, storage_provider):
+    def validate_references(the_object: Post,
+                            storage_provider: StorageProvider):
+        post = the_object
         storage_provider.get_app_user_by_oid(post.author_oid)
