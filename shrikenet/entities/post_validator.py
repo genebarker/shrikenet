@@ -6,12 +6,13 @@ class PostValidator(RecordValidator):
 
     MIN_POST_CHARACTERS = 1
 
-    MAX_WORDS = 5000 # About 10 pages of single-spaced 12pt text
+    MAX_WORDS = 5000  # About 10 pages of single-spaced 12pt text
     AVG_CHARACTERS_PER_WORD = 4.79
     MAX_POST_CHARACTERS = round(MAX_WORDS * (AVG_CHARACTERS_PER_WORD + 1))
 
     @staticmethod
-    def validate_fields(post):
+    def validate_fields(the_object):
+        post = the_object
         FieldValidator.validate_oid(post.oid)
         FieldValidator.validate_title(post.title)
         PostValidator.validate_body(post.body)
@@ -20,8 +21,10 @@ class PostValidator(RecordValidator):
 
     @classmethod
     def validate_body(cls, body):
-        if body is None: return
-        if body == '': raise ValueError('body can not be an empty string')
+        if body is None:
+            return
+        if body == '':
+            raise ValueError('body can not be an empty string')
 
         FieldValidator.validate_string(
             field_value=body,
