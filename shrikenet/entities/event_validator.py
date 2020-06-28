@@ -11,16 +11,18 @@ class EventValidator(RecordValidator):
 
     @staticmethod
     def validate_fields(the_object: Event):
-        FieldValidator.validate_oid(the_object.oid)
-        FieldValidator.validate_instant(the_object.time, 'time')
-        FieldValidator.validate_oid(the_object.app_user_oid)
-        FieldValidator.validate_tag(the_object.tag)
-        FieldValidator.validate_tag(the_object.usecase_tag, 'usecase_tag')
-        FieldValidator.validate_string(the_object.text, 'text',
+        event = the_object
+        FieldValidator.validate_oid(event.oid)
+        FieldValidator.validate_instant(event.time, 'time')
+        FieldValidator.validate_oid(event.app_user_oid)
+        FieldValidator.validate_tag(event.tag)
+        FieldValidator.validate_tag(event.usecase_tag, 'usecase_tag')
+        FieldValidator.validate_string(event.text, 'text',
                                        EventValidator.text_min_length,
                                        EventValidator.text_max_length)
 
     @staticmethod
     def validate_references(the_object: Event,
                             storage_provider: StorageProvider):
-        storage_provider.get_app_user_by_oid(the_object.app_user_oid)
+        event = the_object
+        storage_provider.get_app_user_by_oid(event.app_user_oid)
