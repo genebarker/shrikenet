@@ -1,5 +1,7 @@
 import pytest
 
+from shrikenet.adapters.memory import Memory
+from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.event_validator import EventValidator
 from shrikenet.entities.record_validator import RecordValidator
 
@@ -83,3 +85,28 @@ def test_text_required(event):
 def test_text_validated(event):
     event.text = 'a' * (EventValidator.text_max_length + 1)
     verify_validation_raises(event)
+
+
+@pytest.fixture
+def db():
+    provider = Memory()
+    provider.open()
+    yield provider
+    provider.close()
+
+
+def test_unknown_app_user_oid_raises(event, db):
+    with pytest.raises(Exception) as excinfo:
+        EventValidator.validate_references(event, db)
+
+    expected_message = (
+        'can not get app_user (oid={}), reason: '
+        .format(event.app_user_oid)
+    )
+    assert expected_message in str(excinfo.value)
+
+
+def test_known_app_user_validates(event, db):
+    user = AppUser(event.app_user_oid, None, event.app_user_name, None)
+    db.add_app_user(user)
+    assert EventValidator.validate_references(event, db) is None
