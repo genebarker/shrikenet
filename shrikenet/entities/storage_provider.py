@@ -57,6 +57,9 @@ class StorageProvider:
     def add_event(self, event):
         raise NotImplementedError
 
+    def get_last_event(self):
+        raise NotImplementedError
+
     def get_post_by_oid(self, oid):
         raise NotImplementedError
 

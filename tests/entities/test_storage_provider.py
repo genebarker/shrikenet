@@ -35,6 +35,7 @@ class TestStorageProvider:
         ('exists_app_username', 1),
         ('get_event_by_oid', 1),
         ('add_event', 1),
+        ('get_last_event', 0),
         ('get_post_by_oid', 1),
         ('add_post', 1),
         ('update_post', 1),
