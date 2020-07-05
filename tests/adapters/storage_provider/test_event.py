@@ -72,3 +72,16 @@ def test_add_event_with_duplicate_oid_raises(db, existing_event):
              .format(existing_event.oid, existing_event.tag))
     with pytest.raises(DatastoreError, match=regex):
         db.add_event(new_event)
+
+
+def test_get_last_event_gets_last_one(db, existing_event):
+    new_event = copy.copy(existing_event)
+    new_event.oid = existing_event.oid + 1
+    db.add_event(new_event)
+    assert db.get_last_event() == new_event
+
+
+def test_get_last_event_when_none_raises(db):
+    regex = 'there are no event records'
+    with pytest.raises(DatastoreKeyError, match=regex):
+        db.get_last_event()

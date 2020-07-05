@@ -175,6 +175,12 @@ class Memory(StorageProvider):
             raise DatastoreError(error + reason)
         self.event[event.oid] = copy.copy(event)
 
+    def get_last_event(self):
+        key_list = list(self.event.keys())
+        if len(key_list) == 0:
+            raise DatastoreKeyError('there are no event records')
+        return self.get_event_by_oid(key_list[-1])
+
     def get_post_by_oid(self, oid):
         if oid not in self.post:
             message = (
