@@ -311,6 +311,15 @@ class PostgreSQL(StorageProvider):
         )
         self._execute_process_sql(sql, parms, error)
 
+    def get_last_event(self):
+        sql = "SELECT max(oid) FROM event"
+        parms = None
+        error = 'can not get last event, reason: '
+        last_oid = self._execute_select_value(sql, parms, error)
+        if last_oid is None:
+            raise DatastoreKeyError('there are no event records')
+        return self.get_event_by_oid(last_oid)
+
     def get_post_by_oid(self, oid):
         sql = """
             SELECT p.oid,
