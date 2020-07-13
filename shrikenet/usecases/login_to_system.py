@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta, timezone
 import logging
 
+from shrikenet.entities.event import Event
 from shrikenet.usecases.login_to_system_result import LoginToSystemResult
 
 
 class LoginToSystem:
+
+    USECASE_TAG = 'login_to_system'
 
     def __init__(self, services):
         self.db = services.storage_provider
@@ -56,6 +59,20 @@ class LoginToSystem:
 
     def _verify_user_active(self, user, ip_address):
         if user.is_dormant:
+            text = (
+                'Dormant app user (username={}) from {} attempted to login.'
+                .format(user.username, ip_address)
+            )
+            event = Event(
+                oid=self.db.get_next_event_oid(),
+                time=datetime.now(timezone.utc),
+                app_user_oid=user.oid,
+                tag='dormant_user',
+                text=text,
+                usecase_tag=self.USECASE_TAG,
+            )
+            self.db.add_event(event)
+            self.db.commit()
             self.logger.info('Dormant app user (username=%s) from %s '
                              'attempted to login.',
                              user.username, ip_address)

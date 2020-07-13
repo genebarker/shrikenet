@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import pytest
 
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -40,3 +42,17 @@ class TestDormantUserPaths(SetupClass):
             'Dormant app user (username=max) from 9.8.7.6 attempted to '
             'login.'
         )
+
+    def test_dormant_user_login_attempt_recorded(self):
+        user = self.create_dormant_user('max', 'some_password')
+        time_before = datetime.now(timezone.utc)
+        login_to_system = LoginToSystem(self.services)
+        login_to_system.run('max', 'some_password', '4.5.6.7')
+        event = self.db.get_last_event()
+        assert event.time > time_before
+        assert event.time < datetime.now(timezone.utc)
+        assert event.app_user_oid == user.oid
+        assert event.tag == 'dormant_user'
+        assert event.text == ('Dormant app user (username=max) from 4.5.6.7 '
+                              'attempted to login.')
+        assert event.usecase_tag == 'login_to_system'
