@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import pytest
 
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -27,6 +29,20 @@ class TestGoodCredentialPaths(SetupClass):
             caplog,
             'App user (username=joe) from 4.3.2.1 successfully logged in.'
         )
+
+    def test_successful_login_recorded(self):
+        user = self.create_and_store_user('max', 'some_password')
+        time_before = datetime.now(timezone.utc)
+        login_to_system = LoginToSystem(self.services)
+        login_to_system.run('max', 'some_password', '1.2.3.4')
+        event = self.db.get_last_event()
+        assert event.time > time_before
+        assert event.time < datetime.now(timezone.utc)
+        assert event.app_user_oid == user.oid
+        assert event.tag == 'user_login'
+        assert event.text == ('App user (username=max) from 1.2.3.4 '
+                              'successfully logged in.')
+        assert event.usecase_tag == 'login_to_system'
 
     def test_password_fail_count_reset_on_successful_login(self):
         self.perform_login_to_reset_password_fail_count()

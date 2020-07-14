@@ -42,9 +42,18 @@ class LoginToSystem:
             message += suffix
             log_message += suffix
 
+        event = Event(
+            oid=self.db.get_next_event_oid(),
+            time=datetime.now(timezone.utc),
+            app_user_oid=user.oid,
+            tag='user_login',
+            text=log_message,
+            usecase_tag=self.USECASE_TAG,
+        )
         user.is_locked = False
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
+        self.db.add_event(event)
         self.db.commit()
         self.logger.info(log_message)
         return LoginToSystemResult(message=message, has_failed=False,
