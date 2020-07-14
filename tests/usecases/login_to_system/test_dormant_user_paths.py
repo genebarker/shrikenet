@@ -48,11 +48,12 @@ class TestDormantUserPaths(SetupClass):
         time_before = datetime.now(timezone.utc)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run('max', 'some_password', '4.5.6.7')
-        event = self.db.get_last_event()
-        assert event.time > time_before
-        assert event.time < datetime.now(timezone.utc)
-        assert event.app_user_oid == user.oid
-        assert event.tag == 'dormant_user'
-        assert event.text == ('Dormant app user (username=max) from 4.5.6.7 '
-                              'attempted to login.')
-        assert event.usecase_tag == 'login_to_system'
+        expected_text = ('Dormant app user (username=max) from 4.5.6.7 '
+                         'attempted to login.')
+        self.validate_event_recorded(
+            time_before=time_before,
+            app_user_oid=user.oid,
+            tag='dormant_user',
+            text=expected_text,
+            usecase_tag='login_to_system'
+        )

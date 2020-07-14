@@ -62,6 +62,16 @@ class SetupClass:
         assert log_record.name == MODULE_UNDER_TEST
         assert log_record.message == message
 
+    def validate_event_recorded(self, time_before, app_user_oid, tag, text,
+                                usecase_tag):
+        event = self.db.get_last_event()
+        assert event.time > time_before
+        assert event.time < datetime.now(timezone.utc)
+        assert event.app_user_oid == app_user_oid
+        assert event.tag == tag
+        assert event.text == text
+        assert event.usecase_tag == usecase_tag
+
     def validate_successful_result(self, user, login_result,
                                    expected_login_message):
         assert login_result.user_oid == user.oid
