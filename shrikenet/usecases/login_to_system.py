@@ -84,9 +84,14 @@ class LoginToSystem:
 
     def _verify_user_unlocked(self, user, ip_address):
         if self._lock_is_active(user):
-            self.logger.info('Locked app user (username=%s) from %s '
-                             'attempted to login.',
-                             user.username, ip_address)
+            text = (
+                'Locked app user (username={}) from {} attempted to login.'
+                .format(user.username, ip_address)
+            )
+            event = self._create_login_event(user.oid, 'locked_user', text)
+            self.db.add_event(event)
+            self.db.commit()
+            self.logger.info(text)
             raise LoginToSystemError('Login attempt failed. Your account '
                                      'is locked.')
 

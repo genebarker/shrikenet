@@ -46,6 +46,22 @@ class TestLockedUserPaths(SetupClass):
             'login.'
         )
 
+    def test_locked_user_login_attempt_recorded(self):
+        user = self.create_locked_user(username='jill',
+                                       password='some_password')
+        time_before = datetime.now(timezone.utc)
+        login_to_system = LoginToSystem(self.services)
+        login_to_system.run('jill', 'some_password', '4.5.6.7')
+        expected_text = ('Locked app user (username=jill) from 4.5.6.7 '
+                         'attempted to login.')
+        self.validate_event_recorded(
+            time_before=time_before,
+            app_user_oid=user.oid,
+            tag='locked_user',
+            text=expected_text,
+            usecase_tag='login_to_system'
+        )
+
     def test_can_login_after_lock_length_met(self):
         result = self.perform_login_after_lock_expires()
         assert not result.has_failed
