@@ -68,9 +68,7 @@ class LoginToSystem:
             event = self._create_login_event(user.oid, 'dormant_user', text)
             self.db.add_event(event)
             self.db.commit()
-            self.logger.info('Dormant app user (username=%s) from %s '
-                             'attempted to login.',
-                             user.username, ip_address)
+            self.logger.info(text)
             raise LoginToSystemError('Login attempt failed. Your '
                                      'credentials are invalid.')
 
