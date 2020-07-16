@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
+from shrikenet.entities.event_tag import EventTag
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
@@ -40,7 +41,7 @@ class TestGoodCredentialPaths(SetupClass):
         self.validate_event_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
-            tag='user_login',
+            tag=EventTag.user_login,
             text=expected_text,
             usecase_tag='login_to_system'
         )

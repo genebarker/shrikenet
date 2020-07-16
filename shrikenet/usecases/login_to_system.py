@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from shrikenet.entities.event import Event
+from shrikenet.entities.event_tag import EventTag
 from shrikenet.usecases.login_to_system_result import LoginToSystemResult
 
 
@@ -44,7 +45,11 @@ class LoginToSystem:
 
         user.is_locked = False
         user.ongoing_password_failure_count = 0
-        event = self._create_login_event(user.oid, 'user_login', log_message)
+        event = self._create_login_event(
+            app_user_oid=user.oid,
+            tag=EventTag.user_login,
+            text=log_message
+        )
         self.db.update_app_user(user)
         self.db.add_event(event)
         self.db.commit()
@@ -65,7 +70,11 @@ class LoginToSystem:
                 'Dormant app user (username={}) from {} attempted to login.'
                 .format(user.username, ip_address)
             )
-            event = self._create_login_event(user.oid, 'dormant_user', text)
+            event = self._create_login_event(
+                app_user_oid=user.oid,
+                tag=EventTag.dormant_user,
+                text=text
+            )
             self.db.add_event(event)
             self.db.commit()
             self.logger.info(text)
@@ -88,7 +97,11 @@ class LoginToSystem:
                 'Locked app user (username={}) from {} attempted to login.'
                 .format(user.username, ip_address)
             )
-            event = self._create_login_event(user.oid, 'locked_user', text)
+            event = self._create_login_event(
+                app_user_oid=user.oid,
+                tag=EventTag.locked_user,
+                text=text
+            )
             self.db.add_event(event)
             self.db.commit()
             self.logger.info(text)
