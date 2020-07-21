@@ -136,10 +136,20 @@ class LoginToSystem:
     def _verify_user_password_reset_satisfied(self, user, new_password,
                                               ip_address):
         if user.needs_password_change and new_password is None:
-            self.logger.info('App user (username=%s) with password marked '
-                             'for reset from %s attempted to login without '
-                             'providing a new password.',
-                             user.username, ip_address)
+            text = (
+                'App user (username={}) with password marked for reset '
+                'from {} attempted to login without providing a new '
+                'password.'
+                .format(user.username, ip_address)
+            )
+            event = self._create_login_event(
+                app_user_oid=user.oid,
+                tag=EventTag.must_change_password,
+                text=text
+            )
+            self.db.add_event(event)
+            self.db.commit()
+            self.logger.info(text)
             raise LoginToSystemError('Password marked for reset. Must '
                                      'supply a new password.',
                                      must_change_password=True)

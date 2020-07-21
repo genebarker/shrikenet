@@ -1,5 +1,8 @@
+from datetime import datetime, timezone
+
 import pytest
 
+from shrikenet.entities.event_tag import EventTag
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
@@ -36,6 +39,25 @@ class TestPasswordChangePaths(SetupClass):
             caplog,
             'App user (username=jack) with password marked for reset from '
             '4.3.2.1 attempted to login without providing a new password.'
+        )
+
+    def test_password_marked_for_reset_failure_recorded(self):
+        user = self.create_needs_password_change_user(
+            username='jill',
+            password='some_password'
+        )
+        time_before = datetime.now(timezone.utc)
+        login_to_system = LoginToSystem(self.services)
+        login_to_system.run('jill', 'some_password', '4.5.6.7')
+        expected_text = ('App user (username=jill) with password marked '
+                         'for reset from 4.5.6.7 attempted to login '
+                         'without providing a new password.')
+        self.validate_event_recorded(
+            time_before=time_before,
+            app_user_oid=user.oid,
+            tag=EventTag.must_change_password,
+            text=expected_text,
+            usecase_tag=LoginToSystem.USECASE_TAG
         )
 
     def test_password_marked_for_reset_succeeds_when_new_provided(self):
