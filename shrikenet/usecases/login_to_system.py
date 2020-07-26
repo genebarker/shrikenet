@@ -60,6 +60,20 @@ class LoginToSystem:
             self._record_event(None, event_tag, event_text)
             raise LoginToSystemError('Login attempt failed.')
 
+    def _record_event(self, app_user_oid, tag, text):
+        event = self._create_login_event(app_user_oid, tag, text)
+        self.db.add_event(event)
+        self.logger.info(text)
+        self.db.commit()
+
+    def _create_login_event(self, app_user_oid, event_tag, text):
+        return Event(self.db.get_next_event_oid(),
+                     datetime.now(timezone.utc),
+                     app_user_oid,
+                     event_tag,
+                     text,
+                     self.USECASE_TAG)
+
     def _verify_user_active(self, user, ip_address):
         if user.is_dormant:
             event_tag = EventTag.dormant_user
@@ -68,22 +82,6 @@ class LoginToSystem:
             self._record_event(user.oid, event_tag, event_text)
             raise LoginToSystemError('Login attempt failed. Your '
                                      'credentials are invalid.')
-
-    def _record_event(self, app_user_oid, tag, text):
-        event = self._create_login_event(app_user_oid, tag, text)
-        self.db.add_event(event)
-        self.logger.info(text)
-        self.db.commit()
-
-    def _create_login_event(self, app_user_oid, tag, text):
-        return Event(
-            oid=self.db.get_next_event_oid(),
-            time=datetime.now(timezone.utc),
-            app_user_oid=app_user_oid,
-            tag=tag,
-            text=text,
-            usecase_tag=self.USECASE_TAG,
-        )
 
     def _verify_user_unlocked(self, user, ip_address):
         if self._lock_is_active(user):
