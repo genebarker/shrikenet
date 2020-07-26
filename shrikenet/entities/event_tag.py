@@ -5,3 +5,4 @@ class EventTag:
     must_change_password = 'must_change_password'
     unknown_user = 'unknown_user'
     user_login = 'user_login'
+    wrong_password = 'wrong_password'

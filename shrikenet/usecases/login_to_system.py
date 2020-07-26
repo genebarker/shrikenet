@@ -109,12 +109,12 @@ class LoginToSystem:
                 user.is_locked = True
             user.last_password_failure_time = datetime.now(timezone.utc)
             self.db.update_app_user(user)
-            self.db.commit()
-            log_message = (f'App user (username={user.username}) from '
-                           f'{ip_address} attempted to login with the '
-                           f'wrong password (ongoing_password_failure_count='
-                           f'{user.ongoing_password_failure_count}).')
-            self.logger.info(log_message)
+            event_tag = EventTag.wrong_password
+            event_text = (f'App user (username={user.username}) from '
+                          f'{ip_address} attempted to login with the '
+                          f'wrong password (ongoing_password_failure_count='
+                          f'{user.ongoing_password_failure_count}).')
+            self._record_event(user.oid, event_tag, event_text)
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_password_reset_satisfied(self, user, new_password,

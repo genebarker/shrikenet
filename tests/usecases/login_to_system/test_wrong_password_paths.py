@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+from shrikenet.entities.event_tag import EventTag
 from shrikenet.entities.rules import Rules
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
@@ -27,6 +28,22 @@ class TestWrongPasswordPaths(SetupClass):
             'App user (username=mrunhappy) from 1.2.3.4 attempted '
             'to login with the wrong password '
             '(ongoing_password_failure_count=1).'
+        )
+
+    def test_wrong_password_occurrence_recorded(self):
+        user = self.create_and_store_user('mrforgetful', GOOD_USER_PASSWORD)
+        time_before = datetime.now(timezone.utc)
+        login_to_system = LoginToSystem(self.services)
+        login_to_system.run('mrforgetful', 'wrong_password', '1.2.3.4')
+        expected_text = ('App user (username=mrforgetful) from 1.2.3.4 '
+                         'attempted to login with the wrong password '
+                         '(ongoing_password_failure_count=1).')
+        self.validate_event_recorded(
+            time_before=time_before,
+            app_user_oid=user.oid,
+            tag=EventTag.wrong_password,
+            text=expected_text,
+            usecase_tag=LoginToSystem.USECASE_TAG
         )
 
     def test_fail_count_increments_on_wrong_password(self):
