@@ -32,8 +32,8 @@ class LoginToSystem:
                 )
 
         message = 'Login successful.'
-        log_message = (f'App user (username={user.username}) from '
-                       f'{ip_address} successfully logged in.')
+        event_text = (f'App user (username={user.username}) from '
+                      f'{ip_address} successfully logged in.')
 
         if new_password is not None:
             user.password_hash = self.crypto.generate_hash_from_string(
@@ -41,19 +41,13 @@ class LoginToSystem:
             user.needs_password_change = False
             suffix = ' Password successfully changed.'
             message += suffix
-            log_message += suffix
+            event_text += suffix
 
         user.is_locked = False
         user.ongoing_password_failure_count = 0
-        event = self._create_login_event(
-            app_user_oid=user.oid,
-            tag=EventTag.user_login,
-            text=log_message
-        )
         self.db.update_app_user(user)
-        self.db.add_event(event)
-        self.db.commit()
-        self.logger.info(log_message)
+        event_tag = EventTag.user_login
+        self._record_event(user.oid, event_tag, event_text)
         return LoginToSystemResult(message=message, has_failed=False,
                                    must_change_password=False,
                                    user_oid=user.oid)
@@ -67,18 +61,18 @@ class LoginToSystem:
 
     def _verify_user_active(self, user, ip_address):
         if user.is_dormant:
-            log_message = (f'Dormant app user (username={user.username}) '
-                           f'from {ip_address} attempted to login.')
-            event = self._create_login_event(
-                app_user_oid=user.oid,
-                tag=EventTag.dormant_user,
-                text=log_message
-            )
-            self.db.add_event(event)
-            self.db.commit()
-            self.logger.info(log_message)
+            event_tag = EventTag.dormant_user
+            event_text = (f'Dormant app user (username={user.username}) '
+                          f'from {ip_address} attempted to login.')
+            self._record_event(user.oid, event_tag, event_text)
             raise LoginToSystemError('Login attempt failed. Your '
                                      'credentials are invalid.')
+
+    def _record_event(self, app_user_oid, tag, text):
+        event = self._create_login_event(app_user_oid, tag, text)
+        self.db.add_event(event)
+        self.logger.info(text)
+        self.db.commit()
 
     def _create_login_event(self, app_user_oid, tag, text):
         return Event(
@@ -92,16 +86,10 @@ class LoginToSystem:
 
     def _verify_user_unlocked(self, user, ip_address):
         if self._lock_is_active(user):
-            log_message = (f'Locked app user (username={user.username}) '
-                           f'from {ip_address} attempted to login.')
-            event = self._create_login_event(
-                app_user_oid=user.oid,
-                tag=EventTag.locked_user,
-                text=log_message
-            )
-            self.db.add_event(event)
-            self.db.commit()
-            self.logger.info(log_message)
+            event_tag = EventTag.locked_user
+            event_text = (f'Locked app user (username={user.username}) '
+                          f'from {ip_address} attempted to login.')
+            self._record_event(user.oid, event_tag, event_text)
             raise LoginToSystemError('Login attempt failed. Your account '
                                      'is locked.')
 
@@ -133,18 +121,12 @@ class LoginToSystem:
     def _verify_user_password_reset_satisfied(self, user, new_password,
                                               ip_address):
         if user.needs_password_change and new_password is None:
-            log_message = (f'App user (username={user.username}) with '
-                           f'password marked for reset from {ip_address} '
-                           f'attempted to login without providing a new '
-                           f'password.')
-            event = self._create_login_event(
-                app_user_oid=user.oid,
-                tag=EventTag.must_change_password,
-                text=log_message
-            )
-            self.db.add_event(event)
-            self.db.commit()
-            self.logger.info(log_message)
+            event_tag = EventTag.must_change_password
+            event_text = (f'App user (username={user.username}) with '
+                          f'password marked for reset from {ip_address} '
+                          f'attempted to login without providing a new '
+                          f'password.')
+            self._record_event(user.oid, event_tag, event_text)
             raise LoginToSystemError('Password marked for reset. Must '
                                      'supply a new password.',
                                      must_change_password=True)
