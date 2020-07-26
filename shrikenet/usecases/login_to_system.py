@@ -54,9 +54,10 @@ class LoginToSystem:
 
     def _verify_user_exists(self, username, ip_address):
         if self.db.exists_app_username(username) is False:
-            log_message = (f'Unknown app user (username={username}) from '
-                           f'{ip_address} attempted to login.')
-            self.logger.info(log_message)
+            event_tag = EventTag.unknown_user
+            event_text = (f'Unknown app user (username={username}) from '
+                          f'{ip_address} attempted to login.')
+            self._record_event(None, event_tag, event_text)
             raise LoginToSystemError('Login attempt failed.')
 
     def _verify_user_active(self, user, ip_address):
