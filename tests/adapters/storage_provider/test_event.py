@@ -59,6 +59,16 @@ def test_add_event_adds_record(db, existing_event):
     assert stored_event == existing_event
 
 
+def test_add_event_allows_none_app_user_oid(db, existing_event):
+    no_user_event = copy.copy(existing_event)
+    no_user_event.oid = existing_event.oid + 1
+    no_user_event.app_user_oid = None
+    no_user_event.app_user_name = None
+    db.add_event(no_user_event)
+    stored_event = db.get_event_by_oid(no_user_event.oid)
+    assert stored_event == no_user_event
+
+
 def test_add_event_adds_a_copy(db, existing_event):
     existing_event.text = 'Different'
     stored_event = db.get_event_by_oid(existing_event.oid)
