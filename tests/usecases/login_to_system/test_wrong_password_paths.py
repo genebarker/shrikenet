@@ -97,6 +97,10 @@ class TestWrongPasswordPaths(SetupClass):
         assert user_after != user_before
 
     def test_user_locks_on_consecutive_password_failures(self):
+        user = self.create_user_and_trip_login_fail_threshold()
+        assert user.is_locked
+
+    def create_user_and_trip_login_fail_threshold(self):
         self.create_good_user()
         rules = self.db.get_rules()
         login_to_system = LoginToSystem(self.services)
@@ -104,5 +108,4 @@ class TestWrongPasswordPaths(SetupClass):
             login_to_system.run(GOOD_USER_USERNAME, 'wrong_password',
                                 GOOD_IP_ADDRESS)
 
-        user = self.db.get_app_user_by_username(GOOD_USER_USERNAME)
-        assert user.is_locked
+        return self.db.get_app_user_by_username(GOOD_USER_USERNAME)
