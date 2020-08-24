@@ -1,6 +1,3 @@
-import copy
-from datetime import datetime, timezone
-
 import pytest
 
 from shrikenet.entities.app_user import AppUser
