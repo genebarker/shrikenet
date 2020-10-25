@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
 
-import pytest
-
 from shrikenet.entities.event import Event
 
 
