@@ -5,10 +5,9 @@ project folders are organized as that found in the flask documentation and
 examples. We added three more folders to this structure:
 
 Folder / Layer  | Description
---------------- | -----------------------------------------------------
+--------------- | ----------------------------------------------------------
 entities        | app data, functions, and interface definitions
-usecases        | orchestrates flow of data to / from entities
-                | (to perform transactions)
+usecases        | transactions: orchestrate flow of data to / from entities
 adapters        | product, library, and storage adapters
 
 These three folders contain the core code of the project and have no
