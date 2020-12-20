@@ -19,8 +19,7 @@ Level       | Guideline
 `CRITICAL`  | Application event that requires immediate attention.
 `ERROR`     | Application event that's an obvious problem / needs review.
 `WARNING`   | Application event that's a potential problem / needs review.
-`INFO`      | Business event that is understood, tracked, and / or measured
-            | by business users.
+`INFO`      | Business event that is understood, tracked, and / or measured.
 `DEBUG`     | Application event that's significant[^1].
 
 ## Logging Tips
