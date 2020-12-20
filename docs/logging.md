@@ -14,14 +14,14 @@ business object history.
 The following guidelines are used to determine the appropriate logging level
 for events:
 
-Level       Guideline
------------ ---------------------------------------------------------------
-`CRITICAL`  Application event that requires immediate attention.
-`ERROR`     Application event that's an obvious problem / needs review.
-`WARNING`   Application event that's a potential problem / needs review.
-`INFO`      Business event that is understood, tracked, and / or measured
-            by business users.
-`DEBUG`     Application event that's significant[^1].
+Level       | Guideline
+----------- | --------------------------------------------------------------
+`CRITICAL`  | Application event that requires immediate attention.
+`ERROR`     | Application event that's an obvious problem / needs review.
+`WARNING`   | Application event that's a potential problem / needs review.
+`INFO`      | Business event that is understood, tracked, and / or measured
+            | by business users.
+`DEBUG`     | Application event that's significant[^1].
 
 ## Logging Tips
 
@@ -33,6 +33,6 @@ Level       Guideline
 breadcrumbs that assists in debugging. Some examples: environment settings,
 database calls, user actions, processing times, etc..  
 
-[a]: decisions/002_perform_structured_logging.txt
+[a]: decisions/002_perform_structured_logging.md
 [b]: https://www.javacodegeeks.com/2011/01/10-tips-proper-application-logging.html
 [c]: http://softwareengineering.stackexchange.com/questions/168059/best-practices-for-logging-user-actions-in-production/168075#168075

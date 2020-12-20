@@ -4,11 +4,11 @@ This folder contains the project's design documentation. The documentation
 is written in plain text, then supplemented as-needed with pictures and
 models:
 
-Type        Format
------------ -----------------
-Plain Text  .txt files
-Pictures    [PNG Files][1]
-Models      [StarUML][2]
+Type        | Format
+----------- | -----------------
+Plain Text  | .txt files
+Pictures    | [PNG Files][1]
+Models      | [StarUML][2]
 
 ## .txt File Guidelines
 

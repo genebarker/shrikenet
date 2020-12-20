@@ -42,4 +42,4 @@ database with key fields to support business reporting.
 - Developers must know the *logging levels* and log events accordingly.
 
 
-[1]: ../logging.txt
+[1]: ../logging.md
