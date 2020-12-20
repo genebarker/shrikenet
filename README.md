@@ -10,12 +10,12 @@ safely.
 We describe this as an *Organization Owned Social Network*. And yes, it's
 designed to be an alternative to *Vendor Owned Social Networks* like
 Facebook and Twitter. By definition, vendor owned networks force
-organizations and their members to interact with one another via a middle
-man, the vendor.
+organizations and their members to interact with one another via a
+middleman, the vendor.
 
     organization <--> vendor <--> member
 
-This vendor owned / vendor centric model has several problems:
+This vendor middleman model has several problems:
 
 - dependence on vendor;
 - poor organization support;
@@ -52,7 +52,7 @@ because it's fairly unique, it's short, and Eugene thinks the Shrike is
 cool.
 
 
-[1]: LICENSE.txt
+[1]: LICENSE.md
 [2]: AGPLv3.png
 [3]: https://www.gnu.org/licenses/licenses.html
 [4]: docs
