@@ -1,10 +1,11 @@
 # Contributors
 
-This is the official list of the project's contributors. Names of the
-original copyright holders (individuals or organizations) are listed with a
-'*' in the first column, followed by indented '-' bullets summarizing their
-contributions. Optionally, organizations can group their contributions by
-author via an additional level of indented '-' bullets.
+This is the official list of the project's contributors.
+
+The bullet list below lists the names of the original copyright holders
+(individuals or organizations). Each is followed by indented bullets
+summarizing their contributions. Optionally, organizations can group their
+contributions by author via an additional level of indented bullets.
 
 Accordingly, here are the awesome contributors to this project.
 
