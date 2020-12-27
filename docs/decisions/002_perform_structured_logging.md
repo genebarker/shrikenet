@@ -20,7 +20,7 @@ We want that success too.
 ## Decision
 
 (1) Log events in a structured manner. Adhere to the *logging levels*
-defined in the Logging design document[^1]. The specifics of these levels
+defined in the [Logging design document][1]. The specifics of these levels
 will evolve over time and that's OK; most old log entries are culled
 anyways.
 
