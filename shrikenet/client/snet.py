@@ -59,8 +59,8 @@ def print_usage():
     text = textwrap.dedent("""\
         Usage:
           snet status
-          snet open [USERNAME@HOST]
-          snet close [USERNAME@HOST]
+          snet open [username@host]
+          snet close [username@host]
           snet license
           snet version
           snet help [COMMAND]
