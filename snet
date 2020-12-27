@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+import sys
+
+from shrikenet.client import snet
+
+snet.main(sys.argv)
