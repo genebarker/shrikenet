@@ -8,12 +8,13 @@ import shrikenet
 def main(arg_list=None):
     if arg_list and len(arg_list) > 1:
         command = arg_list[1]
-        if command == 'license':
-            license_cmd()
-        elif command == 'version':
-            version_cmd()
-        elif command == 'help':
-            help_cmd()
+        try:
+            func = getattr(sys.modules[__name__], f'{command}_cmd')
+            func()
+        except AttributeError:
+            print_header()
+            print(f'ERROR: unknown command ({command})')
+            sys.exit(1)
 
     exit_code = 1
     help_cmd(exit_code)

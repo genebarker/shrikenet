@@ -28,6 +28,20 @@ def assert_has_header(output):
     assert 'snet' in output
 
 
+def test_error_code_on_unknown_command():
+    args = ['snet', 'bogus']
+    exit_code = run_snet(args)
+    assert exit_code == 1
+
+
+def test_shows_header_with_error_on_unknown_command(capsys):
+    args = ['snet', 'bogus']
+    run_snet(args)
+    captured = capsys.readouterr()
+    assert_has_header(captured.out)
+    assert 'ERROR: unknown command (bogus)' in captured.out
+
+
 @pytest.mark.parametrize(('command'), (
     ('license'),
     ('version'),
