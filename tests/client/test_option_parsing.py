@@ -29,14 +29,17 @@ def assert_has_header(output):
 
 
 def test_error_code_on_unknown_command():
-    args = ['snet', 'bogus']
-    exit_code = run_snet(args)
+    exit_code = run_snet_cmd('bogus')
     assert exit_code == 1
 
 
+def run_snet_cmd(command):
+    args = ['snet', command]
+    return run_snet(args)
+
+
 def test_shows_header_with_error_on_unknown_command(capsys):
-    args = ['snet', 'bogus']
-    run_snet(args)
+    run_snet_cmd('bogus')
     captured = capsys.readouterr()
     assert_has_header(captured.out)
     assert 'ERROR: unknown command (bogus)' in captured.out
@@ -48,14 +51,12 @@ def test_shows_header_with_error_on_unknown_command(capsys):
     ('help'),
 ))
 def test_no_error_code(command):
-    args = ['snet', command]
-    error_code = run_snet(args)
+    error_code = run_snet_cmd(command)
     assert error_code == 0
 
 
-def test_license_command_shows_it(capsys):
-    args = ['snet', 'license']
-    run_snet(args)
+def test_license_command_shows_it_with_header(capsys):
+    run_snet_cmd('license')
     captured = capsys.readouterr()
     assert_has_header(captured.out)
     assert 'GNU AFFERO' in captured.out
@@ -64,21 +65,19 @@ def test_license_command_shows_it(capsys):
 def test_license_shows_regardless_of_run_path(capsys):
     homepath = os.environ['HOME']
     os.chdir(homepath)
-    args = ['snet', 'license']
-    run_snet(args)
+    run_snet_cmd('license')
     captured = capsys.readouterr()
     assert 'GNU AFFERO' in captured.out
 
 
 def test_version_command_shows_it(capsys):
-    args = ['snet', 'version']
-    run_snet(args)
+    run_snet_cmd('version')
     captured = capsys.readouterr()
     assert f'snet v{shrikenet.__version__}' in captured.out
 
 
-def test_help_shows_usage_info(capsys):
-    args = ['snet', 'help']
-    run_snet(args)
+def test_help_shows_usage_info_with_header(capsys):
+    run_snet_cmd('help')
     captured = capsys.readouterr()
+    assert_has_header(captured.out)
     assert 'Usage:' in captured.out
