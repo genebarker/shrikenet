@@ -20,19 +20,6 @@ def main(arg_list=None):
     help_cmd(exit_code)
 
 
-def license_cmd():
-    print_header()
-    license_filepath = get_license_filepath()
-    with open(license_filepath) as text_file:
-        print(text_file.read())
-    sys.exit(0)
-
-
-def get_license_filepath():
-    this_path = os.path.dirname(__file__)
-    return os.path.join(this_path, '../../LICENSE.md')
-
-
 def print_header():
     version = shrikenet.__version__
     text = textwrap.dedent(f"""\
@@ -41,13 +28,7 @@ def print_header():
         This program comes with ABSOLUTELY NO WARRANTY. This is free software.
         Type 'snet license' for details.
         """)
-
     print(text)
-
-
-def version_cmd():
-    print_header()
-    sys.exit(0)
 
 
 def help_cmd(exit_code=0):
@@ -67,3 +48,21 @@ def print_usage():
           snet help [COMMAND]
         """)
     print(text)
+
+
+def license_cmd():
+    print_header()
+    license_filepath = get_license_filepath()
+    with open(license_filepath) as text_file:
+        print(text_file.read())
+    sys.exit(0)
+
+
+def get_license_filepath():
+    this_path = os.path.dirname(__file__)
+    return os.path.join(this_path, '../../LICENSE.md')
+
+
+def version_cmd():
+    print_header()
+    sys.exit(0)
