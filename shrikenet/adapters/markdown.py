@@ -22,7 +22,8 @@ class Markdown(TextTransformer):
                     'smart_quotes': False,
                     'smart_angled_quotes': False,
                 }
-            }
+            },
+            output_format='html5',
         )
 
     def transform_to_html(self, plain_text):
