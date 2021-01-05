@@ -15,3 +15,4 @@ _(listed alphabetically)_
 
 * [Eugene F. Barker](https://github.com/genebarker)
   - founder of the project
+  - architect and developer of v1.0
