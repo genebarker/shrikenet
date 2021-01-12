@@ -1,34 +1,42 @@
 # shrikenet
 
-**shrikenet** is social network software for small organizations like
-schools, churches, clubs, and sports teams. It's designed to allow
-organizations to **interact directly with their members** and to do so
-safely.
+**shrikenet** is online community software for small organizations like
+schools, churches, clubs, and sports teams. It's designed so that (1)
+organizations can interact directly with their members; and (2) members can
+interact safely, without pressure, at times of their own choosing.
+
+## Organization Owned
 
     organization <--> member
 
-We describe this as an *Organization Owned Social Network*. And yes, it's
-designed to be an alternative to *Vendor Owned Social Networks* like
-Facebook and Twitter. By definition, vendor owned networks force
-organizations and their members to interact with one another via a
-middleman, the vendor.
+**shrikenet** is an *organization owned network*. And yes, it's designed to
+be an alternative to *vendor owned networks* like Facebook and Twitter. By
+definition, vendor owned networks force organizations and their members to
+interact with one another via a middleman, the vendor.
 
     organization <--> vendor <--> member
 
 This vendor middleman model has several problems:
 
-- dependence on vendor;
-- poor organization support;
+- inappropriate content;
+- invasive advertising;
 - unsafe discourse (bullying, scams, predators, etc.);
 - muddled flow of information (vendor optimized);
-- invasive advertising with inappropriate content;
+- poor organization support;
+- dependence on vendor;
 - vendor's rights to *organization* content; and
-- collection and sales of *organization* data.
+- vendor's collection and sales of *organization* data.
 
 **shrikenet** doesn't have these problems.
 
-Organizations use **shrikenet** to run their own social networks using their
-own rules.
+Organizations use **shrikenet** to run their own online communities using
+their own rules.
+
+## Member Friendly
+
+**shrikenet** is the members one stop shop to find out what's happening with
+their organization. Members can check-up on their organization, at their
+convenience, in a manner that suits them. 
 
 ## License
 
