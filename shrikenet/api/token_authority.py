@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 import functools
 import logging
 
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, current_app, g, request
 import jwt
 
 from shrikenet.db import get_services
@@ -22,18 +22,18 @@ def get_token():
     login_result = login_to_system.run(username, password, ip_address)
     if login_result.has_failed:
         return {
-            "error_code": 2,
-            "message": login_result.message,
+            'error_code': 2,
+            'message': login_result.message,
         }
     expire_time = datetime.now(timezone.utc) + timedelta(days=30)
     secret_key = current_app.config['SECRET_KEY']
     token = create_token(login_result.user_oid, expire_time, secret_key)
-    return jsonify(
-        error_code=0,
-        message=login_result.message,
-        token=token,
-        Elapse_time=f'{expire_time}',
-    )
+    return {
+        'error_code': 0,
+        'message': login_result.message,
+        'token': token,
+        'expire_time': f'{expire_time}',
+    }
 
 
 def create_token(user_oid, expire_time, secret_key):
@@ -121,8 +121,8 @@ def token_required(api):
                 str(error),
             )
             return {
-                "error_code": error_code,
-                "message": message,
+                'error_code': error_code,
+                'message': message,
             }
 
     return wrapped_api
