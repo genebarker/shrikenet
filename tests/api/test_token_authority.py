@@ -7,6 +7,9 @@ from shrikenet.db import get_services
 
 logging.basicConfig(level=logging.INFO)
 
+TEST_USER_USERNAME = 'test'
+TEST_USER_PASSWORD = 'test'
+
 
 def test_get_token_fails_on_bad_credentials(client):
     response = do_get_token_with_bad_credentials(client)
@@ -17,7 +20,7 @@ def do_get_token_with_bad_credentials(client):
     return client.post(
         '/api/get_token',
         json={
-            'username': 'test',
+            'username': TEST_USER_USERNAME,
             'password': 'wrong_password',
         },
     )
@@ -85,7 +88,7 @@ def do_token_required_with_expired_token(app, client):
     with app.app_context():
         services = get_services()
         db = services.storage_provider
-        app_user = db.get_app_user_by_username('test')
+        app_user = db.get_app_user_by_username(TEST_USER_USERNAME)
         secret_key = app.config['SECRET_KEY']
     user_oid = app_user.oid
     expire_time = datetime.now(timezone.utc) - timedelta(seconds=1)
