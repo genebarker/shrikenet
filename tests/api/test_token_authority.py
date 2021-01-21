@@ -2,13 +2,50 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from shrikenet.api import token_authority
-from shrikenet.db import get_services
 
 
 logging.basicConfig(level=logging.INFO)
 
+TEST_USER_OID = 1
 TEST_USER_USERNAME = 'test'
 TEST_USER_PASSWORD = 'test'
+
+
+def test_get_token_returns_expected_fields(client):
+    expected_expire_time = datetime.now(timezone.utc) + timedelta(days=30)
+    json_data = do_get_token_with_good_credentials(client)
+    assert json_data['error_code'] == 0
+    assert json_data['message'] == 'Login successful.'
+    assert json_data['token'] is not None
+    expire_time = datetime.fromisoformat(json_data['expire_time'])
+    assert get_time_str(expire_time) == get_time_str(expected_expire_time)
+
+
+def do_get_token_with_good_credentials(client):
+    response = client.post(
+        '/api/get_token',
+        json={
+            'username': TEST_USER_USERNAME,
+            'password': TEST_USER_PASSWORD,
+        },
+    )
+    return response.get_json()
+
+
+def get_time_str(time):
+    return time.strftime('%Y-%m-%d %H:%M')
+
+
+def test_get_token_returns_expected_payload(app, client):
+    with app.app_context():
+        secret_key = app.config['SECRET_KEY']
+    expected_expire_time = datetime.now(timezone.utc) + timedelta(days=30)
+    json_data = do_get_token_with_good_credentials(client)
+    token = json_data['token']
+    payload = token_authority.decode_token(token, secret_key)
+    assert payload['user_oid'] == TEST_USER_OID
+    expire_time = datetime.fromtimestamp(payload['exp'], tz=timezone.utc)
+    assert get_time_str(expire_time) == get_time_str(expected_expire_time)
 
 
 def test_get_token_fails_on_bad_credentials(client):
@@ -86,11 +123,8 @@ def test_token_required_fails_when_expired(app, client):
 
 def do_token_required_with_expired_token(app, client):
     with app.app_context():
-        services = get_services()
-        db = services.storage_provider
-        app_user = db.get_app_user_by_username(TEST_USER_USERNAME)
         secret_key = app.config['SECRET_KEY']
-    user_oid = app_user.oid
+    user_oid = TEST_USER_OID
     expire_time = datetime.now(timezone.utc) - timedelta(seconds=1)
     expired_token = token_authority.create_token(
         user_oid,
@@ -126,7 +160,7 @@ def test_token_required_fails_on_exception(app, client):
 def do_token_required_with_exception(app, client):
     with app.app_context():
         secret_key = app.config['SECRET_KEY']
-    user_oid = -1
+    user_oid = -999
     expire_time = datetime.now(timezone.utc) + timedelta(minutes=1)
     token_with_bad_user = token_authority.create_token(
         user_oid,

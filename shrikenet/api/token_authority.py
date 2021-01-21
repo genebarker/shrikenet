@@ -64,9 +64,7 @@ def token_required(api):
 
             secret_key = current_app.config['SECRET_KEY']
             try:
-                payload = jwt.decode(
-                    token, secret_key, algorithms=['HS256', ]
-                )
+                payload = decode_token(token, secret_key)
                 user_oid = payload['user_oid']
                 db = get_services().storage_provider
                 g.user = db.get_app_user_by_oid(user_oid)
@@ -128,10 +126,16 @@ def token_required(api):
     return wrapped_api
 
 
+def decode_token(token, secret_key):
+    payload = jwt.decode(
+        token, secret_key, algorithms=['HS256', ]
+    )
+    return payload
+
+
 def get_expire_time(token, secret_key):
     payload = jwt.decode(
         token,
-        secret_key,
         algorithms=['HS256', ],
         options={'verify_signature': False},
     )
