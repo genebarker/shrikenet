@@ -11,8 +11,11 @@ TEST_USER_USERNAME = 'test'
 TEST_USER_PASSWORD = 'test'
 
 
-def test_get_token_returns_expected_fields(client):
-    expected_expire_time = datetime.now(timezone.utc) + timedelta(days=30)
+def test_get_token_returns_expected_fields(app, client):
+    with app.app_context():
+        lifespan_days = app.config['TOKEN_LIFESPAN_DAYS']
+    expected_expire_time = (datetime.now(timezone.utc)
+                            + timedelta(days=lifespan_days))
     json_data = do_get_token_with_good_credentials(client)
     assert json_data['error_code'] == 0
     assert json_data['message'] == 'Login successful.'
@@ -39,7 +42,9 @@ def get_time_str(time):
 def test_get_token_returns_expected_payload(app, client):
     with app.app_context():
         secret_key = app.config['SECRET_KEY']
-    expected_expire_time = datetime.now(timezone.utc) + timedelta(days=30)
+        lifespan_days = app.config['TOKEN_LIFESPAN_DAYS']
+    expected_expire_time = (datetime.now(timezone.utc)
+                            + timedelta(days=lifespan_days))
     json_data = do_get_token_with_good_credentials(client)
     token = json_data['token']
     payload = token_authority.decode_token(token, secret_key)

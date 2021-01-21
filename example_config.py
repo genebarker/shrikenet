@@ -1,5 +1,6 @@
 # Flask
 # SECRET_KEY = 'dev'
+# TOKEN_LIFESPAN_DAYS = 30
 SECRET_KEY = 'poorSecret'
 
 # StorageProvider
