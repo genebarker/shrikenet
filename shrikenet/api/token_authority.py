@@ -25,7 +25,9 @@ def get_token():
             'error_code': 2,
             'message': login_result.message,
         }
-    expire_time = datetime.now(timezone.utc) + timedelta(days=30)
+
+    lifespan_days = current_app.config['TOKEN_LIFESPAN_DAYS']
+    expire_time = datetime.now(timezone.utc) + timedelta(days=lifespan_days)
     secret_key = current_app.config['SECRET_KEY']
     token = create_token(login_result.user_oid, expire_time, secret_key)
     return {
