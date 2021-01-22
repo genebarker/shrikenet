@@ -15,8 +15,8 @@ DB_PASSWORD = 'poorPassword'
 DB_PORT = 5432
 
 # TextTransformer (Markup)
-TEXT_TRANSFORMER_MODULE = 'shrikenet.adapters.markdown'
-TEXT_TRANSFORMER_CLASS = 'Markdown'
+# TEXT_TRANSFORMER_MODULE = 'shrikenet.adapters.markdown'
+# TEXT_TRANSFORMER_CLASS = 'Markdown'
 
 # CryptoProvider
 # CRYPTO_PROVIDER_MODULE = 'shrikenet.adapters.swapcase'
