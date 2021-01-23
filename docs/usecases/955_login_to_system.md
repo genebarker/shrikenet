@@ -6,9 +6,6 @@ Users use this function to securely enter the system. Users do so by
 providing their credentials. Upon verification, the system provides users
 with access to the functions for which they are authorized.
 
-Upon successful login, the system informs users of their recent login
-activity so that suspicious activity can be identified.
-
 Upon consecutive failed logins within a time period (i.e. one hour), the
 system will lock the user's account for a set time (i.e. one hour) to
 prevent their account from being compromised, AND inform the system's
@@ -28,10 +25,8 @@ All users
 2. System asks user for their username and password.
 3. User provides their credentials.
 4. System verifies user's credentials.
-5. System informs user of their logon activity since their last successful
-   login.
-6. System provides access to functions for which user is authorized.
-7. System logs the login, username, IP address, and time.
+5. System provides access to functions for which user is authorized.
+6. System logs the login, username, IP address, and time.
 
 ## Extensions
 
@@ -57,7 +52,7 @@ All users
   3. System emails administrators of the lock.
   4. System logs the lock, username, IP address, and time.
 
-6a. Password marked for reset:
+5a. Password marked for reset:
 
   1. See __change password__.
 
