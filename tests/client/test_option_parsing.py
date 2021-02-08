@@ -81,3 +81,13 @@ def test_help_shows_usage_info_with_header(capsys):
     captured = capsys.readouterr()
     assert_has_header(captured.out)
     assert 'Usage:' in captured.out
+
+
+def test_open_no_args_shows_error(capsys):
+    error_code = run_snet_cmd('open')
+    captured = capsys.readouterr()
+    assert error_code == 1
+    assert (
+        'ERROR: A target account ID (i.e. me@example.com) must be provided.'
+        in captured.out
+    )

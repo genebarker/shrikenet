@@ -66,3 +66,10 @@ def get_license_filepath():
 def version_cmd():
     print_header()
     sys.exit(0)
+
+
+def open_cmd():
+    print(
+        'ERROR: A target account ID (i.e. me@example.com) must be provided.'
+    )
+    sys.exit(1)
