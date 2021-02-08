@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, timezone
 import logging
 
+import jwt
+
 from shrikenet.api import token_authority
 
 
@@ -11,17 +13,11 @@ TEST_USER_USERNAME = 'test'
 TEST_USER_PASSWORD = 'test'
 
 
-def test_get_token_returns_expected_fields(app, client):
-    with app.app_context():
-        lifespan_days = app.config['TOKEN_LIFESPAN_DAYS']
-    expected_expire_time = (datetime.now(timezone.utc)
-                            + timedelta(days=lifespan_days))
+def test_get_token_returns_expected_fields(client):
     json_data = do_get_token_with_good_credentials(client)
     assert json_data['error_code'] == 0
     assert json_data['message'] == 'Login successful.'
-    assert json_data['token'] is not None
-    expire_time = datetime.fromisoformat(json_data['expire_time'])
-    assert get_time_str(expire_time) == get_time_str(expected_expire_time)
+    verify_is_jwt_token(json_data['token'])
 
 
 def do_get_token_with_good_credentials(client):
@@ -35,11 +31,12 @@ def do_get_token_with_good_credentials(client):
     return response.get_json()
 
 
-def get_time_str(time):
-    return time.strftime('%Y-%m-%d %H:%M')
+def verify_is_jwt_token(token):
+    header = jwt.get_unverified_header(token)
+    assert header['typ'] == 'JWT'
 
 
-def test_get_token_returns_expected_payload(app, client):
+def test_token_contains_expected_payload(app, client):
     with app.app_context():
         secret_key = app.config['SECRET_KEY']
         lifespan_days = app.config['TOKEN_LIFESPAN_DAYS']
@@ -51,6 +48,10 @@ def test_get_token_returns_expected_payload(app, client):
     assert payload['user_oid'] == TEST_USER_OID
     expire_time = datetime.fromtimestamp(payload['exp'], tz=timezone.utc)
     assert get_time_str(expire_time) == get_time_str(expected_expire_time)
+
+
+def get_time_str(time):
+    return time.strftime('%Y-%m-%d %H:%M')
 
 
 def test_get_token_fails_on_bad_credentials(client):
