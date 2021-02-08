@@ -48,7 +48,7 @@ def print_usage():
           snet close [username@host]
           snet license
           snet version
-          snet help [COMMAND]
+          snet help [command]
         """)
     print(text)
 
