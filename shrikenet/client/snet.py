@@ -13,7 +13,10 @@ def main(arg_list=None):
             func()
         except AttributeError:
             print_header()
-            eprint(f'ERROR: unknown command ({command})')
+            eprint(
+                f"ERROR: Unknown command ({command}) provided. Type 'snet "
+                "help' for help."
+            )
             sys.exit(1)
 
     exit_code = 1
