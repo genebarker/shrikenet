@@ -13,7 +13,7 @@ def main(arg_list=None):
             func()
         except AttributeError:
             print_header()
-            print(f'ERROR: unknown command ({command})')
+            eprint(f'ERROR: unknown command ({command})')
             sys.exit(1)
 
     exit_code = 1
@@ -69,7 +69,11 @@ def version_cmd():
 
 
 def open_cmd():
-    print(
+    eprint(
         'ERROR: A target account ID (i.e. me@example.com) must be provided.'
     )
     sys.exit(1)
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)

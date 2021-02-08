@@ -42,7 +42,7 @@ def test_shows_header_with_error_on_unknown_command(capsys):
     run_snet_cmd('bogus')
     captured = capsys.readouterr()
     assert_has_header(captured.out)
-    assert 'ERROR: unknown command (bogus)' in captured.out
+    assert 'ERROR: unknown command (bogus)' in captured.err
 
 
 @pytest.mark.parametrize(('command'), (
@@ -89,5 +89,5 @@ def test_open_no_args_shows_error(capsys):
     assert error_code == 1
     assert (
         'ERROR: A target account ID (i.e. me@example.com) must be provided.'
-        in captured.out
+        in captured.err
     )
