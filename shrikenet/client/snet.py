@@ -67,7 +67,8 @@ def get_license_filepath():
 
 
 def version_cmd():
-    print_header()
+    version = shrikenet.__version__
+    print(f'snet v{version}')
     sys.exit(0)
 
 
