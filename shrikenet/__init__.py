@@ -76,7 +76,8 @@ def create_app(test_config=None):
     app.register_blueprint(blog.bp)
     app.add_url_rule('/', endpoint='index')
 
-    from shrikenet.api import token_authority
+    from shrikenet.api import hello_json, token_authority
+    app.register_blueprint(hello_json.bp)
     app.register_blueprint(token_authority.bp)
 
     return app
