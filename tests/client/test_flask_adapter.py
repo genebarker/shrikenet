@@ -1,5 +1,6 @@
 import pytest
 
+from shrikenet.client.http_request_provider import HTTPRequestProvider
 from shrikenet.client.http_response import HTTPResponse
 from shrikenet.client.flask_adapter import FlaskAdapter
 
@@ -13,6 +14,9 @@ class TestFlaskAdapter:
     @pytest.fixture
     def http(self, client):
         return self.get_response_provider(client)
+
+    def test_is_a_http_request_provider(self, http):
+        assert isinstance(http, HTTPRequestProvider)
 
     def test_get_hello_returns_response_object(self, http):
         response = http.get('/api/hello')

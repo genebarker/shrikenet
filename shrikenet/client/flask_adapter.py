@@ -1,7 +1,8 @@
+from shrikenet.client.http_request_provider import HTTPRequestProvider
 from shrikenet.client.http_response import HTTPResponse
 
 
-class FlaskAdapter:
+class FlaskAdapter(HTTPRequestProvider):
 
     def __init__(self, test_client):
         self.client = test_client
