@@ -26,9 +26,9 @@ class TestFlaskAdapter:
             'message': 'Hello, World!',
         }
         assert response.status_code == 200
-        assert response.status.lower() == '200 ok'
+        assert response.status.lower().endswith('ok')
 
     def test_bad_get_returns_expected_status(self, http):
         response = http.get('/NON/EXISTING/LINK')
         assert response.status_code == 404
-        assert response.status.lower() == '404 not found'
+        assert response.status.lower().endswith('not found')
