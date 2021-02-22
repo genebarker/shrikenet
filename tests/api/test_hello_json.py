@@ -23,12 +23,16 @@ def token(client):
 
 def test_token_get_returns_expected(token, client):
     response = client.get('/api/hello-get', headers={'TOKEN': token})
+    verify_response_data(response, http_method='GET')
+
+
+def verify_response_data(response, http_method):
     assert response.status_code == 200
     json = response.get_json()
     assert json['error_code'] == 0
     assert json['username'] == 'test'
     assert json['user_oid'] > 0
-    assert json['http_method'] == 'GET'
+    assert json['http_method'] == http_method
 
 
 def test_token_post_returns_expected(token, client):
@@ -37,10 +41,6 @@ def test_token_post_returns_expected(token, client):
         headers={'TOKEN': token},
         json={'id1': 1, 'id2': 'two'},
     )
-    assert response.status_code == 200
+    verify_response_data(response, http_method='POST')
     json = response.get_json()
-    assert json['error_code'] == 0
-    assert json['username'] == 'test'
-    assert json['user_oid'] > 0
-    assert json['http_method'] == 'POST'
     assert json['data_posted'] == {'id1': 1, 'id2': 'two'}
