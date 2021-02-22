@@ -30,6 +30,7 @@ def verify_response_data(response, http_method):
     assert response.status_code == 200
     json = response.get_json()
     assert json['error_code'] == 0
+    assert json['message'] == 'Hello, Mr. Test!'
     assert json['username'] == 'test'
     assert json['user_oid'] > 0
     assert json['http_method'] == http_method

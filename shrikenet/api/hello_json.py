@@ -19,7 +19,7 @@ def hello_json():
 def hello_get():
     return {
         'error_code': 0,
-        'message': 'Hello, GET!',
+        'message': f'Hello, {g.user.name}!',
         'username': g.user.username,
         'user_oid': g.user.oid,
         'http_method': 'GET',
@@ -31,7 +31,7 @@ def hello_get():
 def hello_post():
     return {
         'error_code': 0,
-        'message': 'Hello, POST!',
+        'message': f'Hello, {g.user.name}!',
         'username': g.user.username,
         'user_oid': g.user.oid,
         'http_method': 'POST',
