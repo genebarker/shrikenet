@@ -1,4 +1,4 @@
-from flask import Blueprint, g
+from flask import Blueprint, g, request
 
 from shrikenet.api.token_authority import token_required
 
@@ -23,4 +23,17 @@ def hello_get():
         'username': g.user.username,
         'user_oid': g.user.oid,
         'http_method': 'GET',
+    }
+
+
+@bp.route('/hello-post', methods=['POST'])
+@token_required
+def hello_post():
+    return {
+        'error_code': 0,
+        'message': 'Hello, POST!',
+        'username': g.user.username,
+        'user_oid': g.user.oid,
+        'http_method': 'POST',
+        'data_posted': request.get_json(),
     }

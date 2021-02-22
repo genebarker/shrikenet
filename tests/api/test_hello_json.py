@@ -29,3 +29,18 @@ def test_token_get_returns_expected(token, client):
     assert json['username'] == 'test'
     assert json['user_oid'] > 0
     assert json['http_method'] == 'GET'
+
+
+def test_token_post_returns_expected(token, client):
+    response = client.post(
+        '/api/hello-post',
+        headers={'TOKEN': token},
+        json={'id1': 1, 'id2': 'two'},
+    )
+    assert response.status_code == 200
+    json = response.get_json()
+    assert json['error_code'] == 0
+    assert json['username'] == 'test'
+    assert json['user_oid'] > 0
+    assert json['http_method'] == 'POST'
+    assert json['data_posted'] == {'id1': 1, 'id2': 'two'}
