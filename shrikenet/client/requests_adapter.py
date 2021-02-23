@@ -12,7 +12,6 @@ class RequestsAdapter(HTTPRequestProvider):
     def get(self, url):
         full_url = self.base_url + url
         requests_response = requests.get(full_url)
-        print('I got here!')
         return HTTPResponse(
             json=requests_response.json(),
             status_code=requests_response.status_code,
