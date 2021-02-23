@@ -60,3 +60,12 @@ def test_token_put_returns_expected(token, client):
         json=TEST_PAYLOAD,
     )
     verify_response_data(response, http_method='PUT')
+
+
+def test_token_delete_returns_expected(token, client):
+    response = client.delete(
+        '/api/hello-delete',
+        headers={'TOKEN': token},
+        json=TEST_PAYLOAD,
+    )
+    verify_response_data(response, http_method='DELETE')

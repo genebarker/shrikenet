@@ -41,3 +41,9 @@ def hello_post():
 @token_required
 def hello_put():
     return hello_data('PUT')
+
+
+@bp.route('/hello-delete', methods=['DELETE'])
+@token_required
+def hello_delete():
+    return hello_data('DELETE')
