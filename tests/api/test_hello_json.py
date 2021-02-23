@@ -25,9 +25,12 @@ def test_token_get_returns_expected(token, client):
     response = client.get(
         '/api/hello-get',
         headers={'TOKEN': token},
-        json={'id1': 1, 'id2': 'two'},
+        json=TEST_PAYLOAD,
     )
     verify_response_data(response, http_method='GET')
+
+
+TEST_PAYLOAD = {'id1': 1, 'id2': 'two'}
 
 
 def verify_response_data(response, http_method):
@@ -38,14 +41,14 @@ def verify_response_data(response, http_method):
     assert json['username'] == 'test'
     assert json['user_oid'] > 0
     assert json['http_method'] == http_method
-    assert json['http_payload'] == {'id1': 1, 'id2': 'two'}
+    assert json['http_payload'] == TEST_PAYLOAD
 
 
 def test_token_post_returns_expected(token, client):
     response = client.post(
         '/api/hello-post',
         headers={'TOKEN': token},
-        json={'id1': 1, 'id2': 'two'},
+        json=TEST_PAYLOAD,
     )
     verify_response_data(response, http_method='POST')
 
@@ -54,6 +57,6 @@ def test_token_put_returns_expected(token, client):
     response = client.put(
         '/api/hello-put',
         headers={'TOKEN': token},
-        json={'id1': 1, 'id2': 'two'},
+        json=TEST_PAYLOAD,
     )
     verify_response_data(response, http_method='PUT')
