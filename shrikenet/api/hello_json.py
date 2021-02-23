@@ -23,6 +23,7 @@ def hello_get():
         'username': g.user.username,
         'user_oid': g.user.oid,
         'http_method': 'GET',
+        'http_payload': request.get_json(),
     }
 
 
@@ -35,5 +36,5 @@ def hello_post():
         'username': g.user.username,
         'user_oid': g.user.oid,
         'http_method': 'POST',
-        'data_posted': request.get_json(),
+        'http_payload': request.get_json(),
     }
