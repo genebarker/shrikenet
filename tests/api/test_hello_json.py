@@ -48,3 +48,12 @@ def test_token_post_returns_expected(token, client):
         json={'id1': 1, 'id2': 'two'},
     )
     verify_response_data(response, http_method='POST')
+
+
+def test_token_put_returns_expected(token, client):
+    response = client.put(
+        '/api/hello-put',
+        headers={'TOKEN': token},
+        json={'id1': 1, 'id2': 'two'},
+    )
+    verify_response_data(response, http_method='PUT')

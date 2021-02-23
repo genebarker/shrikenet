@@ -17,12 +17,16 @@ def hello_json():
 @bp.route('/hello-get')
 @token_required
 def hello_get():
+    return hello_data('GET')
+
+
+def hello_data(http_method):
     return {
         'error_code': 0,
         'message': f'Hello, {g.user.name}!',
         'username': g.user.username,
         'user_oid': g.user.oid,
-        'http_method': 'GET',
+        'http_method': http_method,
         'http_payload': request.get_json(),
     }
 
@@ -30,11 +34,10 @@ def hello_get():
 @bp.route('/hello-post', methods=['POST'])
 @token_required
 def hello_post():
-    return {
-        'error_code': 0,
-        'message': f'Hello, {g.user.name}!',
-        'username': g.user.username,
-        'user_oid': g.user.oid,
-        'http_method': 'POST',
-        'http_payload': request.get_json(),
-    }
+    return hello_data('POST')
+
+
+@bp.route('/hello-put', methods=['PUT'])
+@token_required
+def hello_put():
+    return hello_data('PUT')
