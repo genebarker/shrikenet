@@ -30,13 +30,7 @@ def requests_http():
         }),
     )
     register_uri_for_no_token_hellos()
-    for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
-        method = getattr(httpretty, http_method)
-        httpretty.register_uri(
-            method=method,
-            uri=re.compile(f'^{BASE_URL}/.*'),
-            status=404,
-        )
+    register_uri_for_unknown_links()
     yield RequestsAdapter(base_url=BASE_URL)
     httpretty.disable()
     httpretty.reset()
@@ -53,6 +47,16 @@ def register_uri_for_no_token_hellos():
                 'error_code': 1,
                 'message': 'An authorization token is required.',
             }),
+        )
+
+
+def register_uri_for_unknown_links():
+    for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
+        method = getattr(httpretty, http_method)
+        httpretty.register_uri(
+            method=method,
+            uri=re.compile(f'^{BASE_URL}/.*'),
+            status=404,
         )
 
 
