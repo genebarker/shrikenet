@@ -29,6 +29,7 @@ def requests_http():
             'message': 'Hello, World!',
         }),
     )
+    register_uri_for_no_token_hellos()
     httpretty.register_uri(
         method=httpretty.GET,
         uri=re.compile(f'^{BASE_URL}/.*'),
@@ -37,6 +38,21 @@ def requests_http():
     yield RequestsAdapter(base_url=BASE_URL)
     httpretty.disable()
     httpretty.reset()
+
+
+def register_uri_for_no_token_hellos():
+    for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
+        method = getattr(httpretty, http_method)
+        uri = f'{BASE_URL}/api/hello-{http_method.lower()}'
+        print(f'method={method}, uri={uri}')
+        httpretty.register_uri(
+            method=method,
+            uri=uri,
+            body=json.dumps({
+                'error_code': 1,
+                'message': 'An authorization token is required.',
+            }),
+        )
 
 
 @pytest.fixture(params=['flask_http', 'requests_http'])
@@ -63,3 +79,15 @@ def test_bad_get_returns_expected_status(http):
     response = http.get('/NON/EXISTING/LINK')
     assert response.status_code == 404
     assert response.status.lower().endswith('not found')
+
+
+@pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+def test_unauthorized_http_method_returns_expected(http, http_method):
+    http_call = getattr(http, http_method) # i.e. http.get()
+    response = http_call(f'/api/hello-{http_method}')
+    assert response.status_code == 200
+    assert response.status.lower().endswith('ok')
+    assert response.json == {
+        'error_code': 1,
+        'message': 'An authorization token is required.',
+    }
