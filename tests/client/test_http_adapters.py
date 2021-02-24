@@ -30,11 +30,13 @@ def requests_http():
         }),
     )
     register_uri_for_no_token_hellos()
-    httpretty.register_uri(
-        method=httpretty.GET,
-        uri=re.compile(f'^{BASE_URL}/.*'),
-        status=404,
-    )
+    for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
+        method = getattr(httpretty, http_method)
+        httpretty.register_uri(
+            method=method,
+            uri=re.compile(f'^{BASE_URL}/.*'),
+            status=404,
+        )
     yield RequestsAdapter(base_url=BASE_URL)
     httpretty.disable()
     httpretty.reset()
@@ -44,7 +46,6 @@ def register_uri_for_no_token_hellos():
     for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
         method = getattr(httpretty, http_method)
         uri = f'{BASE_URL}/api/hello-{http_method.lower()}'
-        print(f'method={method}, uri={uri}')
         httpretty.register_uri(
             method=method,
             uri=uri,
@@ -75,8 +76,10 @@ def test_get_hello_returns_response_object(http):
     assert response.status.lower().endswith('ok')
 
 
-def test_bad_get_returns_expected_status(http):
-    response = http.get('/NON/EXISTING/LINK')
+@pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+def test_bad_links_return_expected_status(http, http_method):
+    http_call = getattr(http, http_method) # i.e. http.get()
+    response = http_call('/NON/EXISTING/LINK')
     assert response.status_code == 404
     assert response.status.lower().endswith('not found')
 
