@@ -16,6 +16,6 @@ class TestHTTPRequestProvider:
                 pass
         return FakeAdapter()
 
-    def test_do_get_cant_be_called(self, http):
+    def test_get_cant_be_called(self, http):
         with pytest.raises(NotImplementedError):
             http.get('http://example.com')
