@@ -16,6 +16,9 @@ class TestHTTPRequestProvider:
                 pass
         return FakeAdapter()
 
-    def test_get_cant_be_called(self, http):
+
+    @pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+    def test_get_cant_be_called(self, http, http_method):
+        http_call = getattr(http, http_method)  # i.e. http.get()
         with pytest.raises(NotImplementedError):
-            http.get('http://example.com')
+            http_call('http://example.com')
