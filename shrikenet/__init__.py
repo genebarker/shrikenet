@@ -6,13 +6,13 @@ from flask import Flask
 
 
 __version__ = '1.0.0-SNAPSHOT'
-
+DEV_SECRET_KEY = 'dev'
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY=DEV_SECRET_KEY,
         TOKEN_LIFESPAN_DAYS=30,
         STORAGE_PROVIDER_MODULE='shrikenet.adapters.memory',
         STORAGE_PROVIDER_CLASS='Memory',

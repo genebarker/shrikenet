@@ -1,9 +1,12 @@
+from datetime import datetime, timedelta, timezone
 import json
 import re
 
 import httpretty
 import pytest
 
+from shrikenet import DEV_SECRET_KEY
+from shrikenet.api.token_authority import create_token
 from shrikenet.client.http_request_provider import HTTPRequestProvider
 from shrikenet.client.http_response import HTTPResponse
 from shrikenet.client.flask_adapter import FlaskAdapter
@@ -82,7 +85,7 @@ def test_get_hello_returns_response_object(http):
 
 @pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
 def test_bad_links_return_expected_status(http, http_method):
-    http_call = getattr(http, http_method) # i.e. http.get()
+    http_call = getattr(http, http_method)  # i.e. http.get()
     response = http_call('/NON/EXISTING/LINK')
     assert response.status_code == 404
     assert response.status.lower().endswith('not found')
@@ -90,7 +93,7 @@ def test_bad_links_return_expected_status(http, http_method):
 
 @pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
 def test_unauthorized_http_method_returns_expected(http, http_method):
-    http_call = getattr(http, http_method) # i.e. http.get()
+    http_call = getattr(http, http_method)  # i.e. http.get()
     response = http_call(f'/api/hello-{http_method}')
     assert response.status_code == 200
     assert response.status.lower().endswith('ok')
@@ -98,3 +101,21 @@ def test_unauthorized_http_method_returns_expected(http, http_method):
         'error_code': 1,
         'message': 'An authorization token is required.',
     }
+
+
+@pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+def test_authorized_http_method_returns_expected(http, http_method):
+    http_call = getattr(http, http_method)  # i.e. http.get()
+    token = get_auth_token()
+    response = http_call(
+        url=f'/api/hello-{http_method}',
+        token=token,
+    )
+    assert response.status_code == 200
+
+
+def get_auth_token():
+    user_oid = 1
+    expire_time = datetime.now(timezone.utc) + timedelta(days=1)
+    secret_key = DEV_SECRET_KEY
+    return create_token(user_oid, expire_time, secret_key)
