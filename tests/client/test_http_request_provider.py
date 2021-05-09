@@ -17,7 +17,7 @@ def http():
 
 
 @pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
-def test_get_cant_be_called(http, http_method):
+def test_methods_cant_be_called(http, http_method):
     http_call = getattr(http, http_method)  # i.e. http.get()
     with pytest.raises(NotImplementedError):
         http_call('http://example.com')
