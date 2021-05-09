@@ -11,6 +11,7 @@ from shrikenet.client.http_request_provider import HTTPRequestProvider
 from shrikenet.client.http_response import HTTPResponse
 from shrikenet.client.flask_adapter import FlaskAdapter
 from shrikenet.client.requests_adapter import RequestsAdapter
+from tests.api.test_token_authority import TEST_USER_OID
 
 
 BASE_URL = 'http://localhost:5000'
@@ -115,7 +116,7 @@ def test_authorized_http_method_returns_expected(http, http_method):
 
 
 def get_auth_token():
-    user_oid = 1
+    user_oid = TEST_USER_OID
     expire_time = datetime.now(timezone.utc) + timedelta(days=1)
     secret_key = DEV_SECRET_KEY
     return create_token(user_oid, expire_time, secret_key)
