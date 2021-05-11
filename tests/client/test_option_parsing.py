@@ -10,7 +10,7 @@ from shrikenet.client import snet
 TEST_USER = 'fmulder'
 TEST_HOSTNAME = 'localhost'
 TEST_PORT = '5000'
-FULL_ACCOUNT_ID = f'{TEST_USER}@{TEST_HOSTNAME}:{TEST_PORT}'
+ACCOUNT_NAME = f'{TEST_USER}@{TEST_HOSTNAME}:{TEST_PORT}'
 
 
 def test_error_code_when_no_command():
@@ -104,16 +104,16 @@ def test_open_no_args_shows_error(capsys):
 
 
 def test_good_open_stores_account_info_in_config():
-    run_snet_cmd(['open', FULL_ACCOUNT_ID])
+    run_snet_cmd(['open', ACCOUNT_NAME])
     config = ConfigParser()
     config.read('.snetrc')
-    assert FULL_ACCOUNT_ID in config.sections()
-    assert config[FULL_ACCOUNT_ID]['is_open'] == 'true'
-    assert 'token' in config[FULL_ACCOUNT_ID]
+    assert ACCOUNT_NAME in config.sections()
+    assert config[ACCOUNT_NAME]['is_open'] == 'true'
+    assert 'token' in config[ACCOUNT_NAME]
 
 
 def test_good_open_returns_expected_output(capsys):
-    error_code = run_snet_cmd(['open', FULL_ACCOUNT_ID])
+    error_code = run_snet_cmd(['open', ACCOUNT_NAME])
     captured = capsys.readouterr()
     assert error_code == 0
     assert f"Opened '{TEST_USER}' at '{TEST_HOSTNAME}'" in captured.out
