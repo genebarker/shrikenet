@@ -108,7 +108,7 @@ def test_good_open_stores_account_info_in_config():
     config = ConfigParser()
     config.read('.snetrc')
     assert ACCOUNT_NAME in config.sections()
-    assert config[ACCOUNT_NAME]['is_open'] == 'true'
+    assert config[ACCOUNT_NAME].getboolean('is_open')
     assert 'token' in config[ACCOUNT_NAME]
 
 
