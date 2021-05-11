@@ -1,6 +1,5 @@
 -- assumes:
 --   use of SwapcaseAdapter
---   passwords are the same as the usernames
 INSERT INTO app_user (oid, username, name, password_hash,
                       needs_password_change, is_locked, is_dormant,
                       ongoing_password_failure_count,
@@ -11,7 +10,9 @@ VALUES
     (nextval('app_user_seq'), 'other', 'Mrs. Other', 'OTHER', false, false,
      false, 0, NULL),
     (nextval('app_user_seq'), 'mrlock', 'Mr. Lock', 'MRLOCK', false, true,
-     false, 10, now());
+     false, 10, now()),
+    (nextval('app_user_seq'), 'fmulder', 'Fox Mulder', 'SCULLY',
+     false, false, false, 0, NULL);
 
 INSERT INTO post (oid, title, body, author_oid, created_time)
 VALUES
