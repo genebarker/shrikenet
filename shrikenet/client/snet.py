@@ -82,7 +82,7 @@ def open_cmd(arg_list=None):
         sys.exit(1)
 
     full_account_id = arg_list[0]
-    update_config_file(full_account_id)
+    update_config_file_for_open(full_account_id)
     print_open_successful(full_account_id)
     sys.exit(0)
 
@@ -91,7 +91,7 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-def update_config_file(full_account_id):
+def update_config_file_for_open(full_account_id):
     config = ConfigParser()
     config[full_account_id] = {}
     config[full_account_id]['is_open'] = 'true'
@@ -101,8 +101,17 @@ def update_config_file(full_account_id):
 
 
 def print_open_successful(full_account_id):
-    user_chunk = full_account_id.split('@')
-    user = user_chunk[0]
-    host_chunk = user_chunk[1].split(':')
-    hostname = host_chunk[0]
-    print(f"Opened '{user}' at '{hostname}'")
+    username = get_username(full_account_id)
+    hostname = get_hostname(full_account_id)
+    print(f"Opened '{username}' at '{hostname}'")
+
+
+def get_username(full_account_id):
+    chunk = full_account_id.split('@')
+    return chunk[0]
+
+
+def get_hostname(full_account_id):
+    chunk_one = full_account_id.split('@')
+    chunk_two = chunk_one[1].split(':')
+    return chunk_two[0]
