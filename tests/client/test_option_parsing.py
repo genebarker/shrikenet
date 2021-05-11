@@ -33,8 +33,8 @@ def test_error_code_on_unknown_command():
     assert exit_code == 1
 
 
-def run_snet_cmd(command):
-    args = ['snet', command]
+def run_snet_cmd(cmd):
+    args = ['snet', cmd] if isinstance(cmd, str) else ['snet'] + cmd
     return run_snet(args)
 
 
@@ -94,3 +94,10 @@ def test_open_no_args_shows_error(capsys):
         'ERROR: A target account ID (i.e. me@example.com) must be provided.'
         in captured.err
     )
+
+
+def test_good_open_returns_expected_output(capsys):
+    error_code = run_snet_cmd(['open', 'fmulder@127.0.0.1:5000'])
+    captured = capsys.readouterr()
+    assert error_code == 0
+    assert "Opened 'fmulder' at '127.0.0.1'" in captured.out

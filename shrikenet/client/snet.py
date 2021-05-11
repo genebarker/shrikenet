@@ -8,9 +8,10 @@ import shrikenet
 def main(arg_list=None):
     if arg_list and len(arg_list) > 1:
         command = arg_list[1]
+        command_arg_list = arg_list[2:]
         try:
             func = getattr(sys.modules[__name__], f'{command}_cmd')
-            func()
+            func(command_arg_list)
         except AttributeError:
             print_header()
             eprint(
@@ -19,8 +20,7 @@ def main(arg_list=None):
             )
             sys.exit(1)
 
-    exit_code = 1
-    help_cmd(exit_code)
+    help_cmd(exit_code=1)
 
 
 def print_header():
@@ -34,7 +34,7 @@ def print_header():
     print(text)
 
 
-def help_cmd(exit_code=0):
+def help_cmd(arg_list=None, exit_code=0):
     print_header()
     print_usage()
     sys.exit(exit_code)
@@ -53,7 +53,7 @@ def print_usage():
     print(text)
 
 
-def license_cmd():
+def license_cmd(arg_list=None):
     print_header()
     license_filepath = get_license_filepath()
     with open(license_filepath) as text_file:
@@ -61,22 +61,31 @@ def license_cmd():
     sys.exit(0)
 
 
-def get_license_filepath():
+def get_license_filepath(arg_list=None):
     this_path = os.path.dirname(__file__)
     return os.path.join(this_path, '../../LICENSE.md')
 
 
-def version_cmd():
+def version_cmd(arg_list=None):
     version = shrikenet.__version__
     print(f'snet v{version}')
     sys.exit(0)
 
 
-def open_cmd():
-    eprint(
-        'ERROR: A target account ID (i.e. me@example.com) must be provided.'
-    )
-    sys.exit(1)
+def open_cmd(arg_list=None):
+    if arg_list is None or len(arg_list) == 0:
+        eprint(
+            'ERROR: A target account ID (i.e. me@example.com) must '
+            'be provided.'
+        )
+        sys.exit(1)
+    full_account_id = arg_list[0]
+    user_chunk = full_account_id.split('@')
+    user = user_chunk[0]
+    host_chunk = user_chunk[1].split(':')
+    hostname = host_chunk[0]
+    print(f"Opened '{user}' at '{hostname}'")
+    sys.exit(0)
 
 
 def eprint(*args, **kwargs):
