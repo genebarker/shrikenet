@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 import os
 import sys
 import textwrap
@@ -79,6 +80,13 @@ def open_cmd(arg_list=None):
             'be provided.'
         )
         sys.exit(1)
+    full_account_id = arg_list[0]
+    config = ConfigParser()
+    config[full_account_id] = {}
+    config[full_account_id]['is_open'] = 'true'
+    config[full_account_id]['token'] = 'fake_token'
+    with open('.snetrc', 'w') as configfile:
+        config.write(configfile)
     full_account_id = arg_list[0]
     user_chunk = full_account_id.split('@')
     user = user_chunk[0]

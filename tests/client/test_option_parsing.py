@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 import os
 
 import pytest
@@ -100,6 +101,15 @@ def test_open_no_args_shows_error(capsys):
         'ERROR: A target account ID (i.e. me@example.com) must be provided.'
         in captured.err
     )
+
+
+def test_good_open_stores_account_info_in_config():
+    run_snet_cmd(['open', FULL_ACCOUNT_ID])
+    config = ConfigParser()
+    config.read('.snetrc')
+    assert FULL_ACCOUNT_ID in config.sections()
+    assert config[FULL_ACCOUNT_ID]['is_open'] == 'true'
+    assert 'token' in config[FULL_ACCOUNT_ID]
 
 
 def test_good_open_returns_expected_output(capsys):
