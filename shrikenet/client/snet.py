@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from pathlib import Path
 import os
 import sys
 import textwrap
@@ -6,7 +7,13 @@ import textwrap
 import shrikenet
 
 
-def main(arg_list=None):
+DEFAULT_CONFIG_FILENAME = '.snetrc'
+config_path = Path(DEFAULT_CONFIG_FILENAME)
+
+
+def main(arg_list=None, config_path_override=None):
+    if config_path_override is not None:
+        config_path = config_path_override
     if arg_list and len(arg_list) > 1:
         command = arg_list[1]
         command_arg_list = arg_list[2:]
@@ -96,7 +103,7 @@ def update_config_file_for_open(account_name):
     config[account_name] = {}
     config[account_name]['is_open'] = 'true'
     config[account_name]['token'] = 'fake_token'
-    with open('.snetrc', 'w') as configfile:
+    with open(config_path, 'w') as configfile:
         config.write(configfile)
 
 
