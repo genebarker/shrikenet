@@ -7,6 +7,7 @@ import textwrap
 import shrikenet
 
 
+COMMAND_NAME = 'snet'
 DEFAULT_CONFIG_FILENAME = '.snetrc'
 
 
@@ -25,8 +26,8 @@ class CommandProcessor:
             except AttributeError:
                 self.print_header()
                 self.eprint(
-                    f"ERROR: Unknown command ({command}) provided. Type 'snet "
-                    "help' for help."
+                    f"ERROR: Unknown command ({command}) provided. Type '"
+                    f"{COMMAND_NAME} help' for help."
                 )
                 sys.exit(1)
 
@@ -35,10 +36,10 @@ class CommandProcessor:
     def print_header(self):
         version = shrikenet.__version__
         text = textwrap.dedent(f"""\
-            snet v{version} - The command line client for shrikenet.
+            {COMMAND_NAME} v{version} - The command line client for shrikenet.
             Copyright (C) 2021 Eugene F. Barker. Web: https://github.com/genebarker
             This program comes with ABSOLUTELY NO WARRANTY. This is free software.
-            Type 'snet license' for details.
+            Type '{COMMAND_NAME} license' for details.
             """)
         print(text)
 
@@ -51,14 +52,14 @@ class CommandProcessor:
         sys.exit(exit_code)
 
     def print_usage(self):
-        text = textwrap.dedent("""\
+        text = textwrap.dedent(f"""\
             Usage:
-              snet status
-              snet open [user@host[:port]]
-              snet close [user@host]
-              snet license
-              snet version
-              snet help [command]
+              {COMMAND_NAME} status
+              {COMMAND_NAME} open [user@host[:port]]
+              {COMMAND_NAME} close [user@host]
+              {COMMAND_NAME} license
+              {COMMAND_NAME} version
+              {COMMAND_NAME} help [command]
             """)
         print(text)
 
@@ -75,7 +76,7 @@ class CommandProcessor:
 
     def version_cmd(self, arg_list=None):
         version = shrikenet.__version__
-        print(f'snet v{version}')
+        print(f'{COMMAND_NAME} v{version}')
         sys.exit(0)
 
     def open_cmd(self, arg_list=None):
