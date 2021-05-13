@@ -2,6 +2,7 @@
 
 import sys
 
-from shrikenet.client import snet
+from shrikenet.client.command_processor import CommandProcessor
 
-snet.main(sys.argv)
+client = CommandProcessor()
+client.run(sys.argv)
