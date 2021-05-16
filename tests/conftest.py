@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+import os
 
 import pytest
 
@@ -6,10 +7,15 @@ from shrikenet import create_app
 from shrikenet.db import get_services, init_db
 
 
+DB_CONFIG_FILENAME = 'database.cfg'
+
+
 @pytest.fixture
 def app():
     config = ConfigParser()
-    config.read('tests/database.cfg')
+    dir_path = os.path.dirname(__file__)
+    config_path = os.path.join(dir_path, DB_CONFIG_FILENAME)
+    config.read(config_path)
     app = create_app({
         'TESTING': True,
         'STORAGE_PROVIDER_MODULE': 'shrikenet.adapters.postgresql',
