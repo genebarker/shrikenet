@@ -1,18 +1,22 @@
 import configparser
+import getpass
 import os
 import pathlib
 import tempfile
 
+import jwt
 import pytest
 
 import shrikenet
 from shrikenet.client.command_processor import CommandProcessor
+from shrikenet.client.flask_adapter import FlaskAdapter
 
 
 TEST_USER = 'fmulder'
 TEST_HOSTNAME = 'localhost'
 TEST_PORT = '5000'
 ACCOUNT_NAME = f'{TEST_USER}@{TEST_HOSTNAME}:{TEST_PORT}'
+TEST_PASSWORD = 'scully'
 
 
 @pytest.fixture
@@ -22,13 +26,21 @@ def config():
         yield config_path
 
 
+@pytest.fixture
+def http(client):
+    yield FlaskAdapter(client)
+
+
 def test_error_code_when_no_command(config):
     exit_code = run_snet(config)
     assert exit_code == 1
 
 
-def run_snet(config, args=None):
-    processor = CommandProcessor(config_path_override=config)
+def run_snet(config, http=None, args=None):
+    processor = CommandProcessor(
+            config_path_override=config,
+            http_provider_override=http,
+    )
     with pytest.raises(SystemExit) as excinfo:
         processor.run(args)
     return excinfo.value.code
@@ -50,9 +62,9 @@ def test_error_code_on_unknown_command(config):
     assert exit_code == 1
 
 
-def run_snet_cmd(cmd, config):
+def run_snet_cmd(cmd, config, http=None):
     args = ['snet', cmd] if isinstance(cmd, str) else ['snet'] + cmd
-    return run_snet(config, args)
+    return run_snet(config, http=http, args=args)
 
 
 def test_shows_header_with_error_on_unknown_command(config, capsys):
@@ -113,8 +125,23 @@ def test_open_no_args_shows_error(config, capsys):
     )
 
 
-def test_good_open_stores_account_info_in_config(config):
-    run_snet_cmd(['open', ACCOUNT_NAME], config)
+def test_good_open_gets_web_token(monkeypatch, config, http):
+    monkeypatch.setattr(getpass, 'getpass', good_password)
+    run_snet_cmd(['open', ACCOUNT_NAME], config, http)
+    parser = configparser.ConfigParser()
+    parser.read(config)
+    token = parser[ACCOUNT_NAME]['token']
+    header = jwt.get_unverified_header(token)
+    assert header['typ'] == 'JWT'
+
+
+def good_password():
+    return TEST_PASSWORD
+
+
+def test_good_open_stores_account_info_in_config(monkeypatch, config, http):
+    monkeypatch.setattr(getpass, 'getpass', good_password)
+    run_snet_cmd(['open', ACCOUNT_NAME], config, http)
     parser = configparser.ConfigParser()
     parser.read(config)
     assert ACCOUNT_NAME in parser.sections()
@@ -122,8 +149,9 @@ def test_good_open_stores_account_info_in_config(config):
     assert 'token' in parser[ACCOUNT_NAME]
 
 
-def test_good_open_returns_expected_output(config, capsys):
-    error_code = run_snet_cmd(['open', ACCOUNT_NAME], config)
+def test_good_open_returns_expected_output(monkeypatch, config, http, capsys):
+    monkeypatch.setattr(getpass, 'getpass', good_password)
+    error_code = run_snet_cmd(['open', ACCOUNT_NAME], config, http)
     captured = capsys.readouterr()
     assert error_code == 0
     assert f"Opened '{TEST_USER}' at '{TEST_HOSTNAME}'" in captured.out

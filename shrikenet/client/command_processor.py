@@ -1,10 +1,12 @@
 from configparser import ConfigParser
 from pathlib import Path
+import getpass
 import os
 import sys
 import textwrap
 
 import shrikenet
+from shrikenet.client.requests_adapter import RequestsAdapter
 
 
 COMMAND_NAME = 'snet'
@@ -13,8 +15,9 @@ DEFAULT_CONFIG_FILENAME = '.snetrc'
 
 class CommandProcessor:
 
-    def __init__(self, config_path_override=None):
+    def __init__(self, config_path_override=None, http_provider_override=None):
         self.config_path_override = config_path_override
+        self.http_provider_override = http_provider_override
 
     def run(self, arg_list=None):
         if arg_list and len(arg_list) > 1:
@@ -88,15 +91,39 @@ class CommandProcessor:
             sys.exit(1)
 
         account_name = arg_list[0]
-        self.update_config_file_for_open(account_name)
+        username = self.get_username(account_name)
+        hostinfo = self.get_hostinfo(account_name)
+        password = getpass.getpass()
+
+        http = self.get_http_provider(hostinfo)
+        response = http.post(
+            '/api/get_token',
+            json={
+                'username': username,
+                'password': password,
+            },
+        )
+        token = response.json['token']
+        expire_time = response.json['expire_time']
+        self.update_config_file_for_open(account_name, token, expire_time)
         self.print_open_successful(account_name)
         sys.exit(0)
 
-    def update_config_file_for_open(self, account_name):
+    def get_hostinfo(self, account_name):
+        chunk = account_name.split('@')
+        return chunk[1]
+
+    def get_http_provider(self, base_url):
+        if self.http_provider_override is not None:
+            return self.http_provider_override
+        return RequestsAdapter(base_url)
+
+    def update_config_file_for_open(self, account_name, token, expire_time):
         config = ConfigParser()
         config[account_name] = {}
         config[account_name]['is_open'] = 'true'
-        config[account_name]['token'] = 'fake_token'
+        config[account_name]['token'] = token
+        config[account_name]['expire_time'] = expire_time
         config_path = self.get_config_path()
         with open(config_path, 'w') as configfile:
             config.write(configfile)
@@ -104,7 +131,9 @@ class CommandProcessor:
     def get_config_path(self):
         if self.config_path_override is not None:
             return self.config_path_override
-        return Path(DEFAULT_CONFIG_FILENAME)
+
+        config_path = Path.home() / DEFAULT_CONFIG_FILENAME
+        return config_path
 
     def print_open_successful(self, account_name):
         username = self.get_username(account_name)
