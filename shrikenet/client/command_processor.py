@@ -92,10 +92,10 @@ class CommandProcessor:
 
         account_name = arg_list[0]
         username = self.get_username(account_name)
-        hostinfo = self.get_hostinfo(account_name)
+        host_url = self.get_host_url(account_name)
         password = getpass.getpass()
 
-        http = self.get_http_provider(hostinfo)
+        http = self.get_http_provider(host_url)
         response = http.post(
             '/api/get_token',
             json={
@@ -109,14 +109,14 @@ class CommandProcessor:
         self.print_open_successful(account_name)
         sys.exit(0)
 
-    def get_hostinfo(self, account_name):
+    def get_host_url(self, account_name):
         chunk = account_name.split('@')
         return chunk[1]
 
-    def get_http_provider(self, base_url):
+    def get_http_provider(self, host_url):
         if self.http_provider_override is not None:
             return self.http_provider_override
-        return RequestsAdapter(base_url)
+        return RequestsAdapter(host_url)
 
     def update_config_file_for_open(self, account_name, token, expire_time):
         config = ConfigParser()
