@@ -126,8 +126,7 @@ def test_open_no_args_shows_error(config, capsys):
 
 
 def test_first_open_gets_web_token(monkeypatch, config, http):
-    monkeypatch.setattr(getpass, 'getpass', good_password)
-    run_snet_cmd(['open', ACCOUNT_NAME], config, http)
+    perform_open_with_password(monkeypatch, config, http)
     parser = configparser.ConfigParser()
     parser.read(config)
     token = parser[ACCOUNT_NAME]['token']
@@ -135,13 +134,17 @@ def test_first_open_gets_web_token(monkeypatch, config, http):
     assert header['typ'] == 'JWT'
 
 
+def perform_open_with_password(monkeypatch, config, http):
+    monkeypatch.setattr(getpass, 'getpass', good_password)
+    return run_snet_cmd(['open', ACCOUNT_NAME], config, http)
+
+
 def good_password():
     return TEST_PASSWORD
 
 
 def test_first_open_stores_account_info_in_config(monkeypatch, config, http):
-    monkeypatch.setattr(getpass, 'getpass', good_password)
-    run_snet_cmd(['open', ACCOUNT_NAME], config, http)
+    perform_open_with_password(monkeypatch, config, http)
     parser = configparser.ConfigParser()
     parser.read(config)
     assert ACCOUNT_NAME in parser.sections()
@@ -150,8 +153,7 @@ def test_first_open_stores_account_info_in_config(monkeypatch, config, http):
 
 
 def test_first_open_returns_expected_output(monkeypatch, config, http, capsys):
-    monkeypatch.setattr(getpass, 'getpass', good_password)
-    error_code = run_snet_cmd(['open', ACCOUNT_NAME], config, http)
+    error_code = perform_open_with_password(monkeypatch, config, http)
     captured = capsys.readouterr()
     assert error_code == 0
     assert f"Opened '{TEST_USER}' at '{TEST_HOSTNAME}'" in captured.out
