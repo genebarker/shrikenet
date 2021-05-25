@@ -125,7 +125,7 @@ def test_open_no_args_shows_error(config, capsys):
     )
 
 
-def test_good_open_gets_web_token(monkeypatch, config, http):
+def test_first_open_gets_web_token(monkeypatch, config, http):
     monkeypatch.setattr(getpass, 'getpass', good_password)
     run_snet_cmd(['open', ACCOUNT_NAME], config, http)
     parser = configparser.ConfigParser()
@@ -139,7 +139,7 @@ def good_password():
     return TEST_PASSWORD
 
 
-def test_good_open_stores_account_info_in_config(monkeypatch, config, http):
+def test_first_open_stores_account_info_in_config(monkeypatch, config, http):
     monkeypatch.setattr(getpass, 'getpass', good_password)
     run_snet_cmd(['open', ACCOUNT_NAME], config, http)
     parser = configparser.ConfigParser()
@@ -149,7 +149,7 @@ def test_good_open_stores_account_info_in_config(monkeypatch, config, http):
     assert 'token' in parser[ACCOUNT_NAME]
 
 
-def test_good_open_returns_expected_output(monkeypatch, config, http, capsys):
+def test_first_open_returns_expected_output(monkeypatch, config, http, capsys):
     monkeypatch.setattr(getpass, 'getpass', good_password)
     error_code = run_snet_cmd(['open', ACCOUNT_NAME], config, http)
     captured = capsys.readouterr()
