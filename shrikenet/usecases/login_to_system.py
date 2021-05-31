@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from shrikenet.entities.event import Event
-from shrikenet.entities.event_tag import EventTag
+from shrikenet.entities.event_tag import LogEntryTag
 from shrikenet.usecases.login_to_system_result import LoginToSystemResult
 
 
@@ -46,7 +46,7 @@ class LoginToSystem:
         user.is_locked = False
         user.ongoing_password_failure_count = 0
         self.db.update_app_user(user)
-        event_tag = EventTag.user_login
+        event_tag = LogEntryTag.user_login
         self._record_event(user.oid, event_tag, event_text)
         return LoginToSystemResult(message=message, has_failed=False,
                                    must_change_password=False,
@@ -54,7 +54,7 @@ class LoginToSystem:
 
     def _verify_user_exists(self, username, ip_address):
         if self.db.exists_app_username(username) is False:
-            event_tag = EventTag.unknown_user
+            event_tag = LogEntryTag.unknown_user
             event_text = (f'Unknown app user (username={username}) from '
                           f'{ip_address} attempted to login.')
             self._record_event(None, event_tag, event_text)
@@ -76,7 +76,7 @@ class LoginToSystem:
 
     def _verify_user_active(self, user, ip_address):
         if user.is_dormant:
-            event_tag = EventTag.dormant_user
+            event_tag = LogEntryTag.dormant_user
             event_text = (f'Dormant app user (username={user.username}) '
                           f'from {ip_address} attempted to login.')
             self._record_event(user.oid, event_tag, event_text)
@@ -85,7 +85,7 @@ class LoginToSystem:
 
     def _verify_user_unlocked(self, user, ip_address):
         if self._lock_is_active(user):
-            event_tag = EventTag.locked_user
+            event_tag = LogEntryTag.locked_user
             event_text = (f'Locked app user (username={user.username}) '
                           f'from {ip_address} attempted to login.')
             self._record_event(user.oid, event_tag, event_text)
@@ -109,7 +109,7 @@ class LoginToSystem:
                 user.is_locked = True
             user.last_password_failure_time = datetime.now(timezone.utc)
             self.db.update_app_user(user)
-            event_tag = EventTag.wrong_password
+            event_tag = LogEntryTag.wrong_password
             event_text = (f'App user (username={user.username}) from '
                           f'{ip_address} attempted to login with the '
                           f'wrong password (ongoing_password_failure_count='
@@ -120,7 +120,7 @@ class LoginToSystem:
     def _verify_user_password_reset_satisfied(self, user, new_password,
                                               ip_address):
         if user.needs_password_change and new_password is None:
-            event_tag = EventTag.must_change_password
+            event_tag = LogEntryTag.must_change_password
             event_text = (f'App user (username={user.username}) with '
                           f'password marked for reset from {ip_address} '
                           f'attempted to login without providing a new '

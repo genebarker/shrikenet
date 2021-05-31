@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrikenet.entities.event_tag import EventTag
+from shrikenet.entities.event_tag import LogEntryTag
 from shrikenet.entities.rules import Rules
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
@@ -41,7 +41,7 @@ class TestWrongPasswordPaths(SetupClass):
         self.validate_event_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
-            tag=EventTag.wrong_password,
+            tag=LogEntryTag.wrong_password,
             text=expected_text,
             usecase_tag=LoginToSystem.USECASE_TAG
         )

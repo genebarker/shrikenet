@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from shrikenet.entities.event_tag import EventTag
+from shrikenet.entities.event_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import SetupClass
 
@@ -30,7 +30,7 @@ class TestUnknownUserPaths(SetupClass):
         self.validate_event_recorded(
             time_before=time_before,
             app_user_oid=None,
-            tag=EventTag.unknown_user,
+            tag=LogEntryTag.unknown_user,
             text=expected_text,
             usecase_tag=LoginToSystem.USECASE_TAG
         )

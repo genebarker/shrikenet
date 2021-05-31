@@ -1,4 +1,4 @@
-class EventTag:
+class LogEntryTag:
     """Tag for each log entry type."""
 
     dormant_user = 'dormant_user'
