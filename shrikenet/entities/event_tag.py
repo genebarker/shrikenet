@@ -1,4 +1,5 @@
 class EventTag:
+    """Tag for each log entry type."""
 
     dormant_user = 'dormant_user'
     locked_user = 'locked_user'
