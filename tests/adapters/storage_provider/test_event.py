@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import pytest
 
 from shrikenet.entities.app_user import AppUser
-from shrikenet.entities.event import Event
+from shrikenet.entities.event import LogEntry
 from shrikenet.entities.exceptions import (
     DatastoreError,
     DatastoreKeyError,
@@ -24,7 +24,7 @@ def existing_event(db):
         password_hash=None,
     )
     db.add_app_user(user)
-    event = Event(
+    event = LogEntry(
         oid=1234,
         time=CHRISTMAS_2018,
         app_user_oid=88,

@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 @dataclass
-class Event:
+class LogEntry:
     oid: int
     time: datetime
     app_user_oid: int

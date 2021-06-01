@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import logging
 
-from shrikenet.entities.event import Event
+from shrikenet.entities.event import LogEntry
 from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system_result import LoginToSystemResult
 
@@ -67,7 +67,7 @@ class LoginToSystem:
         self.db.commit()
 
     def _create_login_event(self, app_user_oid, log_entry_tag, text):
-        return Event(self.db.get_next_event_oid(),
+        return LogEntry(self.db.get_next_event_oid(),
                      datetime.now(timezone.utc),
                      app_user_oid,
                      log_entry_tag,

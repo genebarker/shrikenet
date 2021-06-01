@@ -11,7 +11,7 @@ from shrikenet.entities.exceptions import (
     DatastoreError,
     DatastoreKeyError,
 )
-from shrikenet.entities.event import Event
+from shrikenet.entities.event import LogEntry
 from shrikenet.entities.post import DeepPost, Post
 from shrikenet.entities.rules import Rules
 from shrikenet.entities.storage_provider import StorageProvider
@@ -281,7 +281,7 @@ class PostgreSQL(StorageProvider):
         return self._create_event_from_row(row)
 
     def _create_event_from_row(self, row):
-        event = Event(
+        event = LogEntry(
             oid=row[0],
             time=row[1],
             app_user_oid=row[2],

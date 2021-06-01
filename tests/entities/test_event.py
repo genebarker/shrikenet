@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from shrikenet.entities.event import Event
+from shrikenet.entities.event import LogEntry
 
 
 CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
@@ -18,7 +18,7 @@ def test_base_field_initialization():
 
 
 def create_good_event():
-    return Event(
+    return LogEntry(
         oid=2112,
         time=CHRISTMAS_2018,
         app_user_oid=123,
@@ -29,7 +29,7 @@ def create_good_event():
 
 
 def test_optional_field_initialization():
-    event = Event(
+    event = LogEntry(
         oid=None,
         time=None,
         app_user_oid=None,
