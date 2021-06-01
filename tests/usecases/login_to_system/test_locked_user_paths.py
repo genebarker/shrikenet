@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from shrikenet.entities.event_tag import LogEntryTag
+from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,

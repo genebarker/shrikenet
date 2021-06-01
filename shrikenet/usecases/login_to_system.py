@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from shrikenet.entities.event import Event
-from shrikenet.entities.event_tag import LogEntryTag
+from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system_result import LoginToSystemResult
 
 
