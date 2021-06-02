@@ -1,4 +1,4 @@
-from shrikenet.entities.event import LogEntry
+from shrikenet.entities.log_entry import LogEntry
 from shrikenet.entities.field_validator import FieldValidator
 from shrikenet.entities.record_validator import RecordValidator
 from shrikenet.entities.storage_provider import StorageProvider

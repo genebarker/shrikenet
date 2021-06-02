@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from shrikenet.entities.event import LogEntry
+from shrikenet.entities.log_entry import LogEntry
 
 
 CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)

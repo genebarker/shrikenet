@@ -11,7 +11,7 @@ from shrikenet.entities.exceptions import (
     DatastoreError,
     DatastoreKeyError,
 )
-from shrikenet.entities.event import LogEntry
+from shrikenet.entities.log_entry import LogEntry
 from shrikenet.entities.post import DeepPost, Post
 from shrikenet.entities.rules import Rules
 from shrikenet.entities.storage_provider import StorageProvider

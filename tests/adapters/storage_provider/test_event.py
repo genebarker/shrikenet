@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import pytest
 
 from shrikenet.entities.app_user import AppUser
-from shrikenet.entities.event import LogEntry
+from shrikenet.entities.log_entry import LogEntry
 from shrikenet.entities.exceptions import (
     DatastoreError,
     DatastoreKeyError,
