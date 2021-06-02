@@ -129,7 +129,7 @@ class PostgreSQL(StorageProvider):
         return self._execute_select_value(sql, parms, error)
 
     def get_next_log_entry_oid(self):
-        return self._get_next_oid('event')
+        return self._get_next_oid('log_entry')
 
     def get_next_post_oid(self):
         return self._get_next_oid('post')
@@ -270,7 +270,7 @@ class PostgreSQL(StorageProvider):
                 e.text,
                 e.usecase_tag,
                 u.name AS app_user_name
-            FROM event e
+            FROM log_entry e
             LEFT OUTER JOIN app_user u
             ON e.app_user_oid = u.oid
             WHERE e.oid = %s
@@ -294,7 +294,7 @@ class PostgreSQL(StorageProvider):
 
     def add_log_entry(self, log_entry):
         sql = """
-            INSERT INTO event (oid, time, app_user_oid, tag, text, usecase_tag)
+            INSERT INTO log_entry (oid, time, app_user_oid, tag, text, usecase_tag)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
         parms = (
@@ -312,7 +312,7 @@ class PostgreSQL(StorageProvider):
         self._execute_process_sql(sql, parms, error)
 
     def get_last_log_entry(self):
-        sql = "SELECT max(oid) FROM event"
+        sql = "SELECT max(oid) FROM log_entry"
         parms = None
         error = 'can not get last log entry, reason: '
         last_oid = self._execute_select_value(sql, parms, error)

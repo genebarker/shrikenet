@@ -1,10 +1,11 @@
 -- reset sequences
 SELECT SETVAL('app_user_seq', 1, FALSE);
+SELECT SETVAL('log_entry_seq', 1, FALSE);
 SELECT SETVAL('post_seq', 1, FALSE);
 
 -- reset data tables
 DELETE FROM app_user;
-DELETE FROM event;
+DELETE FROM log_entry;
 DELETE FROM post;
 
 DELETE FROM rule;

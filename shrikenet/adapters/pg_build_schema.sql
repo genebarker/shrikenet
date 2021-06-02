@@ -2,8 +2,8 @@
 DROP SEQUENCE IF EXISTS app_user_seq;
 CREATE SEQUENCE app_user_seq;
 
-DROP SEQUENCE IF EXISTS event_seq;
-CREATE SEQUENCE event_seq;
+DROP SEQUENCE IF EXISTS log_entry_seq;
+CREATE SEQUENCE log_entry_seq;
 
 DROP SEQUENCE IF EXISTS post_seq;
 CREATE SEQUENCE post_seq;
@@ -22,8 +22,8 @@ CREATE TABLE app_user (
     last_password_failure_time timestamp with time zone
 );
 
-DROP TABLE IF EXISTS event;
-CREATE TABLE event (
+DROP TABLE IF EXISTS log_entry;
+CREATE TABLE log_entry (
     oid integer PRIMARY KEY,
     time timestamp with time zone,
     app_user_oid integer,
