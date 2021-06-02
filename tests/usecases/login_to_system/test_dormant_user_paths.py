@@ -51,7 +51,7 @@ class TestDormantUserPaths(SetupClass):
         login_to_system.run('max', 'some_password', '4.5.6.7')
         expected_text = ('Dormant app user (username=max) from 4.5.6.7 '
                          'attempted to login.')
-        self.validate_event_recorded(
+        self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
             tag=LogEntryTag.dormant_user,

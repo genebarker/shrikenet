@@ -55,7 +55,7 @@ class TestLockedUserPaths(SetupClass):
         login_to_system.run('jill', 'some_password', '4.5.6.7')
         expected_text = ('Locked app user (username=jill) from 4.5.6.7 '
                          'attempted to login.')
-        self.validate_event_recorded(
+        self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
             tag=LogEntryTag.locked_user,

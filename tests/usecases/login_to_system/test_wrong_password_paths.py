@@ -38,7 +38,7 @@ class TestWrongPasswordPaths(SetupClass):
         expected_text = ('App user (username=mrforgetful) from 1.2.3.4 '
                          'attempted to login with the wrong password '
                          '(ongoing_password_failure_count=1).')
-        self.validate_event_recorded(
+        self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
             tag=LogEntryTag.wrong_password,

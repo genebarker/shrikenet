@@ -27,7 +27,7 @@ class TestUnknownUserPaths(SetupClass):
         login_to_system.run('mrunknown', None, '10.11.12.13')
         expected_text = ('Unknown app user (username=mrunknown) from '
                          '10.11.12.13 attempted to login.')
-        self.validate_event_recorded(
+        self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=None,
             tag=LogEntryTag.unknown_user,

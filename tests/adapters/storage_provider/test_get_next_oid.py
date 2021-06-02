@@ -3,7 +3,7 @@ import pytest
 
 GET_NEXT_OID_METHODS = [
     'get_next_app_user_oid',
-    'get_next_event_oid',
+    'get_next_log_entry_oid',
     'get_next_post_oid',
 ]
 

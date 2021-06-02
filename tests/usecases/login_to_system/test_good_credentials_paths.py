@@ -38,7 +38,7 @@ class TestGoodCredentialPaths(SetupClass):
         login_to_system.run('max', 'some_password', '1.2.3.4')
         expected_text = ('App user (username=max) from 1.2.3.4 '
                          'successfully logged in.')
-        self.validate_event_recorded(
+        self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
             tag=LogEntryTag.user_login,

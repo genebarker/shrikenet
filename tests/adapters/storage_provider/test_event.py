@@ -16,7 +16,7 @@ CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
 
 # pylint: disable=redefined-outer-name
 @pytest.fixture
-def existing_event(db):
+def existing_log_entry(db):
     user = AppUser(
         oid=88,
         username='fmulder',
@@ -24,7 +24,7 @@ def existing_event(db):
         password_hash=None,
     )
     db.add_app_user(user)
-    event = LogEntry(
+    log_entry = LogEntry(
         oid=1234,
         time=CHRISTMAS_2018,
         app_user_oid=88,
@@ -33,65 +33,65 @@ def existing_event(db):
         usecase_tag='login_user',
         app_user_name='Fox Mulder',
     )
-    db.add_event(event)
-    return event
+    db.add_log_entry(log_entry)
+    return log_entry
 
 
-def test_get_by_oid_gets_record(db, existing_event):
-    stored_event = db.get_event_by_oid(existing_event.oid)
-    assert stored_event == existing_event
+def test_get_by_oid_gets_record(db, existing_log_entry):
+    stored_log_entry = db.get_log_entry_by_oid(existing_log_entry.oid)
+    assert stored_log_entry == existing_log_entry
 
 
-def test_get_by_oid_gets_a_copy(db, existing_event):
-    existing_event.text = 'Different'
-    stored_event = db.get_event_by_oid(existing_event.oid)
-    assert stored_event != existing_event
+def test_get_by_oid_gets_a_copy(db, existing_log_entry):
+    existing_log_entry.text = 'Different'
+    stored_log_entry = db.get_log_entry_by_oid(existing_log_entry.oid)
+    assert stored_log_entry != existing_log_entry
 
 
 def test_get_by_oid_unknown_raises(db):
-    regex = 'can not get event .oid=12345., reason: '
+    regex = 'can not get log entry .oid=12345., reason: '
     with pytest.raises(DatastoreKeyError, match=regex):
-        db.get_event_by_oid(12345)
+        db.get_log_entry_by_oid(12345)
 
 
-def test_add_event_adds_record(db, existing_event):
-    stored_event = db.get_event_by_oid(existing_event.oid)
-    assert stored_event == existing_event
+def test_add_log_entry_adds_record(db, existing_log_entry):
+    stored_log_entry = db.get_log_entry_by_oid(existing_log_entry.oid)
+    assert stored_log_entry == existing_log_entry
 
 
-def test_add_event_allows_none_app_user_oid(db, existing_event):
-    no_user_event = copy.copy(existing_event)
-    no_user_event.oid = existing_event.oid + 1
-    no_user_event.app_user_oid = None
-    no_user_event.app_user_name = None
-    db.add_event(no_user_event)
-    stored_event = db.get_event_by_oid(no_user_event.oid)
-    assert stored_event == no_user_event
+def test_add_log_entry_allows_none_app_user_oid(db, existing_log_entry):
+    no_user_log_entry = copy.copy(existing_log_entry)
+    no_user_log_entry.oid = existing_log_entry.oid + 1
+    no_user_log_entry.app_user_oid = None
+    no_user_log_entry.app_user_name = None
+    db.add_log_entry(no_user_log_entry)
+    stored_log_entry = db.get_log_entry_by_oid(no_user_log_entry.oid)
+    assert stored_log_entry == no_user_log_entry
 
 
-def test_add_event_adds_a_copy(db, existing_event):
-    existing_event.text = 'Different'
-    stored_event = db.get_event_by_oid(existing_event.oid)
-    assert stored_event != existing_event
+def test_add_log_entry_adds_a_copy(db, existing_log_entry):
+    existing_log_entry.text = 'Different'
+    stored_log_entry = db.get_log_entry_by_oid(existing_log_entry.oid)
+    assert stored_log_entry != existing_log_entry
 
 
-def test_add_event_with_duplicate_oid_raises(db, existing_event):
-    new_event = copy.copy(existing_event)
-    new_event.text = 'Different'
-    regex = ('can not add event .oid={}, tag={}., reason: '
-             .format(existing_event.oid, existing_event.tag))
+def test_add_log_entry_with_duplicate_oid_raises(db, existing_log_entry):
+    new_log_entry = copy.copy(existing_log_entry)
+    new_log_entry.text = 'Different'
+    regex = ('can not add log entry .oid={}, tag={}., reason: '
+             .format(existing_log_entry.oid, existing_log_entry.tag))
     with pytest.raises(DatastoreError, match=regex):
-        db.add_event(new_event)
+        db.add_log_entry(new_log_entry)
 
 
-def test_get_last_event_gets_last_one(db, existing_event):
-    new_event = copy.copy(existing_event)
-    new_event.oid = existing_event.oid + 1
-    db.add_event(new_event)
-    assert db.get_last_event() == new_event
+def test_get_last_log_entry_gets_last_one(db, existing_log_entry):
+    new_log_entry = copy.copy(existing_log_entry)
+    new_log_entry.oid = existing_log_entry.oid + 1
+    db.add_log_entry(new_log_entry)
+    assert db.get_last_log_entry() == new_log_entry
 
 
-def test_get_last_event_when_none_raises(db):
-    regex = 'there are no event records'
+def test_get_last_log_entry_when_none_raises(db):
+    regex = 'there are no log entry records'
     with pytest.raises(DatastoreKeyError, match=regex):
-        db.get_last_event()
+        db.get_last_log_entry()

@@ -128,7 +128,7 @@ class PostgreSQL(StorageProvider):
         error = 'can not get next {} oid, reason: '.format(object_name)
         return self._execute_select_value(sql, parms, error)
 
-    def get_next_event_oid(self):
+    def get_next_log_entry_oid(self):
         return self._get_next_oid('event')
 
     def get_next_post_oid(self):
@@ -261,7 +261,7 @@ class PostgreSQL(StorageProvider):
         )
         return self._execute_select_value(sql, parms, error) == 1
 
-    def get_event_by_oid(self, oid):
+    def get_log_entry_by_oid(self, oid):
         sql = """
             SELECT e.oid,
                 e.time,
@@ -276,12 +276,12 @@ class PostgreSQL(StorageProvider):
             WHERE e.oid = %s
         """
         parms = (oid,)
-        error = 'can not get event (oid={}), reason: '.format(oid)
+        error = 'can not get log entry (oid={}), reason: '.format(oid)
         row = self._execute_select_row(sql, parms, error)
-        return self._create_event_from_row(row)
+        return self._create_log_entry_from_row(row)
 
-    def _create_event_from_row(self, row):
-        event = LogEntry(
+    def _create_log_entry_from_row(self, row):
+        log_entry = LogEntry(
             oid=row[0],
             time=row[1],
             app_user_oid=row[2],
@@ -290,35 +290,35 @@ class PostgreSQL(StorageProvider):
             usecase_tag=row[5],
             app_user_name=row[6],
         )
-        return event
+        return log_entry
 
-    def add_event(self, event):
+    def add_log_entry(self, log_entry):
         sql = """
             INSERT INTO event (oid, time, app_user_oid, tag, text, usecase_tag)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
         parms = (
-            event.oid,
-            event.time,
-            event.app_user_oid,
-            event.tag,
-            event.text,
-            event.usecase_tag,
+            log_entry.oid,
+            log_entry.time,
+            log_entry.app_user_oid,
+            log_entry.tag,
+            log_entry.text,
+            log_entry.usecase_tag,
         )
         error = (
-            'can not add event (oid={}, tag={}), reason: '
-            .format(event.oid, event.tag)
+            'can not add log entry (oid={}, tag={}), reason: '
+            .format(log_entry.oid, log_entry.tag)
         )
         self._execute_process_sql(sql, parms, error)
 
-    def get_last_event(self):
+    def get_last_log_entry(self):
         sql = "SELECT max(oid) FROM event"
         parms = None
-        error = 'can not get last event, reason: '
+        error = 'can not get last log entry, reason: '
         last_oid = self._execute_select_value(sql, parms, error)
         if last_oid is None:
-            raise DatastoreKeyError('there are no event records')
-        return self.get_event_by_oid(last_oid)
+            raise DatastoreKeyError('there are no log entry records')
+        return self.get_log_entry_by_oid(last_oid)
 
     def get_post_by_oid(self, oid):
         sql = """

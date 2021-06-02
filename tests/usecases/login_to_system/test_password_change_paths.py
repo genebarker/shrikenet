@@ -52,7 +52,7 @@ class TestPasswordChangePaths(SetupClass):
         expected_text = ('App user (username=jill) with password marked '
                          'for reset from 4.5.6.7 attempted to login '
                          'without providing a new password.')
-        self.validate_event_recorded(
+        self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
             tag=LogEntryTag.must_change_password,

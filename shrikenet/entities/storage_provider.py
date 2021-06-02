@@ -27,7 +27,7 @@ class StorageProvider:
     def get_next_app_user_oid(self):
         raise NotImplementedError
 
-    def get_next_event_oid(self):
+    def get_next_log_entry_oid(self):
         raise NotImplementedError
 
     def get_next_post_oid(self):
@@ -51,13 +51,13 @@ class StorageProvider:
     def exists_app_username(self, username):
         raise NotImplementedError
 
-    def get_event_by_oid(self, oid):
+    def get_log_entry_by_oid(self, oid):
         raise NotImplementedError
 
-    def add_event(self, event):
+    def add_log_entry(self, log_entry):
         raise NotImplementedError
 
-    def get_last_event(self):
+    def get_last_log_entry(self):
         raise NotImplementedError
 
     def get_post_by_oid(self, oid):

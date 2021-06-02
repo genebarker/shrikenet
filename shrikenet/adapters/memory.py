@@ -24,8 +24,8 @@ class Memory(StorageProvider):
     def _build_schema(self):
         self.app_user = {}
         self.app_user_next_oid = 1
-        self.event = {}
-        self.event_next_oid = 1
+        self.log_entry = {}
+        self.log_entry_next_oid = 1
         self.post = {}
         self.post_next_oid = 1
         self.rules = Rules()
@@ -94,9 +94,9 @@ class Memory(StorageProvider):
         self.app_user_next_oid += 1
         return next_oid
 
-    def get_next_event_oid(self):
-        next_oid = self.event_next_oid
-        self.event_next_oid += 1
+    def get_next_log_entry_oid(self):
+        next_oid = self.log_entry_next_oid
+        self.log_entry_next_oid += 1
         return next_oid
 
     def get_next_post_oid(self):
@@ -154,32 +154,32 @@ class Memory(StorageProvider):
     def exists_app_username(self, username):
         return self._get_app_user_oid_for_username(username) is not None
 
-    def get_event_by_oid(self, oid):
-        if oid not in self.event:
+    def get_log_entry_by_oid(self, oid):
+        if oid not in self.log_entry:
             message = (
-                'can not get event (oid={}), reason: record does not '
+                'can not get log entry (oid={}), reason: record does not '
                 'exist'
                 .format(oid)
             )
             raise DatastoreKeyError(message)
-        event = self.event[oid]
-        return copy.copy(event)
+        log_entry = self.log_entry[oid]
+        return copy.copy(log_entry)
 
-    def add_event(self, event):
+    def add_log_entry(self, log_entry):
         error = (
-            'can not add event (oid={}, tag={}), reason: '
-            .format(event.oid, event.tag)
+            'can not add log entry (oid={}, tag={}), reason: '
+            .format(log_entry.oid, log_entry.tag)
         )
-        if event.oid in self.event:
+        if log_entry.oid in self.log_entry:
             reason = 'record with this oid already exists'
             raise DatastoreError(error + reason)
-        self.event[event.oid] = copy.copy(event)
+        self.log_entry[log_entry.oid] = copy.copy(log_entry)
 
-    def get_last_event(self):
-        key_list = list(self.event.keys())
+    def get_last_log_entry(self):
+        key_list = list(self.log_entry.keys())
         if len(key_list) == 0:
-            raise DatastoreKeyError('there are no event records')
-        return self.get_event_by_oid(key_list[-1])
+            raise DatastoreKeyError('there are no log entry records')
+        return self.get_log_entry_by_oid(key_list[-1])
 
     def get_post_by_oid(self, oid):
         if oid not in self.post:
