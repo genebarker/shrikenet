@@ -5,13 +5,13 @@ from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.event_validator import EventValidator
 from shrikenet.entities.record_validator import RecordValidator
 
-from tests.entities.test_log_entry import create_good_event
+from tests.entities.test_log_entry import create_good_log_entry
 
 
 # pylint: disable=redefined-outer-name
 @pytest.fixture
 def event():
-    return create_good_event()
+    return create_good_log_entry()
 
 
 def test_is_a_record_validator():

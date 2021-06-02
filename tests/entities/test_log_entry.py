@@ -7,7 +7,7 @@ CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
 
 
 def test_base_field_initialization():
-    event = create_good_event()
+    event = create_good_log_entry()
     assert event.oid == 2112
     assert event.time == CHRISTMAS_2018
     assert event.app_user_oid == 123
@@ -17,7 +17,7 @@ def test_base_field_initialization():
     assert event.app_user_name is None
 
 
-def create_good_event():
+def create_good_log_entry():
     return LogEntry(
         oid=2112,
         time=CHRISTMAS_2018,
