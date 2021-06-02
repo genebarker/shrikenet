@@ -2,7 +2,7 @@ import pytest
 
 from shrikenet.adapters.memory import Memory
 from shrikenet.entities.app_user import AppUser
-from shrikenet.entities.event_validator import LogEntryValidator
+from shrikenet.entities.log_entry_validator import LogEntryValidator
 from shrikenet.entities.record_validator import RecordValidator
 
 from tests.entities.test_log_entry import create_good_log_entry
