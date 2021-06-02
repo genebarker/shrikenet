@@ -15,6 +15,7 @@ Models      | [StarUML][3]
 In general, the files should be written so that they display well using an
 (80) column terminal window. Accordingly:
 
+- think **elegant plain text** designed for the terminal
 - limit line length to (76) characters; this makes it easy to edit well on
   terminal editors with line numbering
 - markup lightly using [GitHub Flavored Markdown][1]; this provides a little
