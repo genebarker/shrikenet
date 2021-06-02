@@ -19,7 +19,7 @@ We want that success too.
 
 ## Decision
 
-(1) Log events in a structured manner. Adhere to the *logging levels*
+(1) Record log entries in structured manner. Adhere to the *logging levels*
 defined in the [Logging design document][1]. The specifics of these levels
 will evolve over time and that's OK; most old log entries are culled
 anyways.
@@ -39,7 +39,8 @@ database with key fields to support business reporting.
   the database.
 - Business events, their types, and their relationships must be considered
   in the database design.
-- Developers must know the *logging levels* and log events accordingly.
+- Developers must know the *logging levels* and record log entries
+  accordingly.
 
 
 [1]: ../logging.md

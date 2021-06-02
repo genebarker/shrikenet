@@ -1,26 +1,26 @@
 # Logging
 
-The system logs events to log files using Python's standard logging library
-and its predefined logging levels.
+The system records log entries using Python's standard logging library and
+its predefined logging levels.
 
 The guidelines for these logging levels are defined below.
 
-Of special note, business events are also stored in the database. See
+Of special note, business log entries are also stored in the database. See
 [Perform Structured Logging][a]. This strategy provides easy access to
 business object history.
 
 ## Logging Levels
 
 The following guidelines are used to determine the appropriate logging level
-for events:
+for log entries:
 
 Level       | Guideline
 ----------- | --------------------------------------------------------------
-`CRITICAL`  | Application event that requires immediate attention.
-`ERROR`     | Application event that's an obvious problem / needs review.
-`WARNING`   | Application event that's a potential problem / needs review.
-`INFO`      | Business event that is understood, tracked, and / or measured.
-`DEBUG`     | Application event that's significant[^1].
+`CRITICAL`  | Application entry that requires immediate attention.
+`ERROR`     | Application entry that's an obvious problem / needs review.
+`WARNING`   | Application entry that's a potential problem / needs review.
+`INFO`      | Business entry that is understood, tracked, and / or measured.
+`DEBUG`     | Application entry that's significant[^1].
 
 ## Logging Tips
 
@@ -28,7 +28,7 @@ Level       | Guideline
 - [Best practices for logging user actions][c] answer on StackExchange
 
 
-[^1]: Events that mark significant points in processing - a trail of
+[^1]: Log entry that mark significant points in processing - a trail of
 breadcrumbs that assists in debugging. Some examples: environment settings,
 database calls, user actions, processing times, etc..  
 
