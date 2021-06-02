@@ -5,7 +5,7 @@ from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.event_validator import EventValidator
 from shrikenet.entities.record_validator import RecordValidator
 
-from tests.entities.test_event import create_good_event
+from tests.entities.test_log_entry import create_good_event
 
 
 # pylint: disable=redefined-outer-name
