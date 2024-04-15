@@ -21,6 +21,7 @@ This vendor middleman model has several problems:
 - inappropriate content;
 - invasive advertising;
 - unsafe discourse (bullying, scams, predators, etc.);
+- [deplatforming][6] (censorship);
 - muddled flow of information (vendor optimized);
 - poor organization support;
 - dependence on vendor;
@@ -65,3 +66,4 @@ cool.
 [3]: https://www.gnu.org/licenses/licenses.html
 [4]: docs
 [5]: https://en.wikipedia.org/wiki/Hyperion_Cantos
+[6]: https://en.wikipedia.org/wiki/Deplatforming
