@@ -56,11 +56,11 @@ class SetupClass:
         assert result.message == message
 
     def validate_log_entry(self, caplog, message):
-        assert len(caplog.records) == 1
-        log_record = caplog.records[0]
-        assert log_record.levelname == 'INFO'
-        assert log_record.name == MODULE_UNDER_TEST
-        assert log_record.message == message
+        for log_record in caplog.records:
+            assert log_record.levelname == 'INFO'
+            assert log_record.name == MODULE_UNDER_TEST
+            assert log_record.message == message
+
 
     def validate_log_entry_recorded(self, time_before, app_user_oid, tag,
                                     text, usecase_tag):

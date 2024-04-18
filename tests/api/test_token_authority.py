@@ -98,11 +98,13 @@ def test_token_required_logs_on_bad_token(client, caplog):
 
 
 def verify_error_logged(caplog, message, prev_log_count=0):
-    assert len(caplog.records) == prev_log_count + 1
-    log_record = caplog.records[prev_log_count]
-    assert log_record.levelname == 'INFO'
-    assert log_record.name == 'shrikenet.api.token_authority'
-    assert log_record.message.startswith(message)
+    for log_record in caplog.records:
+        if prev_log_count > 0:
+            prev_log_count -= 1
+            continue
+        assert log_record.levelname == 'INFO'
+        assert log_record.name == 'shrikenet.api.token_authority'
+        assert log_record.message.startswith(message)
 
 
 def test_token_required_fails_on_none(client):

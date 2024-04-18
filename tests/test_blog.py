@@ -36,7 +36,7 @@ def get_year_in_local_time_zone(dt):
 ))
 def test_login_required(client, path):
     response = client.post(path)
-    assert response.headers['Location'] == 'http://localhost/auth/login'
+    assert response.headers['Location'] == '/auth/login'
 
 
 def test_author_required(app, client, auth):
@@ -100,7 +100,7 @@ def test_create_update_validate(client, auth, path):
 def test_delete(client, auth, app):
     auth.login()
     response = client.post('/1/delete')
-    assert response.headers['Location'] == 'http://localhost/'
+    assert response.headers['Location'] == '/'
 
     with app.app_context():
         storage_provider = get_services().storage_provider

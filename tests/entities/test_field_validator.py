@@ -411,6 +411,6 @@ class TestInstantValidation:
                             field_name=alternate_field_name)
 
     def test_datetime_without_timezone_raises(self):
-        instant = datetime.utcnow()
+        instant = datetime.now()
         expected_message = self.bad_value_message
         self.confirm_raises(expected_message, instant)
