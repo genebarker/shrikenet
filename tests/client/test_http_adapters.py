@@ -14,7 +14,7 @@ from shrikenet.client.requests_adapter import RequestsAdapter
 from tests.api.test_token_authority import TEST_USER_OID
 
 
-BASE_URL = 'http://localhost:5000'
+BASE_URL = "http://localhost:5000"
 
 
 @pytest.fixture
@@ -27,11 +27,13 @@ def requests_http():
     httpretty.enable()
     httpretty.register_uri(
         method=httpretty.GET,
-        uri=f'{BASE_URL}/api/hello',
-        body=json.dumps({
-            'error_code': 0,
-            'message': 'Hello, World!',
-        }),
+        uri=f"{BASE_URL}/api/hello",
+        body=json.dumps(
+            {
+                "error_code": 0,
+                "message": "Hello, World!",
+            }
+        ),
     )
     register_uri_for_no_token_hellos()
     register_uri_for_unknown_links()
@@ -41,30 +43,32 @@ def requests_http():
 
 
 def register_uri_for_no_token_hellos():
-    for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
+    for http_method in ["GET", "POST", "PUT", "DELETE"]:
         method = getattr(httpretty, http_method)
-        uri = f'{BASE_URL}/api/hello-{http_method.lower()}'
+        uri = f"{BASE_URL}/api/hello-{http_method.lower()}"
         httpretty.register_uri(
             method=method,
             uri=uri,
-            body=json.dumps({
-                'error_code': 1,
-                'message': 'An authorization token is required.',
-            }),
+            body=json.dumps(
+                {
+                    "error_code": 1,
+                    "message": "An authorization token is required.",
+                }
+            ),
         )
 
 
 def register_uri_for_unknown_links():
-    for http_method in ['GET', 'POST', 'PUT', 'DELETE']:
+    for http_method in ["GET", "POST", "PUT", "DELETE"]:
         method = getattr(httpretty, http_method)
         httpretty.register_uri(
             method=method,
-            uri=re.compile(f'^{BASE_URL}/.*'),
+            uri=re.compile(f"^{BASE_URL}/.*"),
             status=404,
         )
 
 
-@pytest.fixture(params=['flask_http', 'requests_http'])
+@pytest.fixture(params=["flask_http", "requests_http"])
 def http(request):
     return request.getfixturevalue(request.param)
 
@@ -74,42 +78,42 @@ def test_is_a_http_request_provider(http):
 
 
 def test_get_hello_returns_response_object(http):
-    response = http.get('/api/hello')
+    response = http.get("/api/hello")
     assert isinstance(response, HTTPResponse)
     assert response.json == {
-        'error_code': 0,
-        'message': 'Hello, World!',
+        "error_code": 0,
+        "message": "Hello, World!",
     }
     assert response.status_code == 200
-    assert response.status.lower().endswith('ok')
+    assert response.status.lower().endswith("ok")
 
 
-@pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+@pytest.mark.parametrize("http_method", ["get", "post", "put", "delete"])
 def test_bad_links_return_expected_status(http, http_method):
     http_call = getattr(http, http_method)  # i.e. http.get()
-    response = http_call('/NON/EXISTING/LINK')
+    response = http_call("/NON/EXISTING/LINK")
     assert response.status_code == 404
-    assert response.status.lower().endswith('not found')
+    assert response.status.lower().endswith("not found")
 
 
-@pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+@pytest.mark.parametrize("http_method", ["get", "post", "put", "delete"])
 def test_unauthorized_http_method_returns_expected(http, http_method):
     http_call = getattr(http, http_method)  # i.e. http.get()
-    response = http_call(f'/api/hello-{http_method}')
+    response = http_call(f"/api/hello-{http_method}")
     assert response.status_code == 200
-    assert response.status.lower().endswith('ok')
+    assert response.status.lower().endswith("ok")
     assert response.json == {
-        'error_code': 1,
-        'message': 'An authorization token is required.',
+        "error_code": 1,
+        "message": "An authorization token is required.",
     }
 
 
-@pytest.mark.parametrize('http_method', ['get', 'post', 'put', 'delete'])
+@pytest.mark.parametrize("http_method", ["get", "post", "put", "delete"])
 def test_authorized_http_method_returns_expected(http, http_method):
     http_call = getattr(http, http_method)  # i.e. http.get()
     token = get_auth_token()
     response = http_call(
-        url=f'/api/hello-{http_method}',
+        url=f"/api/hello-{http_method}",
         token=token,
     )
     assert response.status_code == 200

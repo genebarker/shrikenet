@@ -1,7 +1,13 @@
 from datetime import date, datetime
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint,
+    flash,
+    g,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
 from werkzeug.exceptions import abort
 
@@ -9,27 +15,27 @@ from shrikenet.auth import login_required
 from shrikenet.db import get_services
 from shrikenet.entities.post import Post
 
-bp = Blueprint('blog', __name__)
+bp = Blueprint("blog", __name__)
 
 
-@bp.route('/')
+@bp.route("/")
 def index():
     storage_provider = get_services().storage_provider
     posts = storage_provider.get_posts()
     today = date.today()
-    return render_template('blog/index.html', posts=posts, today=today)
+    return render_template("blog/index.html", posts=posts, today=today)
 
 
-@bp.route('/create', methods=('GET', 'POST'))
+@bp.route("/create", methods=("GET", "POST"))
 @login_required
 def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+    if request.method == "POST":
+        title = request.form["title"]
+        body = request.form["body"]
         error = None
 
         if not title:
-            error = 'Title is required.'
+            error = "Title is required."
 
         if error is not None:
             flash(error)
@@ -44,9 +50,9 @@ def create():
             )
             storage_provider.add_post(post)
             storage_provider.commit()
-            return redirect(url_for('blog.index'))
+            return redirect(url_for("blog.index"))
 
-    return render_template('blog/create.html')
+    return render_template("blog/create.html")
 
 
 def get_post(id, check_author=True):
@@ -62,18 +68,18 @@ def get_post(id, check_author=True):
     return post
 
 
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@bp.route("/<int:id>/update", methods=("GET", "POST"))
 @login_required
 def update(id):
     post = get_post(id)
 
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+    if request.method == "POST":
+        title = request.form["title"]
+        body = request.form["body"]
         error = None
 
         if not title:
-            error = 'Title is required.'
+            error = "Title is required."
 
         if error is not None:
             flash(error)
@@ -83,16 +89,16 @@ def update(id):
             post.body = body
             storage_provider.update_post(post)
             storage_provider.commit()
-            return redirect(url_for('blog.index'))
+            return redirect(url_for("blog.index"))
 
-    return render_template('blog/update.html', post=post)
+    return render_template("blog/update.html", post=post)
 
 
-@bp.route('/<int:id>/delete', methods=('POST',))
+@bp.route("/<int:id>/delete", methods=("POST",))
 @login_required
 def delete(id):
     get_post(id)
     storage_provider = get_services().storage_provider
     storage_provider.delete_post_by_oid(id)
     storage_provider.commit()
-    return redirect(url_for('blog.index'))
+    return redirect(url_for("blog.index"))

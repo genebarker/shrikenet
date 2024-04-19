@@ -11,9 +11,9 @@ def test_base_field_initialization():
     assert log_entry.oid == 2112
     assert log_entry.time == CHRISTMAS_2018
     assert log_entry.app_user_oid == 123
-    assert log_entry.tag == 'duck_found'
-    assert log_entry.text == 'fmulder found a duck.'
-    assert log_entry.usecase_tag == 'look_for_duck'
+    assert log_entry.tag == "duck_found"
+    assert log_entry.text == "fmulder found a duck."
+    assert log_entry.usecase_tag == "look_for_duck"
     assert log_entry.app_user_name is None
 
 
@@ -22,9 +22,9 @@ def create_good_log_entry():
         oid=2112,
         time=CHRISTMAS_2018,
         app_user_oid=123,
-        tag='duck_found',
-        text='fmulder found a duck.',
-        usecase_tag='look_for_duck',
+        tag="duck_found",
+        text="fmulder found a duck.",
+        usecase_tag="look_for_duck",
     )
 
 
@@ -36,6 +36,6 @@ def test_optional_field_initialization():
         tag=None,
         text=None,
         usecase_tag=None,
-        app_user_name='Fox Mulder'
+        app_user_name="Fox Mulder",
     )
-    assert log_entry.app_user_name == 'Fox Mulder'
+    assert log_entry.app_user_name == "Fox Mulder"

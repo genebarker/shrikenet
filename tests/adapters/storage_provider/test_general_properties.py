@@ -19,14 +19,14 @@ def test_raises_when_not_opened_first(unopened_db):
     with pytest.raises(DatastoreClosed) as excinfo:
         unopened_db.get_version()
     assert str(excinfo.value) == (
-        'get_version is not available since the connection is closed'
+        "get_version is not available since the connection is closed"
     )
 
 
 def test_raises_when_already_opened(db):
     with pytest.raises(DatastoreAlreadyOpen) as excinfo:
         db.open()
-    assert str(excinfo.value) == 'connection already open'
+    assert str(excinfo.value) == "connection already open"
 
 
 def test_raises_when_already_closed(unopened_db):

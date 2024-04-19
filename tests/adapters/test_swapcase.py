@@ -6,9 +6,9 @@ from shrikenet.entities.crypto_provider import CryptoProvider
 
 class TestSwapcase:
 
-    TEST_STRING = 'scully'
-    HASH_OF_TEST_STRING = 'SCULLY'
-    WRONG_HASH = 'Mulder'
+    TEST_STRING = "scully"
+    HASH_OF_TEST_STRING = "SCULLY"
+    WRONG_HASH = "Mulder"
 
     @staticmethod
     def get_crypto_provider():
@@ -27,18 +27,22 @@ class TestSwapcase:
         assert hash_ != self.TEST_STRING
 
     def test_when_hash_matches_string(self, crypto_provider):
-        assert crypto_provider.hash_matches_string(self.HASH_OF_TEST_STRING,
-                                                   self.TEST_STRING)
+        assert crypto_provider.hash_matches_string(
+            self.HASH_OF_TEST_STRING, self.TEST_STRING
+        )
 
-    @pytest.mark.parametrize(('my_hash', 'my_string'), (
-        (WRONG_HASH, TEST_STRING),
-        (WRONG_HASH, None),
-        (None, TEST_STRING),
-        (None, None),
-    ))
-    def test_when_hash_does_not_match_string(self, crypto_provider,
-                                             my_hash, my_string):
+    @pytest.mark.parametrize(
+        ("my_hash", "my_string"),
+        (
+            (WRONG_HASH, TEST_STRING),
+            (WRONG_HASH, None),
+            (None, TEST_STRING),
+            (None, None),
+        ),
+    )
+    def test_when_hash_does_not_match_string(
+        self, crypto_provider, my_hash, my_string
+    ):
         assert (
-            crypto_provider.hash_matches_string(my_hash, my_string)
-            is False
+            crypto_provider.hash_matches_string(my_hash, my_string) is False
         )

@@ -49,7 +49,9 @@ class TestStorageProvider:
             ("save_rules", 1),
         ),
     )
-    def test_method_is_uncallable(self, storage_provider, method_name, args):
+    def test_method_is_uncallable(
+        self, storage_provider, method_name, args
+    ):
         method = getattr(storage_provider, method_name)
         with pytest.raises(NotImplementedError):
             if args == 0:

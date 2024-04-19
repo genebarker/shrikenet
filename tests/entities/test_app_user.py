@@ -4,9 +4,9 @@ from shrikenet.entities.app_user import AppUser
 
 
 GOOD_OID = 100
-GOOD_USERNAME = 'fmulder'
-GOOD_NAME = 'Fox Mulder'
-GOOD_PASSWORD_HASH = 'xxxYYY'
+GOOD_USERNAME = "fmulder"
+GOOD_NAME = "Fox Mulder"
+GOOD_PASSWORD_HASH = "xxxYYY"
 DEFAULT_NEEDS_PASSWORD_CHANGE = False
 DEFAULT_IS_LOCKED = False
 DEFAULT_IS_DORMANT = False
@@ -20,7 +20,7 @@ def create_good_app_user():
         username=GOOD_USERNAME,
         name=GOOD_NAME,
         password_hash=GOOD_PASSWORD_HASH,
-        )
+    )
 
 
 def test_minimal_init():

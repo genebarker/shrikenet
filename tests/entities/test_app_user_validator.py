@@ -31,7 +31,7 @@ class TestFieldValidation:
 
     def test_oid_validated(self):
         app_user = create_good_app_user()
-        app_user.oid = 'bad oid'
+        app_user.oid = "bad oid"
         self.verify_validation_raises(app_user)
 
     def test_username_required(self):
@@ -41,7 +41,7 @@ class TestFieldValidation:
 
     def test_username_validated(self):
         app_user = create_good_app_user()
-        app_user.username = 'bad username'
+        app_user.username = "bad username"
         self.verify_validation_raises(app_user)
 
     def test_name_required(self):
@@ -51,7 +51,7 @@ class TestFieldValidation:
 
     def test_name_validated(self):
         app_user = create_good_app_user()
-        app_user.name = 'A *bad* Name'
+        app_user.name = "A *bad* Name"
         self.verify_validation_raises(app_user)
 
 

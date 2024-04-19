@@ -9,10 +9,10 @@ from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.services import Services
 from shrikenet.usecases.login_to_system import LoginToSystem
 
-GOOD_USER_USERNAME = 'fmulder'
-GOOD_USER_PASSWORD = 'scully'
-GOOD_IP_ADDRESS = '1.2.3.4'
-MODULE_UNDER_TEST = 'shrikenet.usecases.login_to_system'
+GOOD_USER_USERNAME = "fmulder"
+GOOD_USER_PASSWORD = "scully"
+GOOD_IP_ADDRESS = "1.2.3.4"
+MODULE_UNDER_TEST = "shrikenet.usecases.login_to_system"
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -31,8 +31,9 @@ class SetupClass:
         self.db.close()
 
     def create_good_user(self):
-        return self.create_and_store_user(GOOD_USER_USERNAME,
-                                          GOOD_USER_PASSWORD)
+        return self.create_and_store_user(
+            GOOD_USER_USERNAME, GOOD_USER_PASSWORD
+        )
 
     def create_and_store_user(self, username, password):
         user = self.create_user(username, password)
@@ -42,13 +43,14 @@ class SetupClass:
 
     def create_user(self, username, password):
         oid = self.db.get_next_app_user_oid()
-        name = 'mr ' + username
+        name = "mr " + username
         password_hash = self.crypto.generate_hash_from_string(password)
         user = AppUser(oid, username, name, password_hash)
         return user
 
-    def validate_login_fails(self, username, password,
-                             message='Login attempt failed.'):
+    def validate_login_fails(
+        self, username, password, message="Login attempt failed."
+    ):
         login_to_system = LoginToSystem(self.services)
         result = login_to_system.run(username, password, GOOD_IP_ADDRESS)
         assert result.has_failed
@@ -57,13 +59,13 @@ class SetupClass:
 
     def validate_log_entry(self, caplog, message):
         for log_record in caplog.records:
-            assert log_record.levelname == 'INFO'
+            assert log_record.levelname == "INFO"
             assert log_record.name == MODULE_UNDER_TEST
             assert log_record.message == message
 
-
-    def validate_log_entry_recorded(self, time_before, app_user_oid, tag,
-                                    text, usecase_tag):
+    def validate_log_entry_recorded(
+        self, time_before, app_user_oid, tag, text, usecase_tag
+    ):
         log_entry = self.db.get_last_log_entry()
         assert log_entry.time > time_before
         assert log_entry.time < datetime.now(timezone.utc)
@@ -72,8 +74,9 @@ class SetupClass:
         assert log_entry.text == text
         assert log_entry.usecase_tag == usecase_tag
 
-    def validate_successful_result(self, user, login_result,
-                                   expected_login_message):
+    def validate_successful_result(
+        self, user, login_result, expected_login_message
+    ):
         assert login_result.user_oid == user.oid
         assert not login_result.has_failed
         assert not login_result.must_change_password

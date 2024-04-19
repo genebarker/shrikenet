@@ -17,33 +17,37 @@ class TestGoodCredentialPaths(SetupClass):
     def test_login_succeeds_for_good_credentials(self):
         good_user = self.create_good_user()
         login_to_system = LoginToSystem(self.services)
-        result = login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                                     GOOD_IP_ADDRESS)
-        self.validate_successful_result(good_user, result,
-                                        'Login successful.')
+        result = login_to_system.run(
+            GOOD_USER_USERNAME, GOOD_USER_PASSWORD, GOOD_IP_ADDRESS
+        )
+        self.validate_successful_result(
+            good_user, result, "Login successful."
+        )
 
     def test_successful_login_logs(self, caplog):
-        self.create_and_store_user('joe', 'some_password')
+        self.create_and_store_user("joe", "some_password")
         login_to_system = LoginToSystem(self.services)
-        login_to_system.run('joe', 'some_password', '4.3.2.1')
+        login_to_system.run("joe", "some_password", "4.3.2.1")
         self.validate_log_entry(
             caplog,
-            'App user (username=joe) from 4.3.2.1 successfully logged in.'
+            "App user (username=joe) from 4.3.2.1 successfully logged in.",
         )
 
     def test_successful_login_recorded(self):
-        user = self.create_and_store_user('max', 'some_password')
+        user = self.create_and_store_user("max", "some_password")
         time_before = datetime.now(timezone.utc)
         login_to_system = LoginToSystem(self.services)
-        login_to_system.run('max', 'some_password', '1.2.3.4')
-        expected_text = ('App user (username=max) from 1.2.3.4 '
-                         'successfully logged in.')
+        login_to_system.run("max", "some_password", "1.2.3.4")
+        expected_text = (
+            "App user (username=max) from 1.2.3.4 "
+            "successfully logged in."
+        )
         self.validate_log_entry_recorded(
             time_before=time_before,
             app_user_oid=user.oid,
             tag=LogEntryTag.user_login,
             text=expected_text,
-            usecase_tag='login_to_system'
+            usecase_tag="login_to_system",
         )
 
     def test_password_fail_count_reset_on_successful_login(self):
@@ -56,8 +60,9 @@ class TestGoodCredentialPaths(SetupClass):
         user.ongoing_password_failure_count = 2
         self.db.update_app_user(user)
         login_to_system = LoginToSystem(self.services)
-        login_to_system.run(GOOD_USER_USERNAME, GOOD_USER_PASSWORD,
-                            GOOD_IP_ADDRESS)
+        login_to_system.run(
+            GOOD_USER_USERNAME, GOOD_USER_PASSWORD, GOOD_IP_ADDRESS
+        )
 
     def test_user_record_change_is_committed(self):
         self.perform_login_to_reset_password_fail_count()

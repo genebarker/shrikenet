@@ -12,6 +12,6 @@ class Werkzeug(CryptoProvider):
         return generate_password_hash(string)
 
     def hash_matches_string(self, hash_, string):
-        if (hash_ is None or string is None):
+        if hash_ is None or string is None:
             return False
         return check_password_hash(hash_, string)

@@ -7,15 +7,13 @@ class Rules:
         self.login_fail_threshold_count = (
             self.DEFAULT_LOGIN_FAIL_THRESHOLD_COUNT
         )
-        self.login_fail_lock_minutes = (
-            self.DEFAULT_LOGIN_FAIL_LOCK_MINUTES
-        )
+        self.login_fail_lock_minutes = self.DEFAULT_LOGIN_FAIL_LOCK_MINUTES
 
     def __eq__(self, other):
         return (
-            isinstance(other, Rules) and
-            self.login_fail_threshold_count
-            == other.login_fail_threshold_count and
-            self.login_fail_lock_minutes
+            isinstance(other, Rules)
+            and self.login_fail_threshold_count
+            == other.login_fail_threshold_count
+            and self.login_fail_lock_minutes
             == other.login_fail_lock_minutes
         )

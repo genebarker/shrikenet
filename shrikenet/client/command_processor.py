@@ -9,13 +9,15 @@ import shrikenet
 from shrikenet.client.requests_adapter import RequestsAdapter
 
 
-COMMAND_NAME = 'snet'
-DEFAULT_CONFIG_FILENAME = '.snetrc'
+COMMAND_NAME = "snet"
+DEFAULT_CONFIG_FILENAME = ".snetrc"
 
 
 class CommandProcessor:
 
-    def __init__(self, config_path_override=None, http_provider_override=None):
+    def __init__(
+        self, config_path_override=None, http_provider_override=None
+    ):
         self.config_path_override = config_path_override
         self.http_provider_override = http_provider_override
 
@@ -24,7 +26,7 @@ class CommandProcessor:
             command = arg_list[1]
             command_arg_list = arg_list[2:]
             try:
-                func = getattr(self, f'{command}_cmd')
+                func = getattr(self, f"{command}_cmd")
                 func(command_arg_list)
             except AttributeError:
                 self.print_header()
@@ -38,12 +40,14 @@ class CommandProcessor:
 
     def print_header(self):
         version = shrikenet.__version__
-        text = textwrap.dedent(f"""\
+        text = textwrap.dedent(
+            f"""\
             {COMMAND_NAME} v{version} - The command line client for shrikenet.
             Copyright (C) 2021 Eugene F. Barker. Web: https://github.com/genebarker
             This program comes with ABSOLUTELY NO WARRANTY. This is free software.
             Type '{COMMAND_NAME} license' for details.
-            """)
+            """
+        )
         print(text)
 
     def eprint(self, *args, **kwargs):
@@ -55,7 +59,8 @@ class CommandProcessor:
         sys.exit(exit_code)
 
     def print_usage(self):
-        text = textwrap.dedent(f"""\
+        text = textwrap.dedent(
+            f"""\
             Usage:
               {COMMAND_NAME} status
               {COMMAND_NAME} open [user@host[:port]]
@@ -63,7 +68,8 @@ class CommandProcessor:
               {COMMAND_NAME} license
               {COMMAND_NAME} version
               {COMMAND_NAME} help [command]
-            """)
+            """
+        )
         print(text)
 
     def license_cmd(self, arg_list=None):
@@ -75,18 +81,18 @@ class CommandProcessor:
 
     def get_license_filepath(self):
         this_path = os.path.dirname(__file__)
-        return os.path.join(this_path, '../../LICENSE.md')
+        return os.path.join(this_path, "../../LICENSE.md")
 
     def version_cmd(self, arg_list=None):
         version = shrikenet.__version__
-        print(f'{COMMAND_NAME} v{version}')
+        print(f"{COMMAND_NAME} v{version}")
         sys.exit(0)
 
     def open_cmd(self, arg_list=None):
         if arg_list is None or len(arg_list) == 0:
             self.eprint(
-                'ERROR: A target account ID (i.e. me@example.com) must '
-                'be provided.'
+                "ERROR: A target account ID (i.e. me@example.com) must "
+                "be provided."
             )
             sys.exit(1)
 
@@ -97,20 +103,20 @@ class CommandProcessor:
 
         http = self.get_http_provider(host_url)
         response = http.post(
-            '/api/get_token',
+            "/api/get_token",
             json={
-                'username': username,
-                'password': password,
+                "username": username,
+                "password": password,
             },
         )
-        token = response.json['token']
-        expire_time = response.json['expire_time']
+        token = response.json["token"]
+        expire_time = response.json["expire_time"]
         self.update_config_file_for_open(account_name, token, expire_time)
         self.print_open_successful(account_name)
         sys.exit(0)
 
     def get_host_url(self, account_name):
-        chunk = account_name.split('@')
+        chunk = account_name.split("@")
         return chunk[1]
 
     def get_http_provider(self, host_url):
@@ -121,11 +127,11 @@ class CommandProcessor:
     def update_config_file_for_open(self, account_name, token, expire_time):
         config = ConfigParser()
         config[account_name] = {}
-        config[account_name]['is_open'] = 'true'
-        config[account_name]['token'] = token
-        config[account_name]['expire_time'] = expire_time
+        config[account_name]["is_open"] = "true"
+        config[account_name]["token"] = token
+        config[account_name]["expire_time"] = expire_time
         config_path = self.get_config_path()
-        with open(config_path, 'w') as configfile:
+        with open(config_path, "w") as configfile:
             config.write(configfile)
 
     def get_config_path(self):
@@ -141,10 +147,10 @@ class CommandProcessor:
         print(f"Opened '{username}' at '{hostname}'")
 
     def get_username(self, account_name):
-        chunk = account_name.split('@')
+        chunk = account_name.split("@")
         return chunk[0]
 
     def get_hostname(self, account_name):
-        chunk_one = account_name.split('@')
-        chunk_two = chunk_one[1].split(':')
+        chunk_one = account_name.split("@")
+        chunk_two = chunk_one[1].split(":")
         return chunk_two[0]

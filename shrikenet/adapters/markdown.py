@@ -15,9 +15,8 @@ class Markdown(TextTransformer):
 
     def transform_to_html(self, plain_text):
         if plain_text is None:
-            return ''
+            return ""
 
         return cmarkgfm.github_flavored_markdown_to_html(
-                plain_text,
-                self.options
-            )
+            plain_text, self.options
+        )

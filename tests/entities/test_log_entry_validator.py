@@ -33,7 +33,7 @@ def verify_validation_raises(log_entry):
 
 
 def test_oid_validated(log_entry):
-    log_entry.oid = 'bad'
+    log_entry.oid = "bad"
     verify_validation_raises(log_entry)
 
 
@@ -53,7 +53,7 @@ def test_app_user_id_required(log_entry):
 
 
 def test_app_user_id_validated(log_entry):
-    log_entry.app_user_oid = 'bad'
+    log_entry.app_user_oid = "bad"
     verify_validation_raises(log_entry)
 
 
@@ -63,7 +63,7 @@ def test_tag_required(log_entry):
 
 
 def test_tag_validated(log_entry):
-    log_entry.tag = 'Bad tag'
+    log_entry.tag = "Bad tag"
     verify_validation_raises(log_entry)
 
 
@@ -73,7 +73,7 @@ def test_usecase_tag_required(log_entry):
 
 
 def test_usecase_tag_validated(log_entry):
-    log_entry.usecase_tag = 'Bad tag'
+    log_entry.usecase_tag = "Bad tag"
     verify_validation_raises(log_entry)
 
 
@@ -83,7 +83,7 @@ def test_text_required(log_entry):
 
 
 def test_text_validated(log_entry):
-    log_entry.text = 'a' * (LogEntryValidator.text_max_length + 1)
+    log_entry.text = "a" * (LogEntryValidator.text_max_length + 1)
     verify_validation_raises(log_entry)
 
 
@@ -99,14 +99,15 @@ def test_unknown_app_user_oid_raises(log_entry, db):
     with pytest.raises(Exception) as excinfo:
         LogEntryValidator.validate_references(log_entry, db)
 
-    expected_message = (
-        'can not get app_user (oid={}), reason: '
-        .format(log_entry.app_user_oid)
+    expected_message = "can not get app_user (oid={}), reason: ".format(
+        log_entry.app_user_oid
     )
     assert expected_message in str(excinfo.value)
 
 
 def test_known_app_user_validates(log_entry, db):
-    user = AppUser(log_entry.app_user_oid, None, log_entry.app_user_name, None)
+    user = AppUser(
+        log_entry.app_user_oid, None, log_entry.app_user_name, None
+    )
     db.add_app_user(user)
     assert LogEntryValidator.validate_references(log_entry, db) is None

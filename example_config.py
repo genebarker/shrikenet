@@ -1,17 +1,17 @@
 # Flask
 # SECRET_KEY = 'dev'
 # TOKEN_LIFESPAN_DAYS = 30
-SECRET_KEY = 'poorSecret'
+SECRET_KEY = "poorSecret"
 
 # StorageProvider
 # STORAGE_PROVIDER_MODULE = 'shrikenet.adapters.memory'
 # STORAGE_PROVIDER_CLASS = 'Memory'
-STORAGE_PROVIDER_MODULE = 'shrikenet.adapters.postgresql'
-STORAGE_PROVIDER_CLASS = 'PostgreSQL'
+STORAGE_PROVIDER_MODULE = "shrikenet.adapters.postgresql"
+STORAGE_PROVIDER_CLASS = "PostgreSQL"
 # (postgresql adapter config values)
-DB_NAME = 'shrike20'
-DB_USER = 'mrshrike'
-DB_PASSWORD = 'poorPassword'
+DB_NAME = "shrike20"
+DB_USER = "mrshrike"
+DB_PASSWORD = "poorPassword"
 DB_PORT = 5432
 
 # TextTransformer (Markup)
@@ -21,14 +21,14 @@ DB_PORT = 5432
 # CryptoProvider
 # CRYPTO_PROVIDER_MODULE = 'shrikenet.adapters.swapcase'
 # CRYPTO_PROVIDER_CLASS = 'Swapcase'
-CRYPTO_PROVIDER_MODULE = 'shrikenet.adapters.werkzeug'
-CRYPTO_PROVIDER_CLASS = 'Werkzeug'
+CRYPTO_PROVIDER_MODULE = "shrikenet.adapters.werkzeug"
+CRYPTO_PROVIDER_CLASS = "Werkzeug"
 
 # Logging
 # LOGGING_FORMAT = '%(asctime)s %(levelname)s %(name)s -> %(message)s'
 # LOGGING_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 # LOGGING_LEVEL = 'DEBUG'
 # LOGGING_FILE = None
-LOGGING_FILE = 'instance/shrikenet.log'
+LOGGING_FILE = "instance/shrikenet.log"
 # LOGGING_FILE_MAX_BYTES = 102400
 # LOGGING_FILE_BACKUP_COUNT = 5

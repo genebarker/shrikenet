@@ -10,7 +10,7 @@ def test_get_close_storage_provider(app):
     with pytest.raises(RuntimeError) as excinfo:
         get_services()
 
-    assert 'outside of application context' in str(excinfo.value)
+    assert "outside of application context" in str(excinfo.value)
 
 
 def test_init_db_command(runner, monkeypatch):
@@ -20,7 +20,7 @@ def test_init_db_command(runner, monkeypatch):
     def fake_init_db():
         Recorder.called = True
 
-    monkeypatch.setattr('shrikenet.db.init_db', fake_init_db)
-    result = runner.invoke(args=['init-db'])
-    assert 'Initialized' in result.output
+    monkeypatch.setattr("shrikenet.db.init_db", fake_init_db)
+    result = runner.invoke(args=["init-db"])
+    assert "Initialized" in result.output
     assert Recorder.called

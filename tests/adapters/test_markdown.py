@@ -14,18 +14,18 @@ def test_is_a_text_transformer(text_transformer):
 
 
 def test_empty_string_when_none(text_transformer):
-    assert text_transformer.transform_to_html(None) == ''
+    assert text_transformer.transform_to_html(None) == ""
 
 
 def test_performs_a_markdown_transform(text_transformer):
     assert (
-        text_transformer.transform_to_html('*foo bar*')
-        == '<p><em>foo bar</em></p>\n'
+        text_transformer.transform_to_html("*foo bar*")
+        == "<p><em>foo bar</em></p>\n"
     )
 
 
 def test_transforms_strikeout(text_transformer):
     assert (
-        text_transformer.transform_to_html('~~Strike this out.~~')
-        == '<p><del>Strike this out.</del></p>\n'
+        text_transformer.transform_to_html("~~Strike this out.~~")
+        == "<p><del>Strike this out.</del></p>\n"
     )

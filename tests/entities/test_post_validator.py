@@ -32,7 +32,7 @@ class TestFieldValidation:
 
     def test_oid_validated(self):
         post = create_good_post()
-        post.oid = 'bad oid'
+        post.oid = "bad oid"
         self.verify_validation_raises(post)
 
     def test_title_required(self):
@@ -42,7 +42,7 @@ class TestFieldValidation:
 
     def test_title_validated(self):
         post = create_good_post()
-        post.title = '! bad title'
+        post.title = "! bad title"
         self.verify_validation_raises(post)
 
     def test_body_can_be_none(self):
@@ -52,22 +52,22 @@ class TestFieldValidation:
 
     def test_non_none_empty_body_raises(self):
         post = create_good_post()
-        post.body = ''
+        post.body = ""
         self.verify_validation_raises(post)
 
     def test_body_with_leading_spaces_raises(self):
         post = create_good_post()
-        post.body = ' ' + post.body
+        post.body = " " + post.body
         self.verify_validation_raises(post)
 
     def test_body_with_trailing_spaces_raises(self):
         post = create_good_post()
-        post.body = post.body + ' '
+        post.body = post.body + " "
         self.verify_validation_raises(post)
 
     def test_body_too_long_raises(self):
         post = create_good_post()
-        post.body = 'x' * (PostValidator.MAX_POST_CHARACTERS + 1)
+        post.body = "x" * (PostValidator.MAX_POST_CHARACTERS + 1)
         self.verify_validation_raises(post)
 
     def test_author_oid_required(self):
@@ -77,15 +77,17 @@ class TestFieldValidation:
 
     def test_author_oid_validated(self):
         post = create_good_post()
-        post.author_oid = 'bad author oid'
+        post.author_oid = "bad author oid"
         self.verify_validation_raises(post)
 
-    def test_author_oid_validation_exception_states_correct_field_name(self):
+    def test_author_oid_validation_exception_states_correct_field_name(
+        self,
+    ):
         post = create_good_post()
-        post.author_oid = 'bad author oid'
+        post.author_oid = "bad author oid"
         with pytest.raises(ValueError) as excinfo:
             PostValidator.validate_fields(post)
-        assert str(excinfo.value).startswith('author_oid')
+        assert str(excinfo.value).startswith("author_oid")
 
     def test_created_time_required(self):
         post = create_good_post()
@@ -94,15 +96,17 @@ class TestFieldValidation:
 
     def test_created_time_validated(self):
         post = create_good_post()
-        post.created_time = 'bad time value'
+        post.created_time = "bad time value"
         self.verify_validation_raises(post)
 
-    def test_created_time_validation_exception_states_correct_field_name(self):
+    def test_created_time_validation_exception_states_correct_field_name(
+        self,
+    ):
         post = create_good_post()
-        post.created_time = 'bad time value'
+        post.created_time = "bad time value"
         with pytest.raises(ValueError) as excinfo:
             PostValidator.validate_fields(post)
-        assert str(excinfo.value).startswith('created_time')
+        assert str(excinfo.value).startswith("created_time")
 
 
 class TestReferenceValidation:
@@ -133,8 +137,7 @@ class TestReferenceValidation:
         post = create_good_post()
         with pytest.raises(Exception) as excinfo:
             PostValidator.validate_references(post, storage_provider)
-        expected_message = (
-            'can not get app_user (oid={}), reason: '
-            .format(post.author_oid)
+        expected_message = "can not get app_user (oid={}), reason: ".format(
+            post.author_oid
         )
         assert expected_message in str(excinfo.value)

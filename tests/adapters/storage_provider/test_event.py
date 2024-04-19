@@ -19,8 +19,8 @@ CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0, tzinfo=timezone.utc)
 def existing_log_entry(db):
     user = AppUser(
         oid=88,
-        username='fmulder',
-        name='Fox Mulder',
+        username="fmulder",
+        name="Fox Mulder",
         password_hash=None,
     )
     db.add_app_user(user)
@@ -28,10 +28,10 @@ def existing_log_entry(db):
         oid=1234,
         time=CHRISTMAS_2018,
         app_user_oid=88,
-        tag='password_failure',
-        text='fmulder entered wrong password.',
-        usecase_tag='login_user',
-        app_user_name='Fox Mulder',
+        tag="password_failure",
+        text="fmulder entered wrong password.",
+        usecase_tag="login_user",
+        app_user_name="Fox Mulder",
     )
     db.add_log_entry(log_entry)
     return log_entry
@@ -43,13 +43,13 @@ def test_get_by_oid_gets_record(db, existing_log_entry):
 
 
 def test_get_by_oid_gets_a_copy(db, existing_log_entry):
-    existing_log_entry.text = 'Different'
+    existing_log_entry.text = "Different"
     stored_log_entry = db.get_log_entry_by_oid(existing_log_entry.oid)
     assert stored_log_entry != existing_log_entry
 
 
 def test_get_by_oid_unknown_raises(db):
-    regex = 'can not get log entry .oid=12345., reason: '
+    regex = "can not get log entry .oid=12345., reason: "
     with pytest.raises(DatastoreKeyError, match=regex):
         db.get_log_entry_by_oid(12345)
 
@@ -70,16 +70,17 @@ def test_add_log_entry_allows_none_app_user_oid(db, existing_log_entry):
 
 
 def test_add_log_entry_adds_a_copy(db, existing_log_entry):
-    existing_log_entry.text = 'Different'
+    existing_log_entry.text = "Different"
     stored_log_entry = db.get_log_entry_by_oid(existing_log_entry.oid)
     assert stored_log_entry != existing_log_entry
 
 
 def test_add_log_entry_with_duplicate_oid_raises(db, existing_log_entry):
     new_log_entry = copy.copy(existing_log_entry)
-    new_log_entry.text = 'Different'
-    regex = ('can not add log entry .oid={}, tag={}., reason: '
-             .format(existing_log_entry.oid, existing_log_entry.tag))
+    new_log_entry.text = "Different"
+    regex = "can not add log entry .oid={}, tag={}., reason: ".format(
+        existing_log_entry.oid, existing_log_entry.tag
+    )
     with pytest.raises(DatastoreError, match=regex):
         db.add_log_entry(new_log_entry)
 
@@ -92,6 +93,6 @@ def test_get_last_log_entry_gets_last_one(db, existing_log_entry):
 
 
 def test_get_last_log_entry_when_none_raises(db):
-    regex = 'there are no log entry records'
+    regex = "there are no log entry records"
     with pytest.raises(DatastoreKeyError, match=regex):
         db.get_last_log_entry()

@@ -9,18 +9,18 @@ from shrikenet.entities.post import DeepPost, Post
 GOOD_OID = 100
 GOOD_AUTHOR_OID = 111
 GOOD_CREATED_TIME = datetime(2018, 12, 31, 23, 58, tzinfo=timezone.utc)
-GOOD_TITLE = 'The World is Doomed'
-GOOD_BODY = 'No hot sauce was found in the house.'
+GOOD_TITLE = "The World is Doomed"
+GOOD_BODY = "No hot sauce was found in the house."
 
 
 def create_good_post():
     return Post(
-            oid=GOOD_OID,
-            title=GOOD_TITLE,
-            body=GOOD_BODY,
-            author_oid=GOOD_AUTHOR_OID,
-            created_time=GOOD_CREATED_TIME,
-        )
+        oid=GOOD_OID,
+        title=GOOD_TITLE,
+        body=GOOD_BODY,
+        author_oid=GOOD_AUTHOR_OID,
+        created_time=GOOD_CREATED_TIME,
+    )
 
 
 class TestGeneralProperties:
@@ -66,14 +66,14 @@ class TestEquals:
         assert post_one != post_two
 
     @pytest.mark.parametrize(
-        ('attr_name', 'attr_value'),
+        ("attr_name", "attr_value"),
         (
-            ('oid', 999),
-            ('title', 'Different'),
-            ('body', 'Different'),
-            ('author_oid', 999),
-            ('created_time', GOOD_CREATED_TIME + timedelta(seconds=1)),
-        )
+            ("oid", 999),
+            ("title", "Different"),
+            ("body", "Different"),
+            ("author_oid", 999),
+            ("created_time", GOOD_CREATED_TIME + timedelta(seconds=1)),
+        ),
     )
     def test_unequal_when_attribute_different(self, attr_name, attr_value):
         post_one = create_good_post()
@@ -91,6 +91,6 @@ class TestDeepPost:
 
     def test_has_extra_attributes(self):
         post = create_good_post()
-        author_username = 'fmulder'
+        author_username = "fmulder"
         deep_post = DeepPost(post, author_username)
         assert deep_post.author_username == author_username

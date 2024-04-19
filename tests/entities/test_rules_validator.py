@@ -27,21 +27,27 @@ class TestFieldValidation:
         with pytest.raises(ValueError):
             RulesValidator.validate_fields(rules)
 
-    @pytest.mark.parametrize(('count'), (
-        ('not a number'),
-        (100.1),
-        (0),
-    ))
+    @pytest.mark.parametrize(
+        ("count"),
+        (
+            ("not a number"),
+            (100.1),
+            (0),
+        ),
+    )
     def test_login_fail_threshold_count_validated(self, count):
         rules = Rules()
         rules.login_fail_threshold_count = count
         self.verify_validation_raises(rules)
 
-    @pytest.mark.parametrize(('minutes'), (
-        ('not a number'),
-        (100.1),
-        (0),
-    ))
+    @pytest.mark.parametrize(
+        ("minutes"),
+        (
+            ("not a number"),
+            (100.1),
+            (0),
+        ),
+    )
     def test_login_fail_lock_minutes_validated(self, minutes):
         rules = Rules()
         rules.login_fail_lock_minutes = minutes

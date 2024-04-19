@@ -13,6 +13,7 @@ def text_transformer():
     class FakeTransformer(TextTransformer):
         def __init__(self):
             pass
+
     return FakeTransformer()
 
 

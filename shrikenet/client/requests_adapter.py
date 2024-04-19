@@ -10,11 +10,11 @@ class RequestsAdapter(HTTPRequestProvider):
         self.base_url = base_url
 
     def get(self, url, json=None, token=None):
-        return self.process_request('GET', url, json, token)
+        return self.process_request("GET", url, json, token)
 
     def process_request(self, http_method, url, json=None, token=None):
         full_url = self.base_url + url
-        headers = None if token is None else {'TOKEN': token}
+        headers = None if token is None else {"TOKEN": token}
         requests_response = requests.request(
             method=http_method,
             url=full_url,
@@ -28,10 +28,10 @@ class RequestsAdapter(HTTPRequestProvider):
         )
 
     def post(self, url, json=None, token=None):
-        return self.process_request('POST', url, json, token)
+        return self.process_request("POST", url, json, token)
 
     def put(self, url, json=None, token=None):
-        return self.process_request('PUT', url, json, token)
+        return self.process_request("PUT", url, json, token)
 
     def delete(self, url, json=None, token=None):
-        return self.process_request('DELETE', url, json, token)
+        return self.process_request("DELETE", url, json, token)

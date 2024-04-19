@@ -14,8 +14,8 @@ from shrikenet.entities.storage_provider import StorageProvider
 
 class Memory(StorageProvider):
 
-    VERSION_PREFIX = 'MemoryStore'
-    VERSION_NUMBER = '1.0'
+    VERSION_PREFIX = "MemoryStore"
+    VERSION_NUMBER = "1.0"
 
     def __init__(self, db_config=None):
         self._build_schema()
@@ -51,19 +51,20 @@ class Memory(StorageProvider):
     # restrict access to attributes when closed
     def __getattribute__(self, name):
         if (
-            name not in ('open', 'is_open', '_build_schema')
+            name not in ("open", "is_open", "_build_schema")
             and not self.is_open
         ):
             error = (
-                '{} is not available since the connection is closed'
-                .format(name)
+                "{} is not available since the connection is closed".format(
+                    name
+                )
             )
             raise DatastoreClosed(error)
         return object.__getattribute__(self, name)
 
     def open(self):
         if self.is_open:
-            raise DatastoreAlreadyOpen('connection already open')
+            raise DatastoreAlreadyOpen("connection already open")
         self.is_open = True
         self.save_tables()
 
@@ -84,9 +85,8 @@ class Memory(StorageProvider):
         self._build_schema()
 
     def get_version(self):
-        return (
-            '{0} {1} - a lightweight in-memory database for unit testing'
-            .format(self.VERSION_PREFIX, self.VERSION_NUMBER)
+        return "{0} {1} - a lightweight in-memory database for unit testing".format(
+            self.VERSION_PREFIX, self.VERSION_NUMBER
         )
 
     def get_next_app_user_oid(self):
@@ -108,9 +108,8 @@ class Memory(StorageProvider):
         oid = self._get_app_user_oid_for_username(username)
         if oid is None:
             message = (
-                'can not get app_user (username={}), reason: record does '
-                'not exist'
-                .format(username)
+                "can not get app_user (username={}), reason: record does "
+                "not exist".format(username)
             )
             raise DatastoreKeyError(message)
         return self.get_app_user_by_oid(oid)
@@ -118,9 +117,8 @@ class Memory(StorageProvider):
     def get_app_user_by_oid(self, oid):
         if oid not in self.app_user:
             message = (
-                'can not get app_user (oid={}), reason: record does not '
-                'exist'
-                .format(oid)
+                "can not get app_user (oid={}), reason: record does not "
+                "exist".format(oid)
             )
             raise DatastoreKeyError(message)
         app_user = self.app_user[oid]
@@ -134,14 +132,15 @@ class Memory(StorageProvider):
 
     def add_app_user(self, app_user):
         error = (
-            'can not add app_user (oid={}, username={}), reason: '
-            .format(app_user.oid, app_user.username)
+            "can not add app_user (oid={}, username={}), reason: ".format(
+                app_user.oid, app_user.username
+            )
         )
         if self.exists_app_username(app_user.username):
-            reason = 'record with this username already exists'
+            reason = "record with this username already exists"
             raise DatastoreError(error + reason)
         if app_user.oid in self.app_user:
-            reason = 'record with this oid already exists'
+            reason = "record with this oid already exists"
             raise DatastoreError(error + reason)
         self.app_user[app_user.oid] = copy.copy(app_user)
 
@@ -157,35 +156,32 @@ class Memory(StorageProvider):
     def get_log_entry_by_oid(self, oid):
         if oid not in self.log_entry:
             message = (
-                'can not get log entry (oid={}), reason: record does not '
-                'exist'
-                .format(oid)
+                "can not get log entry (oid={}), reason: record does not "
+                "exist".format(oid)
             )
             raise DatastoreKeyError(message)
         log_entry = self.log_entry[oid]
         return copy.copy(log_entry)
 
     def add_log_entry(self, log_entry):
-        error = (
-            'can not add log entry (oid={}, tag={}), reason: '
-            .format(log_entry.oid, log_entry.tag)
+        error = "can not add log entry (oid={}, tag={}), reason: ".format(
+            log_entry.oid, log_entry.tag
         )
         if log_entry.oid in self.log_entry:
-            reason = 'record with this oid already exists'
+            reason = "record with this oid already exists"
             raise DatastoreError(error + reason)
         self.log_entry[log_entry.oid] = copy.copy(log_entry)
 
     def get_last_log_entry(self):
         key_list = list(self.log_entry.keys())
         if len(key_list) == 0:
-            raise DatastoreKeyError('there are no log entry records')
+            raise DatastoreKeyError("there are no log entry records")
         return self.get_log_entry_by_oid(key_list[-1])
 
     def get_post_by_oid(self, oid):
         if oid not in self.post:
-            message = (
-                'can not get post (oid={}), reason: record does not exist'
-                .format(oid)
+            message = "can not get post (oid={}), reason: record does not exist".format(
+                oid
             )
             raise DatastoreKeyError(message)
         post = self.post[oid]
@@ -195,9 +191,8 @@ class Memory(StorageProvider):
     def add_post(self, post):
         if post.oid in self.post:
             message = (
-                'can not add post (oid={}, title={}), reason: record with '
-                'this oid already exists'
-                .format(post.oid, post.title)
+                "can not add post (oid={}, title={}), reason: record with "
+                "this oid already exists".format(post.oid, post.title)
             )
             raise DatastoreError(message)
         self.post[post.oid] = copy.copy(post)
@@ -220,7 +215,7 @@ class Memory(StorageProvider):
                 else None
             )
             posts.append(DeepPost(post, author_username))
-        posts.sort(key=attrgetter('created_time'), reverse=True)
+        posts.sort(key=attrgetter("created_time"), reverse=True)
         return posts
 
     def get_rules(self):

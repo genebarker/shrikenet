@@ -19,11 +19,11 @@ class TestRules:
         assert rules_a == rules_b
 
     @pytest.mark.parametrize(
-        ('attr_name', 'attr_value'),
+        ("attr_name", "attr_value"),
         (
-            ('login_fail_threshold_count', -1),
-            ('login_fail_lock_minutes', -1),
-        )
+            ("login_fail_threshold_count", -1),
+            ("login_fail_lock_minutes", -1),
+        ),
     )
     def test_not_equals_when_attribute_differs(self, attr_name, attr_value):
         rules_a = Rules()
@@ -38,9 +38,7 @@ class TestRules:
                 self.login_fail_threshold_count = (
                     real.login_fail_threshold_count
                 )
-                self.login_fail_lock_minutes = (
-                    real.login_fail_lock_minutes
-                )
+                self.login_fail_lock_minutes = real.login_fail_lock_minutes
 
         rules_a = Rules()
         rules_b = FakeRules()

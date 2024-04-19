@@ -18,25 +18,26 @@ class PostValidator(RecordValidator):
         FieldValidator.validate_oid(post.oid)
         FieldValidator.validate_title(post.title)
         PostValidator.validate_body(post.body)
-        FieldValidator.validate_oid(post.author_oid, 'author_oid')
-        FieldValidator.validate_instant(post.created_time, 'created_time')
+        FieldValidator.validate_oid(post.author_oid, "author_oid")
+        FieldValidator.validate_instant(post.created_time, "created_time")
 
     @classmethod
     def validate_body(cls, body):
         if body is None:
             return
-        if body == '':
-            raise ValueError('body can not be an empty string')
+        if body == "":
+            raise ValueError("body can not be an empty string")
 
         FieldValidator.validate_string(
             field_value=body,
-            field_name='body',
+            field_name="body",
             min_length=cls.MIN_POST_CHARACTERS,
             max_length=cls.MAX_POST_CHARACTERS,
         )
 
     @staticmethod
-    def validate_references(the_object: Post,
-                            storage_provider: StorageProvider):
+    def validate_references(
+        the_object: Post, storage_provider: StorageProvider
+    ):
         post = the_object
         storage_provider.get_app_user_by_oid(post.author_oid)
