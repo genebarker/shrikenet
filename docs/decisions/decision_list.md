@@ -6,6 +6,8 @@ This is a list of the project's architecture and design decisions.
 
 Home for decisions we're considering.
 
+- [005 Use Embedded Database (SQLite)][5]
+
 ## Accepted
 
 Home for decisions currently in practice.
@@ -30,3 +32,4 @@ time.
 [2]: 002_perform_structured_logging.md
 [3]: 003_adopt_usecase_as_single_word.md
 [4]: 004_isolate_products_from_business_logic.md
+[5]: 005_use_embedded_database.md
