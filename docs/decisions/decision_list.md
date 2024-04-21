@@ -21,7 +21,7 @@ Home for decisions that we no longer use. We reserve the right to change our
 minds and make things better!
 
 
-- [1]: 001_document_architecture_decisions.md
-- [2]: 002_perform_structured_logging.md
-- [3]: 003_adopt_usecase_as_single_word.md
-- [4]: 004_isolate_products_from_business_logic.md
+[1]: 001_document_architecture_decisions.md
+[2]: 002_perform_structured_logging.md
+[3]: 003_adopt_usecase_as_single_word.md
+[4]: 004_isolate_products_from_business_logic.md
