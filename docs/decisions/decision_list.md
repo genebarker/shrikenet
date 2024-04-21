@@ -15,10 +15,15 @@ Home for decisions currently in practice.
 - [003 Adopt Usecase as Single Word][3]
 - [004 Isolate Products from Business Logic][4]
 
-## Retired
+## Deprecated
 
 Home for decisions that we no longer use. We reserve the right to change our
 minds and make things better!
+
+## Shelved
+
+Home for decisions we considered, then decided not to proceed with at this
+time.
 
 
 [1]: 001_document_architecture_decisions.md
