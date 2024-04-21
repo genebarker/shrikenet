@@ -45,7 +45,7 @@ Use [SQLite][2] since:
 - well known, well supported, and free
 
 Moreover, shrikenet's intended use, serving small organizations, closely
-aligns with the [appropriate uses of SQLite][3].
+aligns with the [Appropriate Uses of SQLite][3].
 
 ## Consequences
 
