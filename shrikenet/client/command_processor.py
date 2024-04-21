@@ -43,7 +43,7 @@ class CommandProcessor:
         text = textwrap.dedent(
             f"""\
             {COMMAND_NAME} v{version} - The command line client for shrikenet.
-            Copyright (C) 2021 Eugene F. Barker. Web: https://github.com/genebarker
+            Copyright (C) 2024 shrikenet project.
             This program comes with ABSOLUTELY NO WARRANTY. This is free software.
             Type '{COMMAND_NAME} license' for details.
             """
