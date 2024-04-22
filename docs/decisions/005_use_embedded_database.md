@@ -52,6 +52,8 @@ aligns with the [Appropriate Uses of SQLite][3].
 - External clients can not access shrikenet data directly (they must access
   the data via the shrikenet server).
 - The shrikenet server must manage user connections.
+- The shrikenet server will not scale beyond 100K requests per day as per
+  [SOLite's Websites estimate][3].
 - The MemoryAdapter and PostgreSQLAdapter classes must be replaced with
   a SQLiteAdapter.
 - The StorageProvider tests must be simplified. Currently they use fixtures
