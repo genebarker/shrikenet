@@ -3,7 +3,6 @@ import pytest
 from shrikenet.adapters.sqlite import SQLite
 from shrikenet.entities.exceptions import (
     DatastoreAlreadyOpen,
-    DatastoreClosed,
     DatastoreError,
 )
 from shrikenet.entities.storage_provider import StorageProvider
