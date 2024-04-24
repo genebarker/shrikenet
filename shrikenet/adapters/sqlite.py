@@ -1,5 +1,6 @@
 import inspect
 import logging
+import os
 import sqlite3
 from shrikenet.entities.exceptions import (
     DatastoreAlreadyOpen,
@@ -12,6 +13,9 @@ from shrikenet.entities.storage_provider import StorageProvider
 
 
 class SQLite(StorageProvider):
+
+    SCHEMA_FILENAME = "build_schema.sql"
+    RESET_FILENAME = "reset_objects.sql"
 
     def __init__(self, db_file):
         self.is_open = False
@@ -27,6 +31,21 @@ class SQLite(StorageProvider):
 
     def close(self):
         self.connection.close()
+
+    def build_database_schema(self):
+        self._execute_sql_file(self.SCHEMA_FILENAME)
+
+    def _execute_sql_file(self, filename):
+        file_path = self._get_sql_file_path(filename)
+        with open(file_path) as sql_file:
+            self.connection.executescript(sql_file.read())
+
+    def _get_sql_file_path(self, filename):
+        dir_path = os.path.dirname(__file__)
+        return os.path.join(dir_path, filename)
+
+    def reset_database_objects(self):
+        self._execute_sql_file(self.RESET_FILENAME)
 
     def get_version(self):
         sql = "SELECT sqlite_version()"
