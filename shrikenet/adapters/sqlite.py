@@ -198,7 +198,7 @@ class SQLite(StorageProvider):
                 last_password_failure_time = ?
             WHERE oid = ?
         """
-        parms = (
+        parms = [
             app_user.username,
             app_user.name,
             app_user.password_hash,
@@ -208,10 +208,8 @@ class SQLite(StorageProvider):
             app_user.ongoing_password_failure_count,
             self.datetime_to_sql(app_user.last_password_failure_time),
             app_user.oid,
-        )
-        error = "can not update app_user (oid={}), reason: ".format(
-            app_user.oid
-        )
+        ]
+        error = f"can not update app_user (oid={app_user.oid}), reason: "
         self._execute_sql(sql, parms, error)
 
     def _execute_sql(self, sql, parms, error):
