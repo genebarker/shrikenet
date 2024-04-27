@@ -108,6 +108,13 @@ def test_update_app_user_updates_every_field(app_user, db):
     assert stored_user == app_user
 
 
+def test_update_app_user_raises_on_unknown_oid(db):
+    user = AppUser(12345, "mrunknown", "Mr Unkonwn", "fakeHASH")
+    regex = "can not update app_user .oid=12345., reason: "
+    with pytest.raises(DatastoreKeyError, match=regex):
+        db.update_app_user(user)
+
+
 def test_get_app_user_count_zero_when_empty(db):
     assert db.get_app_user_count() == 0
 
