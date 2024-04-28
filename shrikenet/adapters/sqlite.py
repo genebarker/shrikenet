@@ -10,6 +10,7 @@ from shrikenet.entities.exceptions import (
     DatastoreKeyError,
 )
 from shrikenet.entities.app_user import AppUser
+from shrikenet.entities.log_entry import LogEntry
 from shrikenet.entities.post import Post, DeepPost
 from shrikenet.entities.rules import Rules
 from shrikenet.entities.storage_provider import StorageProvider
@@ -390,3 +391,61 @@ class SQLite(StorageProvider):
             self.connection.execute(clean_sql, parms)
         except Exception as e:
             self._process_exception(e, error, clean_sql)
+
+    def get_log_entry_by_oid(self, oid):
+        sql = """
+            SELECT e.oid,
+                e.time,
+                e.app_user_oid,
+                e.tag,
+                e.text,
+                e.usecase_tag,
+                u.name AS app_user_name
+            FROM log_entry e
+            LEFT OUTER JOIN app_user u
+            ON e.app_user_oid = u.oid
+            WHERE e.oid = ?
+        """
+        parms = [
+            oid,
+        ]
+        error = f"can not get log entry (oid={oid}), reason: "
+        row = self._execute_select_row(sql, parms, error)
+        return self._create_log_entry_from_row(row)
+
+    def _create_log_entry_from_row(self, row):
+        log_entry = LogEntry(
+            oid=row[0],
+            time=self.sql_to_datetime(row[1]),
+            app_user_oid=row[2],
+            tag=row[3],
+            text=row[4],
+            usecase_tag=row[5],
+            app_user_name=row[6],
+        )
+        return log_entry
+
+    def add_log_entry(self, log_entry):
+        sql = """
+            INSERT INTO log_entry (time, app_user_oid, tag, text, usecase_tag)
+            VALUES (?, ?, ?, ?, ?)
+        """
+        parms = [
+            self.datetime_to_sql(log_entry.time),
+            log_entry.app_user_oid,
+            log_entry.tag,
+            log_entry.text,
+            log_entry.usecase_tag,
+        ]
+        error = f"can not add log entry (tag={log_entry.tag}), reason: "
+        oid = self._execute_insert_and_get_oid(sql, parms, error)
+        return oid
+
+    def get_last_log_entry(self):
+        sql = "SELECT max(oid) FROM log_entry"
+        parms = []
+        error = "can not get last log entry, reason: "
+        last_oid = self._execute_select_value(sql, parms, error)
+        if last_oid is None:
+            raise DatastoreKeyError("there are no log entry records")
+        return self.get_log_entry_by_oid(last_oid)
