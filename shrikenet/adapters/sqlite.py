@@ -11,6 +11,7 @@ from shrikenet.entities.exceptions import (
 )
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.post import Post, DeepPost
+from shrikenet.entities.rules import Rules
 from shrikenet.entities.storage_provider import StorageProvider
 
 
@@ -348,3 +349,44 @@ class SQLite(StorageProvider):
     def _select_all_rows(self, sql, parms):
         cursor = self.connection.execute(sql, parms)
         return cursor.fetchall()
+
+    def get_rules(self):
+        sql = "SELECT tag, tag_value, tag_type FROM rule"
+        parms = []
+        error = "can not get rules, reason: "
+        rows = self._execute_select_all_rows(sql, parms, error)
+        rules = Rules()
+        for row in rows:
+            tag = row[0]
+            tag_type = row[2]
+            tag_value = int(row[1]) if tag_type == "int" else row[1]
+            setattr(rules, tag, tag_value)
+        return rules
+
+    def save_rules(self, rules):
+        sql = "DELETE FROM rule"
+        parms = []
+        error = "can not save rules, reason: "
+        self._execute_sql(sql, parms, error)
+
+        attribute = {
+            "login_fail_threshold_count": "int",
+            "login_fail_lock_minutes": "int",
+        }
+        for key, value in attribute.items():
+            sql = """
+                INSERT INTO rule (tag, tag_value, tag_type)
+                VALUES (?, ?, ?)
+            """
+            tag = key
+            tag_type = value
+            tag_value = str(getattr(rules, tag))
+            parms = (tag, tag_value, tag_type)
+            self._execute_sql(sql, parms, error)
+
+    def _execute_sql(self, sql, parms, error):
+        clean_sql = inspect.cleandoc(sql)
+        try:
+            self.connection.execute(clean_sql, parms)
+        except Exception as e:
+            self._process_exception(e, error, clean_sql)
