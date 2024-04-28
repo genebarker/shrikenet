@@ -5,6 +5,7 @@ import os
 import sqlite3
 from shrikenet.entities.exceptions import (
     DatastoreAlreadyOpen,
+    DatastoreClosed,
     DatastoreError,
     DatastoreKeyError,
 )
@@ -31,7 +32,10 @@ class SQLite(StorageProvider):
         self.is_open = True
 
     def close(self):
-        self.connection.close()
+        if not self.is_open:
+            raise DatastoreClosed("connection already closed")
+        self.connection.close()  # not reset to None, let SQLite handle state
+        self.is_open = False
 
     def commit(self):
         self.connection.commit()
