@@ -136,7 +136,7 @@ class SQLite(StorageProvider):
     def sql_to_datetime(self, sql_datetime):
         if sql_datetime is None:
             return None
-        return datetime.strptime(sql_datetime, "%Y-%m-%d %H:%M:%S.%f")
+        return datetime.fromisoformat(sql_datetime)
 
     def get_app_user_by_oid(self, oid):
         sql = "SELECT * FROM app_user WHERE oid = ?"
@@ -181,7 +181,7 @@ class SQLite(StorageProvider):
     def datetime_to_sql(self, py_datetime):
         if py_datetime is None:
             return None
-        return py_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        return py_datetime.isoformat(timespec="microseconds")
 
     def _execute_insert_and_get_oid(self, sql, parms, error):
         clean_sql = inspect.cleandoc(sql)

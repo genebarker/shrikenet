@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 
 from shrikenet.adapters.sqlite import SQLite
@@ -50,3 +52,31 @@ def test_raises_on_access_after_closed(unopened_db):
     with pytest.raises(DatastoreError) as excinfo:
         db.get_version()
     assert "closed database" in str(excinfo.value)
+
+
+def test_datetime_to_sql_converts_to_expected_string(db):
+    nye_2024 = datetime(
+        year=2024,
+        month=1,
+        day=1,
+        hour=0,
+        minute=2,
+        second=3,
+        microsecond=123456,
+    )
+    sql_nye = db.datetime_to_sql(nye_2024)
+    assert sql_nye == "2024-01-01T00:02:03.123456"
+
+
+def test_sql_to_datetime_converts_to_expected_time(db):
+    boxing_2023 = datetime(
+        year=2023,
+        month=12,
+        day=26,
+        hour=14,
+        minute=1,
+        second=2,
+        microsecond=334455,
+    )
+    sql_boxing = "2023-12-26T14:01:02.334455"
+    assert db.sql_to_datetime(sql_boxing) == boxing_2023
