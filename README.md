@@ -1,4 +1,4 @@
-*This v0.x project is just starting, so what follows is a wish list.*
+*This project is in its early stages, so the following outlines our goals.*
 
 # shrikenet
 
