@@ -1,3 +1,5 @@
+*This v0.x project is just starting, so what follows is a wish list.*
+
 # shrikenet
 
 **shrikenet** is online community software for small organizations like
