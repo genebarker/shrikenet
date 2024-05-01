@@ -1,9 +1,6 @@
-from datetime import datetime, timedelta, timezone
-
-import pytest
+from datetime import datetime, timedelta
 
 from shrikenet.entities.log_entry_tag import LogEntryTag
-from shrikenet.entities.rules import Rules
 from shrikenet.usecases.login_to_system import LoginToSystem
 from tests.usecases.login_to_system.setup_class import (
     SetupClass,
@@ -32,7 +29,7 @@ class TestWrongPasswordPaths(SetupClass):
 
     def test_wrong_password_occurrence_recorded(self):
         user = self.create_and_store_user("mrforgetful", GOOD_USER_PASSWORD)
-        time_before = datetime.now(timezone.utc)
+        time_before = datetime.now() - timedelta(seconds=1)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run("mrforgetful", "wrong_password", "1.2.3.4")
         expected_text = (
@@ -62,7 +59,7 @@ class TestWrongPasswordPaths(SetupClass):
     ):
         user = self.create_user(username, password)
         user.ongoing_password_failure_count = 2
-        two_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=2)
+        two_minutes_ago = datetime.now() - timedelta(minutes=2)
         user.last_password_failure_time = two_minutes_ago
         self.db.add_app_user(user)
         return user
@@ -83,11 +80,11 @@ class TestWrongPasswordPaths(SetupClass):
     def test_password_fail_time_set_on_wrong_password(self):
         self.create_good_user()
         login_to_system = LoginToSystem(self.services)
-        time_before_attempt = datetime.now(timezone.utc)
+        time_before_attempt = datetime.now() - timedelta(seconds=1)
         login_to_system.run(
             GOOD_USER_USERNAME, "wrong_password", GOOD_IP_ADDRESS
         )
-        time_after_attempt = datetime.now(timezone.utc)
+        time_after_attempt = datetime.now()
         user_after = self.db.get_app_user_by_username(GOOD_USER_USERNAME)
         assert user_after.last_password_failure_time > time_before_attempt
         assert user_after.last_password_failure_time < time_after_attempt

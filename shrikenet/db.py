@@ -26,13 +26,8 @@ def get_storage_provider():
     storage_class = get_class_from_app_config(
         "STORAGE_PROVIDER_MODULE", "STORAGE_PROVIDER_CLASS"
     )
-    db_config = {
-        "db_name": current_app.config["DB_NAME"],
-        "db_user": current_app.config["DB_USER"],
-        "db_password": current_app.config["DB_PASSWORD"],
-        "db_port": current_app.config["DB_PORT"],
-    }
-    storage_provider = storage_class(db_config)
+    database = current_app.config["STORAGE_PROVIDER_DB"]
+    storage_provider = storage_class(database)
     storage_provider.open()
     return storage_provider
 

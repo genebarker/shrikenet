@@ -36,7 +36,7 @@ def register():
 
         if error is None:
             new_user = AppUser(
-                oid=storage_provider.get_next_app_user_oid(),
+                oid=-1,
                 username=username,
                 name=None,
                 password_hash=crypto_provider.generate_hash_from_string(

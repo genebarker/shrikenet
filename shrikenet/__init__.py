@@ -4,9 +4,11 @@ import os
 
 from flask import Flask
 
+logger = logging.getLogger(__name__)
 
 __version__ = "1.0.0-SNAPSHOT"
-DEV_SECRET_KEY = "dev"
+DEV_SECRET_KEY = "server-dev"
+DEV_DATABASE = "server-dev.db"
 
 
 def create_app(test_config=None):
@@ -15,12 +17,13 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY=DEV_SECRET_KEY,
         TOKEN_LIFESPAN_DAYS=30,
-        STORAGE_PROVIDER_MODULE="shrikenet.adapters.memory",
-        STORAGE_PROVIDER_CLASS="Memory",
+        STORAGE_PROVIDER_MODULE="shrikenet.adapters.sqlite",
+        STORAGE_PROVIDER_CLASS="SQLite",
+        STORAGE_PROVIDER_DB=DEV_DATABASE,
         TEXT_TRANSFORMER_MODULE="shrikenet.adapters.markdown",
         TEXT_TRANSFORMER_CLASS="Markdown",
-        CRYPTO_PROVIDER_MODULE="shrikenet.adapters.swapcase",
-        CRYPTO_PROVIDER_CLASS="Swapcase",
+        CRYPTO_PROVIDER_MODULE="shrikenet.adapters.werkzeug",
+        CRYPTO_PROVIDER_CLASS="Werkzeug",
         LOGGING_FORMAT="%(asctime)s %(levelname)s %(name)s -> %(message)s",
         LOGGING_DATE_FORMAT="%Y-%m-%d %H:%M:%S",
         LOGGING_LEVEL="DEBUG",
@@ -43,24 +46,32 @@ def create_app(test_config=None):
         pass
 
     # setup logging
+    logging_level = app.config["LOGGING_LEVEL"]
+    level_number = logging.getLevelName(logging_level)
     logging.basicConfig(
-        level=getattr(logging, app.config["LOGGING_LEVEL"]),
+        level=level_number,
         format=app.config["LOGGING_FORMAT"],
         datefmt=app.config["LOGGING_DATE_FORMAT"],
     )
-    if app.config["LOGGING_FILE"] is not None:
+    logging_file = app.config["LOGGING_FILE"]
+    if logging_file is not None:
         handler = RotatingFileHandler(
             filename=app.config["LOGGING_FILE"],
             maxBytes=app.config["LOGGING_FILE_MAX_BYTES"],
             backupCount=app.config["LOGGING_FILE_BACKUP_COUNT"],
         )
+        handler.setLevel(level_number)
         formatter = logging.Formatter(
             fmt=app.config["LOGGING_FORMAT"],
             datefmt=app.config["LOGGING_DATE_FORMAT"],
         )
         handler.setFormatter(formatter)
-        logger = logging.getLogger()
         logger.addHandler(handler)
+    logger.info(
+        f"Logger initialized (level={logging_level}, "
+        f"level_number={level_number}, "
+        f"file={logging_file})."
+    )
 
     # a simple page that says hello
     @app.route("/hello")

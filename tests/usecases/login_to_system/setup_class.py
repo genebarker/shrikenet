@@ -1,13 +1,13 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 import logging
 
-import pytest
-
-from shrikenet.adapters.memory import Memory
+from shrikenet.adapters.sqlite import SQLite
 from shrikenet.adapters.swapcase import Swapcase
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.services import Services
 from shrikenet.usecases.login_to_system import LoginToSystem
+
+DATABASE = "test.db"
 
 GOOD_USER_USERNAME = "fmulder"
 GOOD_USER_PASSWORD = "scully"
@@ -21,8 +21,9 @@ logging.basicConfig(level=logging.DEBUG)
 class SetupClass:
 
     def setup_method(self, method):
-        self.db = Memory()
+        self.db = SQLite(DATABASE)
         self.db.open()
+        self.db.reset_database_objects()
         text_transformer = None
         self.crypto = Swapcase()
         self.services = Services(self.db, text_transformer, self.crypto)
@@ -37,12 +38,12 @@ class SetupClass:
 
     def create_and_store_user(self, username, password):
         user = self.create_user(username, password)
-        self.db.add_app_user(user)
+        user.oid = self.db.add_app_user(user)
         self.db.commit()
         return user
 
     def create_user(self, username, password):
-        oid = self.db.get_next_app_user_oid()
+        oid = -1
         name = "mr " + username
         password_hash = self.crypto.generate_hash_from_string(password)
         user = AppUser(oid, username, name, password_hash)
@@ -68,7 +69,7 @@ class SetupClass:
     ):
         log_entry = self.db.get_last_log_entry()
         assert log_entry.time > time_before
-        assert log_entry.time < datetime.now(timezone.utc)
+        assert log_entry.time < datetime.now()
         assert log_entry.app_user_oid == app_user_oid
         assert log_entry.tag == tag
         assert log_entry.text == text

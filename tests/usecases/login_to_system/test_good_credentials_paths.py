@@ -1,6 +1,4 @@
-from datetime import datetime, timezone
-
-import pytest
+from datetime import datetime, timedelta
 
 from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -35,7 +33,7 @@ class TestGoodCredentialPaths(SetupClass):
 
     def test_successful_login_recorded(self):
         user = self.create_and_store_user("max", "some_password")
-        time_before = datetime.now(timezone.utc)
+        time_before = datetime.now() - timedelta(seconds=1)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run("max", "some_password", "1.2.3.4")
         expected_text = (

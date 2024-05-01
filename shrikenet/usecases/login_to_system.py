@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import logging
 
 from shrikenet.entities.log_entry import LogEntry
@@ -71,14 +71,14 @@ class LoginToSystem:
 
     def _record_log_entry(self, app_user_oid, tag, text):
         log_entry = self._create_login_log_entry(app_user_oid, tag, text)
-        self.db.add_log_entry(log_entry)
+        log_entry.oid = self.db.add_log_entry(log_entry)
         self.logger.info(text)
         self.db.commit()
 
     def _create_login_log_entry(self, app_user_oid, log_entry_tag, text):
         return LogEntry(
-            self.db.get_next_log_entry_oid(),
-            datetime.now(timezone.utc),
+            -1,
+            datetime.now(),
             app_user_oid,
             log_entry_tag,
             text,
@@ -94,7 +94,7 @@ class LoginToSystem:
             )
             self._record_log_entry(user.oid, log_entry_tag, log_entry_text)
             raise LoginToSystemError(
-                "Login attempt failed. Your " "credentials are invalid."
+                "Login attempt failed. Your credentials are invalid."
             )
 
     def _verify_user_unlocked(self, user, ip_address):
@@ -106,7 +106,7 @@ class LoginToSystem:
             )
             self._record_log_entry(user.oid, log_entry_tag, log_entry_text)
             raise LoginToSystemError(
-                "Login attempt failed. Your account " "is locked."
+                "Login attempt failed. Your account is locked."
             )
 
     def _lock_is_active(self, user):
@@ -115,7 +115,7 @@ class LoginToSystem:
         rules = self.db.get_rules()
         lock_length = timedelta(minutes=rules.login_fail_lock_minutes)
         lock_expire_time = user.last_password_failure_time + lock_length
-        return datetime.now(timezone.utc) < lock_expire_time
+        return datetime.now() < lock_expire_time
 
     def _verify_user_password_correct(self, user, password, ip_address):
         if not self.crypto.hash_matches_string(
@@ -128,7 +128,7 @@ class LoginToSystem:
                 > rules.login_fail_threshold_count
             ):
                 user.is_locked = True
-            user.last_password_failure_time = datetime.now(timezone.utc)
+            user.last_password_failure_time = datetime.now()
             self.db.update_app_user(user)
             log_entry_tag = LogEntryTag.wrong_password
             log_entry_text = (
@@ -152,7 +152,7 @@ class LoginToSystem:
             )
             self._record_log_entry(user.oid, log_entry_tag, log_entry_text)
             raise LoginToSystemError(
-                "Password marked for reset. Must " "supply a new password.",
+                "Password marked for reset. Must supply a new password.",
                 must_change_password=True,
             )
 

@@ -1,6 +1,4 @@
-from datetime import datetime, timezone
-
-import pytest
+from datetime import datetime, timedelta
 
 from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -22,7 +20,7 @@ class TestUnknownUserPaths(SetupClass):
         )
 
     def test_unknown_username_occurrence_recorded(self):
-        time_before = datetime.now(timezone.utc)
+        time_before = datetime.now() - timedelta(seconds=1)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run("mrunknown", None, "10.11.12.13")
         expected_text = (

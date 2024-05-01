@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta, timezone
-
-import pytest
+from datetime import datetime, timedelta
 
 from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -24,14 +22,14 @@ class TestLockedUserPaths(SetupClass):
 
     def create_locked_user(
         self,
-        lock_time=datetime.now(timezone.utc),
+        lock_time=datetime.now(),
         username=GOOD_USER_USERNAME,
         password=GOOD_USER_PASSWORD,
     ):
         user = self.create_user(username, password)
         user.is_locked = True
         user.last_password_failure_time = lock_time
-        self.db.add_app_user(user)
+        user.oid = self.db.add_app_user(user)
         return user
 
     def test_lock_checked_before_password(self):
@@ -56,7 +54,7 @@ class TestLockedUserPaths(SetupClass):
         user = self.create_locked_user(
             username="jill", password="some_password"
         )
-        time_before = datetime.now(timezone.utc)
+        time_before = datetime.now() - timedelta(seconds=1)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run("jill", "some_password", "4.5.6.7")
         expected_text = (
@@ -84,7 +82,7 @@ class TestLockedUserPaths(SetupClass):
 
     def create_user_with_expired_lock(self):
         rules = self.db.get_rules()
-        lock_time = datetime.now(timezone.utc) - timedelta(
+        lock_time = datetime.now() - timedelta(
             minutes=rules.login_fail_lock_minutes
         )
         return self.create_locked_user(lock_time)

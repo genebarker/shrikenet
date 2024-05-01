@@ -42,13 +42,13 @@ def create():
         else:
             storage_provider = get_services().storage_provider
             post = Post(
-                oid=storage_provider.get_next_post_oid(),
+                oid=-1,
                 title=title,
                 body=body,
                 author_oid=g.user.oid,
                 created_time=datetime.now().astimezone(),
             )
-            storage_provider.add_post(post)
+            post.oid = storage_provider.add_post(post)
             storage_provider.commit()
             return redirect(url_for("blog.index"))
 

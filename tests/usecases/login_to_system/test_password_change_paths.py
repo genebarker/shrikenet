@@ -1,6 +1,4 @@
-from datetime import datetime, timezone
-
-import pytest
+from datetime import datetime, timedelta
 
 from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -29,7 +27,7 @@ class TestPasswordChangePaths(SetupClass):
     def create_needs_password_change_user(
         self, username=GOOD_USER_USERNAME, password=GOOD_USER_PASSWORD
     ):
-        user = self.create_user(username, password)
+        user = self.create_and_store_user(username, password)
         user.needs_password_change = True
         self.db.update_app_user(user)
         return user
@@ -48,7 +46,7 @@ class TestPasswordChangePaths(SetupClass):
         user = self.create_needs_password_change_user(
             username="jill", password="some_password"
         )
-        time_before = datetime.now(timezone.utc)
+        time_before = datetime.now() - timedelta(seconds=1)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run("jill", "some_password", "4.5.6.7")
         expected_text = (

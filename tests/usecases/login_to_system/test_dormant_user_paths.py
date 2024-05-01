@@ -1,6 +1,4 @@
-from datetime import datetime, timezone
-
-import pytest
+from datetime import datetime, timedelta
 
 from shrikenet.entities.log_entry_tag import LogEntryTag
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -26,7 +24,7 @@ class TestDormantUserPaths(SetupClass):
     ):
         user = self.create_user(username, password)
         user.is_dormant = True
-        self.db.add_app_user(user)
+        user.oid = self.db.add_app_user(user)
         return user
 
     def test_dormant_checked_before_password(self):
@@ -49,7 +47,7 @@ class TestDormantUserPaths(SetupClass):
 
     def test_dormant_user_login_attempt_recorded(self):
         user = self.create_dormant_user("max", "some_password")
-        time_before = datetime.now(timezone.utc)
+        time_before = datetime.now() - timedelta(seconds=1)
         login_to_system = LoginToSystem(self.services)
         login_to_system.run("max", "some_password", "4.5.6.7")
         expected_text = (

@@ -1,42 +1,37 @@
-from configparser import ConfigParser
-import os
-
 import pytest
 
 from shrikenet import create_app
 from shrikenet.db import get_services, init_db
 
 
-DB_CONFIG_FILENAME = "database.cfg"
+DATABASE_FILE = "test.db"
+DATABASE_DATA = "load_test_data.sql"
 
 
 @pytest.fixture
 def app():
-    config = ConfigParser()
-    dir_path = os.path.dirname(__file__)
-    config_path = os.path.join(dir_path, DB_CONFIG_FILENAME)
-    config.read(config_path)
     app = create_app(
         {
             "TESTING": True,
-            "STORAGE_PROVIDER_MODULE": "shrikenet.adapters.postgresql",
-            "STORAGE_PROVIDER_CLASS": "PostgreSQL",
-            "DB_NAME": config["development"]["db_name"],
-            "DB_USER": config["development"]["db_user"],
-            "DB_PASSWORD": config["development"]["db_password"],
-            "DB_PORT": config["development"]["db_port"],
+            "STORAGE_PROVIDER_MODULE": "shrikenet.adapters.sqlite",
+            "STORAGE_PROVIDER_CLASS": "SQLite",
+            "STORAGE_PROVIDER_DB": DATABASE_FILE,
             "TEXT_TRANSFORMER_MODULE": "shrikenet.adapters.markdown",
             "TEST_TRANSFORMER_CLASS": "Markdown",
             "CRYPTO_PROVIDER_MODULE": "shrikenet.adapters.swapcase",
             "CRYPTO_PROVIDER_CLASS": "Swapcase",
+            "LOGGING_FORMAT": "%(asctime)s %(levelname)s %(name)s -> %(message)s",
+            "LOGGING_DATE_FORMAT": "%Y-%m-%d %H:%M:%S",
+            "LOGGING_LEVEL": "DEBUG",
+            "LOGGING_FILE": None,
         }
     )
 
     with app.app_context():
         init_db()
-        postgresql = get_services().storage_provider
-        postgresql._execute_sql_file("pg_load_test_data.sql")
-        postgresql.commit()
+        db = get_services().storage_provider
+        db._execute_sql_file(DATABASE_DATA)
+        db.commit()
 
     yield app
 
