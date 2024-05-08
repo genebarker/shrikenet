@@ -86,7 +86,7 @@ class TestPasswordChangePaths(SetupClass):
             user, result, "Login successful. Password successfully changed."
         )
 
-    def test_password_marked_for_reset_logs_when_new_provided(self, caplog):
+    def test_password_change_logged(self, caplog):
         user = self.create_needs_password_change_user(
             "jane", GOOD_USER_PASSWORD
         )
@@ -97,6 +97,28 @@ class TestPasswordChangePaths(SetupClass):
             caplog,
             "App user (username=jane) from 2.1.1.2 successfully "
             "logged in. Password successfully changed.",
+        )
+
+    def test_password_change_recorded(self, caplog):
+        user = self.create_needs_password_change_user(
+            "clark", GOOD_USER_PASSWORD
+        )
+        time_before = datetime.now() - timedelta(seconds=1)
+
+        self.perform_good_password_change_login(
+            user, GOOD_USER_PASSWORD, "9.8.7.6"
+        )
+
+        expected_text = (
+            "App user (username=clark) from 9.8.7.6 successfully "
+            "logged in. Password successfully changed."
+        )
+        self.validate_log_entry_recorded(
+            time_before=time_before,
+            app_user_oid=user.oid,
+            tag=LogEntryTag.user_login,
+            text=expected_text,
+            usecase_tag=LoginToSystem.USECASE_TAG,
         )
 
     def test_password_marked_for_reset_clears_after_new_provided(self):
@@ -130,26 +152,4 @@ class TestPasswordChangePaths(SetupClass):
         user = self.db.get_app_user_by_oid(good_user.oid)
         assert self.crypto.hash_matches_string(
             user.password_hash, new_password
-        )
-
-    def test_password_change_recorded_when_successful(self, caplog):
-        user = self.create_needs_password_change_user(
-            "clark", GOOD_USER_PASSWORD
-        )
-        time_before = datetime.now() - timedelta(seconds=1)
-
-        self.perform_good_password_change_login(
-            user, GOOD_USER_PASSWORD, "9.8.7.6"
-        )
-
-        expected_text = (
-            "App user (username=clark) from 9.8.7.6 successfully "
-            "logged in. Password successfully changed."
-        )
-        self.validate_log_entry_recorded(
-            time_before=time_before,
-            app_user_oid=user.oid,
-            tag=LogEntryTag.user_login,
-            text=expected_text,
-            usecase_tag=LoginToSystem.USECASE_TAG,
         )
