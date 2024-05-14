@@ -153,3 +153,18 @@ class TestPasswordChangePaths(SetupClass):
         assert self.crypto.hash_matches_string(
             user.password_hash, new_password
         )
+
+    def test_fails_when_new_password_is_the_same(self):
+        user = self.create_good_user()
+        login_to_system = LoginToSystem(self.services)
+        result = login_to_system.run(
+            user.username,
+            GOOD_USER_PASSWORD,
+            GOOD_IP_ADDRESS,
+            GOOD_USER_PASSWORD,
+        )
+        assert result.has_failed
+        assert result.message == (
+            "Password change failed. New password can not be the same as "
+            "the current one."
+        )

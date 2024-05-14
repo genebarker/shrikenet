@@ -25,6 +25,11 @@ class LoginToSystem:
             self._verify_user_password_reset_satisfied(
                 user, new_password, ip_address
             )
+            if new_password is not None:
+                self._verify_password_is_different(
+                    user, ip_address, password, new_password
+                )
+
         except LoginToSystemError as error:
             return LoginToSystemResult(
                 message=str(error),
@@ -155,6 +160,23 @@ class LoginToSystem:
                 "Password marked for reset. Must supply a new password.",
                 must_change_password=True,
             )
+
+    def _verify_password_is_different(
+        self, user, ip_address, old_password, new_password
+    ):
+        if old_password != new_password:
+            return
+        log_entry_tag = LogEntryTag.unfit_password
+        log_entry_text = (
+            f"App user (username={user.username}) from {ip_address} "
+            f"attempted to login with a password change but the new "
+            f"password was the same as the current one."
+        )
+        self._record_log_entry(user.oid, log_entry_tag, log_entry_text)
+        raise LoginToSystemError(
+            "Password change failed. New password can not be the same as "
+            "the current one."
+        )
 
 
 class LoginToSystemError(Exception):

@@ -7,3 +7,4 @@ class LogEntryTag:
     unknown_user = "unknown_user"
     user_login = "user_login"
     wrong_password = "wrong_password"
+    unfit_password = "unfit_password"
