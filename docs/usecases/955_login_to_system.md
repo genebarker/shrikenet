@@ -1,6 +1,4 @@
-# 955 - Login to System
-
-![User Goal](level_sea.png)
+# 101 - Login to System
 
 Users use this function to securely enter the system. Users do so by
 providing their credentials. Upon verification, the system provides users
@@ -54,7 +52,7 @@ All users
 
 5a. Password marked for reset:
 
-  1. See __change password__.
+  1. See [change password][1].
 
 ## Technology & Data Variations List
 
@@ -69,4 +67,5 @@ All users
   threshold and age reset functionality.
 
 
-[1]: http://denyhosts.sourceforge.net/
+[1]: 102_change_password.md
+[2]: http://denyhosts.sourceforge.net/

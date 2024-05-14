@@ -1,6 +1,4 @@
-# 956 - Change Password
-
-![User Goal](level_sea.png)
+# 102 - Change Password
 
 Users need the ability to change their password. This function allows a user
 to change their password to another and ensures that it's of sufficient
@@ -12,7 +10,7 @@ All users
 
 ## Precondition(s)
 
-- User is __logged in to system__.
+- User is [logged in to system][1].
 
 ## Main Success Scenario
 
@@ -40,10 +38,11 @@ None.
 
 ## Related Information
 
-- See the [zxcvbn][1] utility from Dropbox for one method of determining
+- See the [zxcvbn][2] utility from Dropbox for one method of determining
   password strength.
-- See the [zxcvbn-python][2] for the Python port of zxcvbn.
+- See the [zxcvbn-python][3] for the Python port of zxcvbn.
 
 
-[1]: https://github.com/dropbox/zxcvbn
-[2]: https://github.com/dwolfhub/zxcvbn-python
+[1]: 101_login_to_system.md
+[2]: https://github.com/dropbox/zxcvbn
+[3]: https://github.com/dwolfhub/zxcvbn-python
