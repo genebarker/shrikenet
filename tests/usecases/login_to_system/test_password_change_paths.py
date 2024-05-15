@@ -168,3 +168,19 @@ class TestPasswordChangePaths(SetupClass):
             "Password change failed. New password can not be the same as "
             "the current one."
         )
+
+    def test_fails_when_new_password_is_too_weak(self):
+        user = self.create_good_user()
+        weak_password = "password"
+        login_to_system = LoginToSystem(self.services)
+        result = login_to_system.run(
+            user.username,
+            GOOD_USER_PASSWORD,
+            GOOD_IP_ADDRESS,
+            weak_password,
+        )
+        assert result.has_failed
+        assert result.message.startswith(
+            "Password change failed. New password is too weak. "
+            "Suggestions: "
+        )

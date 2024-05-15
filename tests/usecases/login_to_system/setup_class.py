@@ -5,6 +5,7 @@ from shrikenet.adapters.sqlite import SQLite
 from shrikenet.adapters.swapcase import Swapcase
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.services import Services
+from shrikenet.entities.password_checker import PasswordChecker
 from shrikenet.usecases.login_to_system import LoginToSystem
 
 DATABASE = "test.db"
@@ -26,7 +27,10 @@ class SetupClass:
         self.db.reset_database_objects()
         text_transformer = None
         self.crypto = Swapcase()
-        self.services = Services(self.db, text_transformer, self.crypto)
+        password_checker = PasswordChecker()
+        self.services = Services(
+            self.db, text_transformer, self.crypto, password_checker
+        )
 
     def teardown_method(self, method):
         self.db.close()

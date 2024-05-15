@@ -14,6 +14,7 @@ class LoginToSystem:
         self.db = services.storage_provider
         self.crypto = services.crypto_provider
         self.logger = logging.getLogger(__name__)
+        self.pw_checker = services.password_checker
 
     def run(self, username, password, ip_address, new_password=None):
         try:
@@ -28,6 +29,9 @@ class LoginToSystem:
             if new_password is not None:
                 self._verify_password_is_different(
                     user, ip_address, password, new_password
+                )
+                self._verify_password_meets_strength_reqs(
+                    user, ip_address, new_password
                 )
 
         except LoginToSystemError as error:
@@ -177,6 +181,25 @@ class LoginToSystem:
             "Password change failed. New password can not be the same as "
             "the current one."
         )
+
+    def _verify_password_meets_strength_reqs(
+        self, user, ip_address, new_password
+    ):
+        strength = self.pw_checker.get_strength(new_password)
+        if strength.is_too_low is False:
+            return
+        log_entry_tag = LogEntryTag.unfit_password
+        log_entry_text = (
+            f"App user (username={user.username}) from {ip_address} "
+            f"attempted to login with a password change but the new "
+            f"password is too weak."
+        )
+        self._record_log_entry(user.oid, log_entry_tag, log_entry_text)
+        text = (
+            f"Password change failed. New password is too weak. "
+            f"Suggestions: {strength.suggestions}"
+        )
+        raise LoginToSystemError(text)
 
 
 class LoginToSystemError(Exception):
