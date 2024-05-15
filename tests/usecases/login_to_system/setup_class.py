@@ -2,16 +2,16 @@ from datetime import datetime
 import logging
 
 from shrikenet.adapters.sqlite import SQLite
+from shrikenet.adapters.zxcvbn import zxcvbnAdapter
 from shrikenet.adapters.swapcase import Swapcase
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.services import Services
-from shrikenet.entities.password_checker import PasswordChecker
 from shrikenet.usecases.login_to_system import LoginToSystem
 
 DATABASE = "test.db"
 
 GOOD_USER_USERNAME = "fmulder"
-GOOD_USER_PASSWORD = "scully"
+GOOD_USER_PASSWORD = "likesScully!"
 GOOD_IP_ADDRESS = "1.2.3.4"
 MODULE_UNDER_TEST = "shrikenet.usecases.login_to_system"
 
@@ -27,7 +27,7 @@ class SetupClass:
         self.db.reset_database_objects()
         text_transformer = None
         self.crypto = Swapcase()
-        password_checker = PasswordChecker()
+        password_checker = zxcvbnAdapter()
         self.services = Services(
             self.db, text_transformer, self.crypto, password_checker
         )

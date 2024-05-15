@@ -1,4 +1,4 @@
-from shrikenet.entities.PasswordStrength import PasswordStrength
+from shrikenet.entities.password_strength import PasswordStrength
 
 
 class PasswordChecker:
