@@ -20,6 +20,8 @@ def app():
             "TEST_TRANSFORMER_CLASS": "Markdown",
             "CRYPTO_PROVIDER_MODULE": "shrikenet.adapters.swapcase",
             "CRYPTO_PROVIDER_CLASS": "Swapcase",
+            "PASSWORD_CHECKER_MODULE": "shrikenet.adapters.zxcvbn",
+            "PASSWORD_CHECKER_CLASS": "zxcvbnAdapter",
             "LOGGING_FORMAT": "%(asctime)s %(levelname)s %(name)s -> %(message)s",
             "LOGGING_DATE_FORMAT": "%Y-%m-%d %H:%M:%S",
             "LOGGING_LEVEL": "DEBUG",

@@ -18,6 +18,12 @@ SECRET_KEY = "changeThisLMAO"
 # shrikenet.adapters.swapcase / Swapcase is available
 # (insecure, used to ease hand entry of app_user records for testing)
 
+# PasswordChecker
+# PASSWORD_CHECKER_MODULE = "shrikenet.adapters.zxcvbn"
+# PASSWORD_CHECKER_CLASS = "zxcvbnAdapter"
+# PASSWORD_MIN_STRENGTH = 2
+# (0 to 4 - where 0 is too guessable and 4 is very unguessable)
+
 # Logging
 # LOGGING_FORMAT = '%(asctime)s %(levelname)s %(name)s -> %(message)s'
 # LOGGING_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
