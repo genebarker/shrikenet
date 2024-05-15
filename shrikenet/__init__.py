@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 __version__ = "1.0.0-SNAPSHOT"
 DEV_SECRET_KEY = "server-dev"
-DEV_DATABASE = "server-dev.db"
 
 
 def create_app(test_config=None):
@@ -19,7 +18,7 @@ def create_app(test_config=None):
         TOKEN_LIFESPAN_DAYS=30,
         STORAGE_PROVIDER_MODULE="shrikenet.adapters.sqlite",
         STORAGE_PROVIDER_CLASS="SQLiteAdapter",
-        STORAGE_PROVIDER_DB=DEV_DATABASE,
+        STORAGE_PROVIDER_DB="instance/server-dev.db",
         TEXT_TRANSFORMER_MODULE="shrikenet.adapters.markdown",
         TEXT_TRANSFORMER_CLASS="Markdown",
         CRYPTO_PROVIDER_MODULE="shrikenet.adapters.werkzeug",

@@ -6,7 +6,7 @@ SECRET_KEY = "changeThisLMAO"
 # StorageProvider
 # STORAGE_PROVIDER_MODULE = 'shrikenet.adapters.sqlite'
 # STORAGE_PROVIDER_CLASS = 'SQLiteAdapter'
-# STORAGE_PROVIDER_DB = "server-dev.db"
+# STORAGE_PROVIDER_DB = "instance/server-dev.db"
 
 # TextTransformer (Markup)
 # TEXT_TRANSFORMER_MODULE = 'shrikenet.adapters.markdown'
