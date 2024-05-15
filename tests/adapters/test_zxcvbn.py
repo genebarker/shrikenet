@@ -52,4 +52,4 @@ def test_get_strength_returns_high_score_for_strong_password():
 def test_get_strength_returns_suggestions_for_horrible_password():
     checker = zxcvbnAdapter()
     strength = checker.get_strength("password")
-    assert "Add another word or two." in strength.suggestions
+    assert "Add another word or two." in strength.suggestion

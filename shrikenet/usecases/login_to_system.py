@@ -197,7 +197,7 @@ class LoginToSystem:
         self._record_log_entry(user.oid, log_entry_tag, log_entry_text)
         text = (
             f"Password change failed. New password is too weak. "
-            f"Suggestions: {strength.suggestions}"
+            f"Suggestions: {strength.suggestion}"
         )
         raise LoginToSystemError(text)
 
