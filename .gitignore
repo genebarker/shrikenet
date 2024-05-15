@@ -18,7 +18,6 @@ dist/
 build/
 *.egg-info/
 
-database.cfg
 playground.py
 spellfile.utf-8.add.spl
 tags
