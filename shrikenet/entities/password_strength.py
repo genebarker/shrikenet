@@ -6,4 +6,4 @@ from typing import List
 class PasswordStrength:
     score: int = 0
     is_too_low: bool = False
-    suggestions: List[str] = None
+    suggestions: str = "None."
