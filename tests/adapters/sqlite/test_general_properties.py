@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from shrikenet.adapters.sqlite import SQLite
+from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.exceptions import (
     DatastoreAlreadyOpen,
     DatastoreError,
@@ -14,7 +14,7 @@ DATABASE = "test.db"
 
 @pytest.fixture
 def db():
-    database = SQLite(DATABASE)
+    database = SQLiteAdapter(DATABASE)
     database.open()
     yield database
     database.close()
@@ -22,7 +22,7 @@ def db():
 
 @pytest.fixture
 def unopened_db():
-    return SQLite(DATABASE)
+    return SQLiteAdapter(DATABASE)
 
 
 def test_is_a_storage_provider(db):

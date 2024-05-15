@@ -16,7 +16,7 @@ from shrikenet.entities.rules import Rules
 from shrikenet.entities.storage_provider import StorageProvider
 
 
-class SQLite(StorageProvider):
+class SQLiteAdapter(StorageProvider):
 
     SCHEMA_FILENAME = "build_schema.sql"
     RESET_FILENAME = "reset_objects.sql"

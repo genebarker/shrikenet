@@ -1,11 +1,11 @@
 import pytest
-from shrikenet.adapters.sqlite import SQLite
+from shrikenet.adapters.sqlite import SQLiteAdapter
 
 
 @pytest.fixture(scope="session")
 def db(tmp_path_factory):
     db_file = tmp_path_factory.mktemp("data") / "test.db"
-    database = SQLite(db_file)
+    database = SQLiteAdapter(db_file)
     database.open()
     database.build_database_schema()
     yield database

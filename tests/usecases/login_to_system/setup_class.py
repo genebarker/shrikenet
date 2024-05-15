@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 
-from shrikenet.adapters.sqlite import SQLite
+from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.adapters.zxcvbn import zxcvbnAdapter
 from shrikenet.adapters.swapcase import Swapcase
 from shrikenet.entities.app_user import AppUser
@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.DEBUG)
 class SetupClass:
 
     def setup_method(self, method):
-        self.db = SQLite(DATABASE)
+        self.db = SQLiteAdapter(DATABASE)
         self.db.open()
         self.db.reset_database_objects()
         text_transformer = None

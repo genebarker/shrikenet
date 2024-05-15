@@ -1,6 +1,6 @@
 import pytest
 
-from shrikenet.adapters.sqlite import SQLite
+from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.rules import Rules
 
 DATABASE = "test.db"
@@ -8,7 +8,7 @@ DATABASE = "test.db"
 
 @pytest.fixture
 def db():
-    database = SQLite(DATABASE)
+    database = SQLiteAdapter(DATABASE)
     database.open()
     database.build_database_schema()
     yield database

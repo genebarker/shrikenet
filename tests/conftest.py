@@ -14,7 +14,7 @@ def app():
         {
             "TESTING": True,
             "STORAGE_PROVIDER_MODULE": "shrikenet.adapters.sqlite",
-            "STORAGE_PROVIDER_CLASS": "SQLite",
+            "STORAGE_PROVIDER_CLASS": "SQLiteAdapter",
             "STORAGE_PROVIDER_DB": DATABASE_FILE,
             "TEXT_TRANSFORMER_MODULE": "shrikenet.adapters.markdown",
             "TEST_TRANSFORMER_CLASS": "Markdown",
@@ -22,6 +22,7 @@ def app():
             "CRYPTO_PROVIDER_CLASS": "Swapcase",
             "PASSWORD_CHECKER_MODULE": "shrikenet.adapters.zxcvbn",
             "PASSWORD_CHECKER_CLASS": "zxcvbnAdapter",
+            "PASSWORD_MIN_STRENGTH": 2,
             "LOGGING_FORMAT": "%(asctime)s %(levelname)s %(name)s -> %(message)s",
             "LOGGING_DATE_FORMAT": "%Y-%m-%d %H:%M:%S",
             "LOGGING_LEVEL": "DEBUG",

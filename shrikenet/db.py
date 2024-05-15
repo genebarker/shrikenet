@@ -19,6 +19,7 @@ def initialize_services():
     services.storage_provider = get_storage_provider()
     services.text_transformer = get_text_transformer()
     services.crypto_provider = get_crypto_provider()
+    services.password_checker = get_password_checker()
     return services
 
 
@@ -51,6 +52,15 @@ def get_crypto_provider():
         "CRYPTO_PROVIDER_MODULE", "CRYPTO_PROVIDER_CLASS"
     )
     crypto_provider = crypto_class()
+    return crypto_provider
+
+
+def get_password_checker():
+    crypto_class = get_class_from_app_config(
+        "PASSWORD_CHECKER_MODULE", "PASSWORD_CHECKER_CLASS"
+    )
+    password_min_strength = current_app.config["STORAGE_PROVIDER_DB"]
+    crypto_provider = crypto_class(password_min_strength)
     return crypto_provider
 
 

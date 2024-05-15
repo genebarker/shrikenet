@@ -1,6 +1,6 @@
 import pytest
 
-from shrikenet.adapters.sqlite import SQLite
+from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.exceptions import DatastoreError
 
 
@@ -22,7 +22,7 @@ BAD_MESSAGE = (
 
 @pytest.fixture
 def db():
-    database = SQLite(DATABASE)
+    database = SQLiteAdapter(DATABASE)
     database.open()
     database.build_database_schema()
     yield database
