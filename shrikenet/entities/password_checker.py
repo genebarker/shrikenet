@@ -1,14 +1,7 @@
-from shrikenet.entities.password_strength import PasswordStrength
-
-
 class PasswordChecker:
 
     def __init__(self):
-        self.is_too_low = False
+        raise NotImplementedError
 
     def get_strength(self, password):
-        is_too_low = True if (password == "password") else False
-        suggestions = [
-            "no suggestion",
-        ]
-        return PasswordStrength(is_too_low, suggestions)
+        raise NotImplementedError
