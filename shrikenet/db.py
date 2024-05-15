@@ -56,12 +56,12 @@ def get_crypto_provider():
 
 
 def get_password_checker():
-    crypto_class = get_class_from_app_config(
+    checker_class = get_class_from_app_config(
         "PASSWORD_CHECKER_MODULE", "PASSWORD_CHECKER_CLASS"
     )
-    password_min_strength = current_app.config["STORAGE_PROVIDER_DB"]
-    crypto_provider = crypto_class(password_min_strength)
-    return crypto_provider
+    password_min_strength = current_app.config["PASSWORD_MIN_STRENGTH"]
+    password_checker = checker_class(password_min_strength)
+    return password_checker
 
 
 def close_services(e=None):
