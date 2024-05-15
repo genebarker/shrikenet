@@ -6,11 +6,12 @@ from shrikenet.entities.password_strength import PasswordStrength
 
 class zxcvbnAdapter(PasswordChecker):
 
-    def __init__(self):
-        pass
+    def __init__(self, min_strength=2):
+        self.min_password_strength = min_strength
 
     def get_strength(self, password):
         results = zxcvbn(password)
-        is_too_low = True if (results["score"] < 2) else False
-        suggestions = None
-        return PasswordStrength(is_too_low, suggestions)
+        score = results["score"]
+        is_too_low = True if score < self.min_password_strength else False
+        suggestions = results["feedback"]["suggestions"]
+        return PasswordStrength(score, is_too_low, suggestions)
