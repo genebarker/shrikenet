@@ -3,27 +3,14 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.exceptions import (
     DatastoreError,
     DatastoreKeyError,
 )
 
-DATABASE = "test.db"
 
-
-@pytest.fixture
-def db():
-    database = SQLiteAdapter(DATABASE)
-    database.open()
-    database.build_database_schema()
-    yield database
-    database.close()
-
-
-@pytest.fixture
-def app_user(db):
+def create_and_add_user(db):
     app_user = create_user()
     app_user.oid = db.add_app_user(app_user)
     return app_user
@@ -61,8 +48,8 @@ def test_get_app_user_by_username_unknown_raises(db):
         db.get_app_user_by_username("xyz")
 
 
-def test_get_app_user_by_username_gets_record(app_user, db):
-    original_user = app_user
+def test_get_app_user_by_username_gets_record(db):
+    original_user = create_and_add_user(db)
     stored_user = db.get_app_user_by_username(original_user.username)
     assert stored_user == original_user
 
@@ -73,26 +60,30 @@ def test_get_app_user_by_oid_unknown_raises(db):
         db.get_app_user_by_oid("12345")
 
 
-def test_add_app_user_adds_record(app_user, db):
+def test_add_app_user_adds_record(db):
+    app_user = create_and_add_user(db)
     stored_user = db.get_app_user_by_oid(app_user.oid)
     assert stored_user == app_user
 
 
-def test_add_app_user_with_duplicate_username_raises(app_user, db):
+def test_add_app_user_with_duplicate_username_raises(db):
+    app_user = create_and_add_user(db)
     new_user = copy.copy(app_user)
     regex = "can not add app_user .username=mawesome., reason: "
     with pytest.raises(DatastoreError, match=regex):
         db.add_app_user(new_user)
 
 
-def test_update_app_user_updates_record(app_user, db):
+def test_update_app_user_updates_record(db):
+    app_user = create_and_add_user(db)
     app_user.name = "Different"
     db.update_app_user(app_user)
     stored_user = db.get_app_user_by_oid(app_user.oid)
     assert stored_user == app_user
 
 
-def test_update_app_user_updates_every_field(app_user, db):
+def test_update_app_user_updates_every_field(db):
+    app_user = create_and_add_user(db)
     app_user.username += "a"
     app_user.name += "b"
     app_user.password_hash += "c"
@@ -119,11 +110,13 @@ def test_get_app_user_count_zero_when_empty(db):
     assert db.get_app_user_count() == 0
 
 
-def test_get_app_user_count_matches_that_stored(app_user, db):
+def test_get_app_user_count_matches_that_stored(db):
+    create_and_add_user(db)
     assert db.get_app_user_count() == 1
 
 
-def test_exists_app_user_true_for_known(app_user, db):
+def test_exists_app_user_true_for_known(db):
+    app_user = create_and_add_user(db)
     assert db.exists_app_username(app_user.username)
 
 
@@ -131,11 +124,13 @@ def test_exists_app_user_false_for_unknown(db):
     assert db.exists_app_username("UNKNOWN") is False
 
 
-def test_add_app_user_record_exists_after_commit(app_user, db):
+def test_add_app_user_record_exists_after_commit(db):
+    app_user = create_and_add_user(db)
     db.commit()
     assert db.exists_app_username(app_user.username)
 
 
-def test_add_app_user_record_gone_after_rollback(app_user, db):
+def test_add_app_user_record_gone_after_rollback(db):
+    app_user = create_and_add_user(db)
     db.rollback()
     assert not db.exists_app_username(app_user.username)

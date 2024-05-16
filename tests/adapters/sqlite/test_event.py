@@ -3,26 +3,13 @@ from datetime import datetime
 
 import pytest
 
-from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.log_entry import LogEntry
 from shrikenet.entities.exceptions import (
     DatastoreKeyError,
 )
 
-DATABASE = "test.db"
-
-
 CHRISTMAS_2018 = datetime(2018, 12, 25, 0, 0)
-
-
-@pytest.fixture
-def db():
-    database = SQLiteAdapter(DATABASE)
-    database.open()
-    database.build_database_schema()
-    yield database
-    database.close()
 
 
 @pytest.fixture

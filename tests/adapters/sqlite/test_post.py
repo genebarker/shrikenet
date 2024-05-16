@@ -10,38 +10,6 @@ from shrikenet.entities.exceptions import (
 )
 from shrikenet.entities.post import Post, DeepPost
 
-DATABASE = "test.db"
-
-
-@pytest.fixture
-def db():
-    database = SQLiteAdapter(DATABASE)
-    database.open()
-    database.build_database_schema()
-    yield database
-    database.close()
-
-
-@pytest.fixture
-def app_user(db):
-    app_user = create_user()
-    app_user.oid = db.add_app_user(app_user)
-    return app_user
-
-
-def create_user():
-    oid = -1
-    username = "mspacman"
-    name = "Ms. Pacman"
-    password_hash = "lowerUPPER"
-    app_user = AppUser(
-        oid,
-        username,
-        name,
-        password_hash,
-    )
-    return app_user
-
 
 @pytest.fixture
 def post(app_user, db):
@@ -80,7 +48,7 @@ def test_get_post_by_oid_gets_record(post, db):
 
 def test_get_post_gets_deep_version(post, db):
     deep_post = db.get_post_by_oid(post.oid)
-    assert deep_post.author_username == "mspacman"
+    assert deep_post.author_username == "dstrange"
 
 
 def test_add_post_adds_record(post, db):
@@ -151,7 +119,7 @@ def test_get_posts_gets_deep_versions(posts, db):
     stored_posts = db.get_posts()
     for post in stored_posts:
         assert isinstance(post, DeepPost)
-        assert post.author_username == "mspacman"
+        assert post.author_username == "dstrange"
 
 
 def test_get_posts_returns_empty_list_when_empty(db):

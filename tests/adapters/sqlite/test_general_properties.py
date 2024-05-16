@@ -9,20 +9,10 @@ from shrikenet.entities.exceptions import (
 )
 from shrikenet.entities.storage_provider import StorageProvider
 
-DATABASE = "test.db"
-
 
 @pytest.fixture
-def db():
-    database = SQLiteAdapter(DATABASE)
-    database.open()
-    yield database
-    database.close()
-
-
-@pytest.fixture
-def unopened_db():
-    return SQLiteAdapter(DATABASE)
+def unopened_db(db_file):
+    return SQLiteAdapter(db_file)
 
 
 def test_is_a_storage_provider(db):

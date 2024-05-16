@@ -1,17 +1,3 @@
-import pytest
-from shrikenet.adapters.sqlite import SQLiteAdapter
-
-
-@pytest.fixture(scope="session")
-def db(tmp_path_factory):
-    db_file = tmp_path_factory.mktemp("data") / "test.db"
-    database = SQLiteAdapter(db_file)
-    database.open()
-    database.build_database_schema()
-    yield database
-    database.close()
-
-
 def test_schema_exists_after_build(db):
     db.build_database_schema()
     assert_database_in_initial_state(db)

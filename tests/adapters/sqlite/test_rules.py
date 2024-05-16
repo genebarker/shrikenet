@@ -1,18 +1,4 @@
-import pytest
-
-from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.rules import Rules
-
-DATABASE = "test.db"
-
-
-@pytest.fixture
-def db():
-    database = SQLiteAdapter(DATABASE)
-    database.open()
-    database.build_database_schema()
-    yield database
-    database.close()
 
 
 def test_get_rules_returns_rules_object(db):

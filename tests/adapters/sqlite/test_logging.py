@@ -1,10 +1,7 @@
 import pytest
 
-from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.exceptions import DatastoreError
 
-
-DATABASE = "test.db"
 
 BAD_SQL = """
     SELECT count(*)
@@ -18,15 +15,6 @@ BAD_MESSAGE = (
     "FROM non_existant_table t\n"
     "WHERE t.color = 'red'"
 )
-
-
-@pytest.fixture
-def db():
-    database = SQLiteAdapter(DATABASE)
-    database.open()
-    database.build_database_schema()
-    yield database
-    database.close()
 
 
 def test_sql_exception_message_format(db):
