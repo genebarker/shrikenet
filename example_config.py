@@ -14,7 +14,7 @@ SECRET_KEY = "changeThisLMAO"
 
 # CryptoProvider
 # CRYPTO_PROVIDER_MODULE = "shrikenet.adapters.werkzeug"
-# CRYPTO_PROVIDER_CLASS = "Werkzeug"
+# CRYPTO_PROVIDER_CLASS = "WerkzeugAdapter"
 # shrikenet.adapters.swapcase / SwapcaseAdapter is available
 # (insecure, used to ease hand entry of app_user records for testing)
 

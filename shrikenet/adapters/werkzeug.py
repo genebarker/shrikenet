@@ -3,7 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from shrikenet.entities.crypto_provider import CryptoProvider
 
 
-class Werkzeug(CryptoProvider):
+class WerkzeugAdapter(CryptoProvider):
 
     def __init__(self):
         pass

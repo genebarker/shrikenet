@@ -1,6 +1,6 @@
 import pytest
 
-from shrikenet.adapters.werkzeug import Werkzeug
+from shrikenet.adapters.werkzeug import WerkzeugAdapter
 from tests.adapters.test_swapcase import TestSwapcase
 
 
@@ -18,4 +18,4 @@ class TestWerkzeug(TestSwapcase):
 
     @staticmethod
     def get_crypto_provider():
-        return Werkzeug()
+        return WerkzeugAdapter()
