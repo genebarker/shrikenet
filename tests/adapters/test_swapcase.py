@@ -1,6 +1,6 @@
 import pytest
 
-from shrikenet.adapters.swapcase import Swapcase
+from shrikenet.adapters.swapcase import SwapcaseAdapter
 from shrikenet.entities.crypto_provider import CryptoProvider
 
 
@@ -12,7 +12,7 @@ class TestSwapcase:
 
     @staticmethod
     def get_crypto_provider():
-        return Swapcase()
+        return SwapcaseAdapter()
 
     @pytest.fixture
     def crypto_provider(self):

@@ -3,7 +3,7 @@ import logging
 
 from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.adapters.zxcvbn import zxcvbnAdapter
-from shrikenet.adapters.swapcase import Swapcase
+from shrikenet.adapters.swapcase import SwapcaseAdapter
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.services import Services
 from shrikenet.usecases.login_to_system import LoginToSystem
@@ -26,7 +26,7 @@ class SetupClass:
         self.db.open()
         self.db.reset_database_objects()
         text_transformer = None
-        self.crypto = Swapcase()
+        self.crypto = SwapcaseAdapter()
         password_checker = zxcvbnAdapter()
         self.services = Services(
             self.db, text_transformer, self.crypto, password_checker

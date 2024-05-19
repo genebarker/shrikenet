@@ -19,7 +19,7 @@ def app():
             "TEXT_TRANSFORMER_MODULE": "shrikenet.adapters.markdown",
             "TEST_TRANSFORMER_CLASS": "Markdown",
             "CRYPTO_PROVIDER_MODULE": "shrikenet.adapters.swapcase",
-            "CRYPTO_PROVIDER_CLASS": "Swapcase",
+            "CRYPTO_PROVIDER_CLASS": "SwapcaseAdapter",
             "PASSWORD_CHECKER_MODULE": "shrikenet.adapters.zxcvbn",
             "PASSWORD_CHECKER_CLASS": "zxcvbnAdapter",
             "PASSWORD_MIN_STRENGTH": 2,
