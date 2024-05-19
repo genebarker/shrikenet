@@ -17,7 +17,7 @@ def app():
             "STORAGE_PROVIDER_CLASS": "SQLiteAdapter",
             "STORAGE_PROVIDER_DB": DATABASE_FILE,
             "TEXT_TRANSFORMER_MODULE": "shrikenet.adapters.markdown",
-            "TEST_TRANSFORMER_CLASS": "MarkdownAdapter",
+            "TEXT_TRANSFORMER_CLASS": "MarkdownAdapter",
             "CRYPTO_PROVIDER_MODULE": "shrikenet.adapters.swapcase",
             "CRYPTO_PROVIDER_CLASS": "SwapcaseAdapter",
             "PASSWORD_CHECKER_MODULE": "shrikenet.adapters.zxcvbn",
