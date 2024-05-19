@@ -11,8 +11,8 @@ from shrikenet.entities.storage_provider import StorageProvider
 
 
 @pytest.fixture
-def unopened_db(db_file):
-    return SQLiteAdapter(db_file)
+def unopened_db(db_config):
+    return SQLiteAdapter(db_config)
 
 
 def test_is_a_storage_provider(db):

@@ -3,17 +3,19 @@ import pytest
 from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.app_user import AppUser
 
-DATABASE = "tests/test.db"
+DB_CONFIG = {
+    "STORAGE_PROVIDER_DB": "tests/test.db",
+}
 
 
 @pytest.fixture
-def db_file():
-    return DATABASE
+def db_config():
+    return DB_CONFIG
 
 
 @pytest.fixture
 def db():
-    database = SQLiteAdapter(DATABASE)
+    database = SQLiteAdapter(DB_CONFIG)
     database.open()
     database.build_database_schema()
     yield database

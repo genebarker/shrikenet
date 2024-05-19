@@ -21,11 +21,16 @@ class SQLiteAdapter(StorageProvider):
     SCHEMA_FILENAME = "build_schema.sql"
     RESET_FILENAME = "reset_objects.sql"
 
-    def __init__(self, db_file):
+    def __init__(self, config):
         self.is_open = False
         self.connection = None
         self.logger = logging.getLogger(__name__)
-        self.db_file = db_file
+        self.db_file = self.get_db_file(config)
+
+    def get_db_file(self, config):
+        if isinstance(config, str):
+            return config
+        return config["STORAGE_PROVIDER_DB"]
 
     def open(self):
         if self.is_open:
