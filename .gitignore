@@ -21,4 +21,5 @@ build/
 playground.py
 spellfile.utf-8.add.spl
 tags
+test.db
 TODO.md
