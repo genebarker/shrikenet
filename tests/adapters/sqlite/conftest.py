@@ -4,7 +4,7 @@ from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.app_user import AppUser
 
 DB_CONFIG = {
-    "STORAGE_PROVIDER_DB": "tests/test.db",
+    "STORAGE_PROVIDER_DB": "test.db",
 }
 
 
