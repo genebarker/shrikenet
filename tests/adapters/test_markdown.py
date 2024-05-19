@@ -1,12 +1,12 @@
 import pytest
 
-from shrikenet.adapters.markdown import Markdown
+from shrikenet.adapters.markdown import MarkdownAdapter
 from shrikenet.entities.text_transformer import TextTransformer
 
 
 @pytest.fixture
 def text_transformer():
-    return Markdown()
+    return MarkdownAdapter()
 
 
 def test_is_a_text_transformer(text_transformer):

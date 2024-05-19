@@ -5,7 +5,7 @@ from cmarkgfm.cmark import Options as cmarkgfmOptions
 from shrikenet.entities.text_transformer import TextTransformer
 
 
-class Markdown(TextTransformer):
+class MarkdownAdapter(TextTransformer):
 
     def __init__(self):
         self.options = (
