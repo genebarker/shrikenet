@@ -153,6 +153,7 @@ def test_first_open_stores_account_info_in_config(
     parser = configparser.ConfigParser()
     parser.read(config)
     assert ACCOUNT_NAME in parser.sections()
+    assert parser[ACCOUNT_NAME]["protocol"] == "http"
     assert parser[ACCOUNT_NAME].getboolean("is_open")
     assert "token" in parser[ACCOUNT_NAME]
 

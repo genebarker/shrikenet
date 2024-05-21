@@ -8,7 +8,6 @@ import textwrap
 import shrikenet
 from shrikenet.client.requests_adapter import RequestsAdapter
 
-
 COMMAND_NAME = "snet"
 DEFAULT_CONFIG_FILENAME = ".snetrc"
 
@@ -97,8 +96,10 @@ class CommandProcessor:
             sys.exit(1)
 
         account_name = arg_list[0]
+        protocol = "http"
+
         username = self.get_username(account_name)
-        host_url = self.get_host_url(account_name)
+        host_url = f"{protocol}://{self.get_host(account_name)}"
         password = getpass.getpass()
 
         http = self.get_http_provider(host_url)
@@ -111,11 +112,13 @@ class CommandProcessor:
         )
         token = response.json["token"]
         expire_time = response.json["expire_time"]
-        self.update_config_file_for_open(account_name, token, expire_time)
+        self.update_config_file_for_open(
+            account_name, protocol, token, expire_time
+        )
         self.print_open_successful(account_name)
         sys.exit(0)
 
-    def get_host_url(self, account_name):
+    def get_host(self, account_name):
         chunk = account_name.split("@")
         return chunk[1]
 
@@ -124,9 +127,16 @@ class CommandProcessor:
             return self.http_provider_override
         return RequestsAdapter(host_url)
 
-    def update_config_file_for_open(self, account_name, token, expire_time):
+    def update_config_file_for_open(
+        self,
+        account_name,
+        protocol,
+        token,
+        expire_time,
+    ):
         config = ConfigParser()
         config[account_name] = {}
+        config[account_name]["protocol"] = protocol
         config[account_name]["is_open"] = "true"
         config[account_name]["token"] = token
         config[account_name]["expire_time"] = expire_time
