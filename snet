@@ -5,4 +5,4 @@ import sys
 from shrikenet.client.command_processor import CommandProcessor
 
 client = CommandProcessor()
-client.run(sys.argv)
+client.run(sys.argv[1:])

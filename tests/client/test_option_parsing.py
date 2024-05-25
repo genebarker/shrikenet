@@ -33,7 +33,7 @@ def http(client):
 
 def test_error_code_when_no_command(config):
     exit_code = run_snet(config)
-    assert exit_code == 1
+    assert exit_code == 2
 
 
 def run_snet(config, http=None, args=None):
@@ -49,8 +49,8 @@ def run_snet(config, http=None, args=None):
 def test_usage_info_when_no_command(capsys, config):
     run_snet(config)
     captured = capsys.readouterr()
-    assert_has_header(captured.out)
-    assert "Usage:" in captured.out
+    assert_has_header(captured.err)
+    assert "usage:" in captured.err
 
 
 def assert_has_header(output):
@@ -59,22 +59,19 @@ def assert_has_header(output):
 
 def test_error_code_on_unknown_command(config):
     exit_code = run_snet_cmd("bogus", config)
-    assert exit_code == 1
+    assert exit_code == 2
 
 
 def run_snet_cmd(cmd, config, http=None):
-    args = ["snet", cmd] if isinstance(cmd, str) else ["snet"] + cmd
+    args = cmd if isinstance(cmd, list) else cmd.split()
     return run_snet(config, http=http, args=args)
 
 
 def test_shows_header_with_error_on_unknown_command(config, capsys):
     run_snet_cmd("bogus", config)
     captured = capsys.readouterr()
-    assert_has_header(captured.out)
-    assert (
-        "ERROR: Unknown command (bogus) provided. Type 'snet help' for help."
-        in captured.err
-    )
+    assert_has_header(captured.err)
+    assert "invalid choice" in captured.err
 
 
 @pytest.mark.parametrize(
@@ -82,7 +79,6 @@ def test_shows_header_with_error_on_unknown_command(config, capsys):
     (
         ("license"),
         ("version"),
-        ("help"),
     ),
 )
 def test_no_error_code(command, config):
@@ -112,20 +108,17 @@ def test_version_command_shows_it(config, capsys):
 
 
 def test_help_shows_usage_info_with_header(config, capsys):
-    run_snet_cmd("help", config)
+    run_snet_cmd("-h", config)
     captured = capsys.readouterr()
     assert_has_header(captured.out)
-    assert "Usage:" in captured.out
+    assert "usage:" in captured.out
 
 
 def test_open_no_args_shows_error(config, capsys):
     error_code = run_snet_cmd("open", config)
     captured = capsys.readouterr()
-    assert error_code == 1
-    assert (
-        "ERROR: A target account ID (i.e. me@example.com) must be provided."
-        in captured.err
-    )
+    assert error_code == 2
+    assert "error" in captured.err
 
 
 def test_first_open_gets_web_token(monkeypatch, config, http):

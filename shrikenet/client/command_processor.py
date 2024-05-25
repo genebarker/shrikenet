@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
 import getpass
@@ -9,6 +10,7 @@ import shrikenet
 from shrikenet.client.requests_adapter import RequestsAdapter
 
 COMMAND_NAME = "snet"
+PROJECT_URL = "https://github.com/genebarker/shrikenet"
 DEFAULT_CONFIG_FILENAME = ".snetrc"
 
 
@@ -21,21 +23,51 @@ class CommandProcessor:
         self.http_provider_override = http_provider_override
 
     def run(self, arg_list=None):
-        if arg_list and len(arg_list) > 1:
-            command = arg_list[1]
-            command_arg_list = arg_list[2:]
-            try:
-                func = getattr(self, f"{command}_cmd")
-                func(command_arg_list)
-            except AttributeError:
-                self.print_header()
-                self.eprint(
-                    f"ERROR: Unknown command ({command}) provided. Type '"
-                    f"{COMMAND_NAME} help' for help."
-                )
-                sys.exit(1)
+        parser = self.build_parser()
+        args = parser.parse_args(arg_list)
+        args.func(args)
 
-        self.help_cmd(exit_code=1)
+    def build_parser(self):
+        parser = ArgumentParser(
+            prog=COMMAND_NAME,
+            description=f"{COMMAND_NAME} is the command line client for shrikenet",
+            epilog=f"shrikenet home page: <{PROJECT_URL}>",
+        )
+        sub_parsers = parser.add_subparsers(
+            required=True,
+        )
+        open_parser = sub_parsers.add_parser(
+            "open",
+            help="open connection to server",
+        )
+        open_parser.add_argument(
+            "-p",
+            "--port",
+            type=int,
+            help="use custom port",
+        )
+        open_parser.add_argument(
+            "-u",
+            "--http",
+            action="store_true",
+            help="use HTTP protocol (default is HTTPS)",
+        )
+        open_parser.add_argument(
+            "address",
+            help="user's shrikenet address (i.e. me@example.com)",
+        )
+        open_parser.set_defaults(func=self.open_cmd)
+        license_parser = sub_parsers.add_parser(
+            "license",
+            help="show license",
+        )
+        license_parser.set_defaults(func=self.license_cmd)
+        version_parser = sub_parsers.add_parser(
+            "version",
+            help="show version info",
+        )
+        version_parser.set_defaults(func=self.version_cmd)
+        return parser
 
     def print_header(self):
         version = shrikenet.__version__
@@ -51,25 +83,6 @@ class CommandProcessor:
 
     def eprint(self, *args, **kwargs):
         print(*args, file=sys.stderr, **kwargs)
-
-    def help_cmd(self, arg_list=None, exit_code=0):
-        self.print_header()
-        self.print_usage()
-        sys.exit(exit_code)
-
-    def print_usage(self):
-        text = textwrap.dedent(
-            f"""\
-            Usage:
-              {COMMAND_NAME} status
-              {COMMAND_NAME} open [user@host[:port]]
-              {COMMAND_NAME} close [user@host]
-              {COMMAND_NAME} license
-              {COMMAND_NAME} version
-              {COMMAND_NAME} help [command]
-            """
-        )
-        print(text)
 
     def license_cmd(self, arg_list=None):
         self.print_header()
@@ -87,15 +100,15 @@ class CommandProcessor:
         print(f"{COMMAND_NAME} v{version}")
         sys.exit(0)
 
-    def open_cmd(self, arg_list=None):
-        if arg_list is None or len(arg_list) == 0:
+    def open_cmd(self, args):
+        if args.address is None:
             self.eprint(
                 "ERROR: A target account ID (i.e. me@example.com) must "
                 "be provided."
             )
             sys.exit(1)
 
-        account_name = arg_list[0]
+        account_name = args.address
         protocol = "http"
 
         username = self.get_username(account_name)
