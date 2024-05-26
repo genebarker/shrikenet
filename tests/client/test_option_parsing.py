@@ -1,3 +1,4 @@
+from argparse import ArgumentTypeError
 import configparser
 import getpass
 import os
@@ -14,8 +15,8 @@ from shrikenet.client.flask_adapter import FlaskAdapter
 
 TEST_USER = "fmulder"
 TEST_HOSTNAME = "localhost"
-TEST_PORT = "5000"
-ACCOUNT_NAME = f"{TEST_USER}@{TEST_HOSTNAME}:{TEST_PORT}"
+TEST_PORT = 5000
+ACCOUNT_NAME = f"{TEST_USER}@{TEST_HOSTNAME}"
 TEST_PASSWORD = "scully"
 
 
@@ -130,9 +131,32 @@ def test_first_open_gets_web_token(monkeypatch, config, http):
     assert header["typ"] == "JWT"
 
 
+def test_accepts_regular_network_id():
+    client = CommandProcessor()
+    client.validate_network_id("me@example.com")
+
+
+def test_accepts_ip_use_in_network_id():
+    client = CommandProcessor()
+    client.validate_network_id("you@11.222.3.44")
+
+
+def test_accepts_localhost_use_in_network_id():
+    client = CommandProcessor()
+    client.validate_network_id("him@localhost")
+
+
+def test_rejects_bad_network_id():
+    client = CommandProcessor()
+    with pytest.raises(ArgumentTypeError):
+        client.validate_network_id("bad_id")
+
+
 def perform_open_with_password(monkeypatch, config, http):
     monkeypatch.setattr(getpass, "getpass", good_password)
-    return run_snet_cmd(["open", ACCOUNT_NAME], config, http)
+    return run_snet_cmd(
+        "select -p 5000 -u fmulder@localhost".split(), config, http
+    )
 
 
 def good_password():
@@ -145,10 +169,12 @@ def test_first_open_stores_account_info_in_config(
     perform_open_with_password(monkeypatch, config, http)
     parser = configparser.ConfigParser()
     parser.read(config)
-    assert ACCOUNT_NAME in parser.sections()
-    assert parser[ACCOUNT_NAME]["protocol"] == "http"
-    assert parser[ACCOUNT_NAME].getboolean("is_open")
-    assert "token" in parser[ACCOUNT_NAME]
+    address = "fmulder@localhost"
+    assert address in parser.sections()
+    assert parser[address]["protocol"] == "http"
+    assert parser[address]["port"] == "5000"
+    assert parser[address].getboolean("is_open")
+    assert "token" in parser[address]
 
 
 def test_first_open_returns_expected_output(
@@ -157,4 +183,4 @@ def test_first_open_returns_expected_output(
     error_code = perform_open_with_password(monkeypatch, config, http)
     captured = capsys.readouterr()
     assert error_code == 0
-    assert f"Opened '{TEST_USER}' at '{TEST_HOSTNAME}'" in captured.out
+    assert "Opened 'fmulder' at 'localhost'" in captured.out

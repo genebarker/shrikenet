@@ -1,8 +1,9 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 from configparser import ConfigParser
 from pathlib import Path
 import getpass
 import os
+import re
 import sys
 import textwrap
 
@@ -30,44 +31,57 @@ class CommandProcessor:
     def build_parser(self):
         parser = ArgumentParser(
             prog=COMMAND_NAME,
-            description=f"{COMMAND_NAME} is the command line client for shrikenet",
-            epilog=f"shrikenet home page: <{PROJECT_URL}>",
+            description=f"{COMMAND_NAME} is the command line client for Shrikenet",
+            epilog=f"Shrikenet home page: <{PROJECT_URL}>",
         )
         sub_parsers = parser.add_subparsers(
             required=True,
         )
-        open_parser = sub_parsers.add_parser(
-            "open",
-            help="open connection to server",
+
+        select_parser = sub_parsers.add_parser(
+            "select",
+            help="select the current community for interaction",
         )
-        open_parser.add_argument(
+        select_parser.add_argument(
             "-p",
             "--port",
             type=int,
-            help="use custom port",
+            help="use custom port (default: 80 for HTTP, 443 for HTTPS)",
         )
-        open_parser.add_argument(
+        select_parser.add_argument(
             "-u",
             "--http",
             action="store_true",
             help="use HTTP protocol (default is HTTPS)",
         )
-        open_parser.add_argument(
-            "address",
-            help="user's shrikenet address (i.e. me@example.com)",
+        select_parser.add_argument(
+            "network_id",
+            type=self.validate_network_id,
+            help="network ID in email form (e.g., me@example.com or me@127.0.0.1 or me@localhost)",
         )
-        open_parser.set_defaults(func=self.open_cmd)
+        select_parser.set_defaults(func=self.select_cmd)
+
         license_parser = sub_parsers.add_parser(
             "license",
             help="show license",
         )
         license_parser.set_defaults(func=self.license_cmd)
+
         version_parser = sub_parsers.add_parser(
             "version",
             help="show version info",
         )
         version_parser.set_defaults(func=self.version_cmd)
+
         return parser
+
+    def validate_network_id(self, network_id):
+        pattern = r"^[a-zA-Z0-9._%+-]+@(localhost|[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$"
+        if not re.match(pattern, network_id):
+            raise ArgumentTypeError(
+                f"Invalid network ID format: {network_id}"
+            )
+        return network_id
 
     def print_header(self):
         version = shrikenet.__version__
@@ -100,19 +114,25 @@ class CommandProcessor:
         print(f"{COMMAND_NAME} v{version}")
         sys.exit(0)
 
-    def open_cmd(self, args):
-        if args.address is None:
+    def select_cmd(self, args):
+        if args.network_id is None:
             self.eprint(
                 "ERROR: A target account ID (i.e. me@example.com) must "
                 "be provided."
             )
             sys.exit(1)
 
-        account_name = args.address
-        protocol = "http"
+        account_name = args.network_id
+        protocol = "https"
+        port = 443
+        if args.http:
+            protocol = "http"
+            port = 80
+        if args.port:
+            port = args.port
 
         username = self.get_username(account_name)
-        host_url = f"{protocol}://{self.get_host(account_name)}"
+        host_url = f"{protocol}://{self.get_host(account_name)}:{port}"
         password = getpass.getpass()
 
         http = self.get_http_provider(host_url)
@@ -126,7 +146,7 @@ class CommandProcessor:
         token = response.json["token"]
         expire_time = response.json["expire_time"]
         self.update_config_file_for_open(
-            account_name, protocol, token, expire_time
+            account_name, port, protocol, token, expire_time
         )
         self.print_open_successful(account_name)
         sys.exit(0)
@@ -143,12 +163,14 @@ class CommandProcessor:
     def update_config_file_for_open(
         self,
         account_name,
+        port,
         protocol,
         token,
         expire_time,
     ):
         config = ConfigParser()
         config[account_name] = {}
+        config[account_name]["port"] = str(port)
         config[account_name]["protocol"] = protocol
         config[account_name]["is_open"] = "true"
         config[account_name]["token"] = token
