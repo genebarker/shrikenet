@@ -31,8 +31,8 @@ class CommandProcessor:
     def build_parser(self):
         parser = ArgumentParser(
             prog=COMMAND_NAME,
-            description=f"{COMMAND_NAME} is the command line client for Shrikenet",
-            epilog=f"Shrikenet home page: <{PROJECT_URL}>",
+            description=f"{COMMAND_NAME} is the command line client for shrikenet community networks",
+            epilog=f"shrikenet home page: <{PROJECT_URL}>",
         )
         sub_parsers = parser.add_subparsers(
             required=True,
@@ -40,19 +40,19 @@ class CommandProcessor:
 
         select_parser = sub_parsers.add_parser(
             "select",
-            help="select the current community for interaction",
-        )
-        select_parser.add_argument(
-            "-p",
-            "--port",
-            type=int,
-            help="use custom port (default: 80 for HTTP, 443 for HTTPS)",
+            help="select the current community network for interaction",
         )
         select_parser.add_argument(
             "-u",
             "--http",
             action="store_true",
             help="use HTTP protocol (default is HTTPS)",
+        )
+        select_parser.add_argument(
+            "-p",
+            "--port",
+            type=int,
+            help="use custom port (default: 80 for HTTP, 443 for HTTPS)",
         )
         select_parser.add_argument(
             "network_id",
