@@ -183,4 +183,7 @@ def test_first_open_returns_expected_output(
     error_code = perform_open_with_password(monkeypatch, config, http)
     captured = capsys.readouterr()
     assert error_code == 0
-    assert "Opened 'fmulder' at 'localhost'" in captured.out
+    assert (
+        "Selected network fmulder@localhost on port 5000 using HTTP."
+        in captured.out
+    )

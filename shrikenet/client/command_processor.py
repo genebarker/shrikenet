@@ -148,7 +148,10 @@ class CommandProcessor:
         self.update_config_file_for_open(
             account_name, port, protocol, token, expire_time
         )
-        self.print_open_successful(account_name)
+        print(
+            f"Selected network {account_name} on port {port} using "
+            f"{protocol.upper()}."
+        )
         sys.exit(0)
 
     def get_host(self, account_name):
