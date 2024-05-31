@@ -47,10 +47,9 @@ class SetupClass:
         return user
 
     def create_user(self, username, password):
-        oid = -1
         name = "mr " + username
         password_hash = self.crypto.generate_hash_from_string(password)
-        user = AppUser(oid, username, name, password_hash)
+        user = AppUser(username, name, password_hash)
         return user
 
     def validate_login_fails(

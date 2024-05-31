@@ -17,16 +17,15 @@ def create_and_add_user(db):
 
 
 def create_user():
-    oid = -1
     username = "mawesome"
     name = "Mr. Awesome"
     password_hash = "xxYYYzzzz"
     time_now = datetime.now()
     app_user = AppUser(
-        oid,
         username,
         name,
         password_hash,
+        oid=-1,
         needs_password_change=True,
         is_locked=True,
         is_dormant=True,
@@ -100,7 +99,8 @@ def test_update_app_user_updates_every_field(db):
 
 
 def test_update_app_user_raises_on_unknown_oid(db):
-    user = AppUser(12345, "mrunknown", "Mr Unkonwn", "fakeHASH")
+    user = AppUser("mrunknown", "Mr Unkonwn", "fakeHASH")
+    user.oid = 12345
     regex = "can not update app_user .oid=12345., reason: "
     with pytest.raises(DatastoreKeyError, match=regex):
         db.update_app_user(user)

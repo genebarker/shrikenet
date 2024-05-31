@@ -106,8 +106,6 @@ def test_unknown_app_user_oid_raises(log_entry, db):
 
 
 def test_known_app_user_validates(log_entry, db):
-    user = AppUser(
-        log_entry.app_user_oid, None, log_entry.app_user_name, None
-    )
-    db.add_app_user(user)
+    user = AppUser("Some name", log_entry.app_user_name, "Some hash")
+    log_entry.app_user_oid = db.add_app_user(user)
     assert LogEntryValidator.validate_references(log_entry, db) is None

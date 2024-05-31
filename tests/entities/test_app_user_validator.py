@@ -1,6 +1,5 @@
 import pytest
 
-from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.app_user_validator import AppUserValidator
 from shrikenet.entities.record_validator import RecordValidator
 

@@ -24,12 +24,10 @@ def db():
 
 @pytest.fixture
 def app_user_obj():
-    oid = -1
     username = "dstrange"
     name = "Dr. Strange"
     password_hash = "easyHARD"
     app_user = AppUser(
-        oid,
         username,
         name,
         password_hash,
