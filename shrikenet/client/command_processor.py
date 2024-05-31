@@ -57,7 +57,7 @@ class CommandProcessor:
         select_parser.add_argument(
             "network_id",
             type=self.validate_network_id,
-            help="network ID in email form (e.g., me@example.com or me@127.0.0.1 or me@localhost)",
+            help="community network ID (e.g., me@example.com or me@127.0.0.1)",
         )
         select_parser.set_defaults(func=self.select_cmd)
 
