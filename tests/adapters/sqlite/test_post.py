@@ -3,7 +3,6 @@ from operator import attrgetter
 
 import pytest
 
-from shrikenet.adapters.sqlite import SQLiteAdapter
 from shrikenet.entities.app_user import AppUser
 from shrikenet.entities.exceptions import (
     DatastoreKeyError,
