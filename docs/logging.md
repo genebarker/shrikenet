@@ -32,6 +32,6 @@ Level       | Guideline
 breadcrumbs that assists in debugging. Some examples: environment settings,
 database calls, user actions, processing times, etc..  
 
-[a]: decisions/002_perform_structured_logging.md
+[a]: decisions/002-perform-structured-logging.md
 [b]: https://www.javacodegeeks.com/2011/01/10-tips-proper-application-logging.html
 [c]: http://softwareengineering.stackexchange.com/questions/168059/best-practices-for-logging-user-actions-in-production/168075#168075

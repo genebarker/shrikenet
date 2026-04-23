@@ -23,4 +23,4 @@ content of these folders and how they are layered.
 
 
 [1]: https://flask.palletsprojects.com
-[2]: hexagonal_architecture.md
+[2]: hexagonal-architecture.md

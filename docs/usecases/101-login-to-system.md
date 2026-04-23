@@ -67,5 +67,5 @@ All users
   threshold and age reset functionality.
 
 
-[1]: 102_change_password.md
+[1]: 102-change-password.md
 [2]: http://denyhosts.sourceforge.net/
