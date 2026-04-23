@@ -27,8 +27,8 @@ Home for decisions we considered, then decided not to proceed with at this
 time.
 
 
-[1]: 001_document_architecture_decisions.md
-[2]: 002_perform_structured_logging.md
-[3]: 003_adopt_usecase_as_single_word.md
-[4]: 004_isolate_products_from_business_logic.md
-[5]: 005_use_embedded_database.md
+[1]: 001-document-architecture-decisions.md
+[2]: 002-perform-structured-logging.md
+[3]: 003-adopt-usecase-as-single-word.md
+[4]: 004-isolate-products-from-business-logic.md
+[5]: 005-use-embedded-database.md

@@ -43,6 +43,6 @@ None.
 - See the [zxcvbn-python][3] for the Python port of zxcvbn.
 
 
-[1]: 101_login_to_system.md
+[1]: 101-login-to-system.md
 [2]: https://github.com/dropbox/zxcvbn
 [3]: https://github.com/dwolfhub/zxcvbn-python

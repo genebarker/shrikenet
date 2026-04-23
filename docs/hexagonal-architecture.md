@@ -18,5 +18,5 @@ adapters provided to it via dependency injection. For example, a usecase
 may require a storage provider (PostgreSQL).
 
 
-[1]: decisions/004_isolate_products_from_business_logic.md
+[1]: decisions/004-isolate-products-from-business-logic.md
 [2]: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
